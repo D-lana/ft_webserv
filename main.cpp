@@ -46,3 +46,8 @@ int main()
 	Core *coreWebSerwer = new Core(vectorServers);
 	coreWebSerwer->runServer();
 }
+
+
+
+
+
