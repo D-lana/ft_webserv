@@ -1,5 +1,5 @@
 #ifndef SERVER_HPP
-#define SERVER_HPP
+# define SERVER_HPP
 
 // # include <iostream>
 // # include <exception>
@@ -14,74 +14,61 @@
 #include <netdb.h>
 
 #define PORT 8080
+#define BUFSIZE 1024
+#define ADDRESS INADDR_ANY
 
 class Server {
 	
 	private:
-		
-		int 	server_fd;
-		int 	new_socket;
-		long	valread;
-		struct 	sockaddr_in address;
-		int		addrlen = sizeof(address);
-		std::string msg;
+		int i, err, opt = 1;
+		int sock;
+		int maxFd = 0;
+		struct sockaddr_in addr;
+
+		int error (const char* err_type) {
+			std::cerr << err_type << std::endl;
+			exit(EXIT_FAILURE);
+		}
 
 	public:
 
 		Server() {
-			msg = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello World!";
-			if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
-			{
-				std::cerr << "Error: Creating socket failed" << std::endl;
-				exit(EXIT_FAILURE);	
+			sock = socket(PF_INET, SOCK_STREAM, 0);
+			if (sock < 0) {
+				error("Error: Creating socket failed");
 			}
-			address.sin_family = AF_INET;
-			address.sin_addr.s_addr = INADDR_ANY;
-			address.sin_port = htons(PORT);
-			memset(address.sin_zero, '\0', sizeof address.sin_zero);
-			if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0)
-			{
-				std::cerr << "Error: Binding socket failed" << std::endl;
-				exit(EXIT_FAILURE);
+			setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char*)&opt, sizeof(opt));
+
+			// заполняем адресную структуру и связываем сокет с любым адресом
+			addr.sin_family = AF_INET;
+			addr.sin_port = htons(PORT);
+			addr.sin_addr.s_addr = ADDRESS;
+			if (bind(sock, (struct sockaddr*)&addr, sizeof(addr)) < 0) {
+				error("Error: Binding socket failed");
 			}
-			if (listen(server_fd, 10) < 0)
-			{
-				std::cerr << "Error: Listening socket failed" << std::endl;
-				exit(EXIT_FAILURE);
+
+			// Создаем очередь на 32 входящих запроса соединения
+			if (listen(sock, 32) < 0) {
+				error("Error: Listening socket failed");
+			}
+
+			// Подготавливаем множества дескрипторов каналов ввода-вывода
+			// Для простоты не вычисляем максимальное значение дескриптора 
+			//а далее будем проверять все дескрипторы вплодь до максимального FD_SETSIZE;
+			std::cout << "LISTEN SOCK - " << sock << "\n";
+			if (sock >= maxFd) {
+				maxFd = sock + 1;
 			}
 		}
 
 		~Server() {
-			close(server_fd);
+			close(sock);
 		}
 
-		// class IndexException : public std::exception
-		// {
-		// 	public:
-		// 		const char* what() const throw();
-		// };
-		// Server(const Server &copy);
-		// Server &operator =(const Server &copy);
-
-		int runServer() {			
-			while (1)
-			{
-				std::cout << "\n------- Waiting for new connection -------\n\n";
-				if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen)) < 0)
-				{
-					std::cerr << "Error: Listening socket failed" << std::endl;
-					exit(EXIT_FAILURE);
-				}
-				char buffer[1000] = {0};
-				///////////// !!!!!
-				valread = read(new_socket, buffer, 1000);
-				printf("%s\n", buffer);
-				write(new_socket, msg.c_str(), msg.size());
-				std::cout << "------- Hello message sent --------\n";
-				close(new_socket);
-			}
-			return 0;
+		int getFdSocket() {
+			return (sock);
 		}
+
 };
 
 #endif 
