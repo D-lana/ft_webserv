@@ -34,6 +34,10 @@ Processor::Processor(std::string _url) {
             answer = response->makeAnswer(response->getFileFound());
             std::cout << response->makeAnswer(response->getFileFound()) << std::endl;
         }
+
+
+
+        
     }
 
     std::string Processor::getAnswer() {
