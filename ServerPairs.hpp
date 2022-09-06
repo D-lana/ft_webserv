@@ -17,17 +17,27 @@
 #include <string>
 #include <cstring>
 #include <fstream>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <iostream>
 // #include "Parser.hpp"
 
 class ServerPairs {
 
     private:
 
-        // u_short _ftPort;
-        // in_addr_t _ftHost;
-        std::string _ftServName;
-        int _maxBodySize;
+        u_short _port;
+        in_addr_t _host;
+        std::string _servName;
         bool _autoIndex;
+        std::string _root;
+        std::string _index;
+        std::string _uploadPath;
+        int _maxBodySize;
+        int _errorCode;
+        std::string _errorDescription;
+        std::string _method;
 
     public:
 
@@ -35,20 +45,31 @@ class ServerPairs {
         ServerPairs &operator=(const ServerPairs &other);
         virtual ~ServerPairs();
 
-        // void setFtPort(const int &port);
-        // const u_short &getFtPort() const;
+        void setPort(const int &port);
+        const u_short &getPort() const;
 
-        // void setFtHost(const std::string &host);
-        // const in_addr_t &getFtHost() const;
+        void setHost(const std::string &host);
+        const in_addr_t &getHost() const;
 
-        // void setServName(const std::string &serverName);
+        void setServName(const std::string &serverName);
         // const std::string &getServName() const;
 
-        // void setMaxBodySize(const int &maxBodySize);
+       void setAutoIndex(const bool &autoIndex);
+//        const bool &getAutoIndex() const;
+
+       void setRoot(const std::string &root);
+
+        void setIndex(const std::string &index);
+
+        void setUpload(const std::string &path);
+
+        void setMaxBodySize(const int &maxBodySize);
         // const int &getMaxBodySize() const;
 
-//        void setAutoIndex(const bool &autoIndex);
-//        const bool &getAutoIndex() const;
+        void setError(const int &code, const std::string &description);
+        void setMethod(const std::string &method);
+
+
 
         // std::vector<FtLocation> &getFtLocations();
 

@@ -23,6 +23,8 @@
 #include <algorithm>
 #include <iostream>
 
+#define PORT 8080
+
 struct ConfigData {
 		std::vector<std::string>			serverData;
 		std::vector<std::string>			locationData;
@@ -54,6 +56,19 @@ class FtParser {
 
 		void serverPairsInit(size_t index, std::vector<std::string> file, 
 			std::vector<std::string>::iterator& start, std::vector<std::string>::iterator& end);
+		
+		void chooseTokenInConfig(std::string str, std::string token);
+		std::vector<std::string> splitLineOfConfig(std::string token, std::string str);
+		void findListen(std::string str, std::string token);
+		std::vector<std::string> splitListen(std::string str);
+		void findServerName(std::string str, std::string token);
+		void findAutoIndex(std::string str, std::string token);
+		void findIndex(std::string str, std::string token);
+		void findRoot(std::string str, std::string token);
+		void findUpload(std::string str, std::string token);
+		void findBodySize(std::string str, std::string token);
+		void findError(std::string str, std::string token);
+		void findMethod(std::string str, std::string token);
 
 
         std::vector<std::string>			_serverTools;
