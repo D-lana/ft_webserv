@@ -39,6 +39,44 @@ class ServerPairs {
         std::string _errorDescription;
         std::string _method;
 
+        class Location {
+        
+        private:
+
+            std::string _locationName;
+            bool _locationAutoIndex;
+            std::string _locationRoot;
+            std::string _locationIndex;
+            std::string _locationUploadPath;
+            bool        _locationRedirection;
+            std::string _locationBinPath;
+            bool        _locationPathCgi;
+            int         _locationErrorCode;
+            std::string _locationErrorDescription;
+            std::string _locationMethod;
+
+        public:
+            Location();
+            virtual ~Location();
+
+            void setLocationName(const std::string& str);
+            void setLocationAutoIndex(const bool& index);
+            void setLocationRoot(const std::string& str);
+            void setLocationIndex(const std::string& str);
+            void setLocationUploadPath(const std::string& str);
+            void setLocationRedirection(const bool& redirection);
+            // void setLocationRedirectionCode(const bool& code);
+            void setLocationBinPath(const std::string& str);
+            void setLocationPathCgi(const bool& cgi);
+            void setLocationError(const int &code, const std::string &description);
+            void setLocationMethod(const std::string& str);
+
+            const bool& getLocationPathCgi(void);
+        };
+
+        std::vector<Location> _locations;
+
+
     public:
 
         ServerPairs();
@@ -71,7 +109,7 @@ class ServerPairs {
 
 
 
-        // std::vector<FtLocation> &getFtLocations();
+        // std::vector<Location> &getLocations();
 
     };
 

@@ -40,6 +40,7 @@ class FtParser {
 		FtParser(const char* config);
 		virtual ~FtParser();
 		void parse(std::string argv);
+		static std::vector<std::string> splitLineOfConfig(std::string token, std::string str);
 
     
     private:
@@ -58,7 +59,6 @@ class FtParser {
 			std::vector<std::string>::iterator& start, std::vector<std::string>::iterator& end);
 		
 		void chooseTokenInConfig(std::string str, std::string token);
-		std::vector<std::string> splitLineOfConfig(std::string token, std::string str);
 		void findListen(std::string str, std::string token);
 		std::vector<std::string> splitListen(std::string str);
 		void findServerName(std::string str, std::string token);
@@ -69,6 +69,21 @@ class FtParser {
 		void findBodySize(std::string str, std::string token);
 		void findError(std::string str, std::string token);
 		void findMethod(std::string str, std::string token);
+
+		void chooseTokenInLocation(std::string str, std::string token);
+		void locationInit(std::string str, std::string token, std::vector<std::string> config, 
+			std::vector<std::string>::iterator& start);
+		void findLocationName(std::string str, std::string token);
+		void findLocationAutoIndex(std::string str, std::string token);
+		void findLocationIndex(std::string str, std::string token);
+		void findLocationRoot(std::string str, std::string token);
+		void findLocationUpload(std::string str, std::string token);
+		void findLocationRedirection(std::string str, std::string token);
+		void findLocationError(std::string str, std::string token);
+		void findLocationBinPath(std::string str, std::string token);
+		// void findLocationPathCgi(std::string str, std::string token);
+		void findLocationMethod(std::string str, std::string token);
+
 
 
         std::vector<std::string>			_serverTools;

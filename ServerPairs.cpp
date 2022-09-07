@@ -68,3 +68,50 @@ void ServerPairs::setError(const int &code, const std::string &description) {
 void ServerPairs::setMethod(const std::string &method) {
 	_method = method;
 }
+
+
+ServerPairs::Location::Location() {
+
+	};
+
+ServerPairs::Location::~Location() {
+
+	};
+
+void ServerPairs::Location::setLocationName(const std::string& str) {
+	_locationName = str;
+};
+void ServerPairs::Location::setLocationAutoIndex(const bool& index) {
+_locationAutoIndex = index;
+};
+void ServerPairs::Location::setLocationRoot(const std::string& str) {
+_locationRoot = str;
+};
+void ServerPairs::Location::setLocationIndex(const std::string& str) {
+_locationIndex = str;
+};
+void ServerPairs::Location::setLocationUploadPath(const std::string& str) {
+	_locationUploadPath = str;
+};
+void ServerPairs::Location::setLocationRedirection(const bool& redirection) {
+	_locationRedirection = redirection;
+};
+void ServerPairs::Location::setLocationBinPath(const std::string& str) {
+	_locationBinPath = str;
+};
+void ServerPairs::Location::setLocationPathCgi(const bool& cgi) {
+	_locationPathCgi = cgi;
+};
+
+const bool& ServerPairs::Location::getLocationPathCgi(void) {
+	return(_locationPathCgi);
+};
+
+void ServerPairs::Location::setLocationError(const int &code, 
+		const std::string &description) {
+	_locationErrorDescription = str;
+	_locationErrorCode = code;
+};
+void ServerPairs::Location::setLocationMethod(const std::string& str) {
+	_locationMethod = str;
+};
