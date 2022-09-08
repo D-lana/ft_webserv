@@ -117,7 +117,7 @@ void FtParser::serverPairsInit(size_t index, std::vector<std::string> config,
 					// std::cout << "*it = " << *it << " >>  *start =" << *start << std::endl;
 					if (!(*start).find(*it)) {
 						// std::cout << "find token" << std::endl;
-						rootTools.serverData.push_back(*start); //???
+						// rootTools.serverData.push_back(*start); //???
 						chooseTokenInConfig(*start, *it);
 						break;
 					}
@@ -125,7 +125,7 @@ void FtParser::serverPairsInit(size_t index, std::vector<std::string> config,
 			}
 			else if (*start == "location") {
 				std::cout << "find location" << std::endl;
-				rootTools.locationData.push_back(*start);
+				// rootTools.locationData.push_back(*start);
 				locationInit(*start, "location", config, start);
 			}
 		}
@@ -136,9 +136,11 @@ void FtParser::locationInit(std::string str, std::string token, std::vector<std:
 		std::vector<std::string>::iterator& start) {
 	std::vector<std::string> vector;
 	std::vector<std::string>::iterator beginLocation = start;
-	ConfigData rootTools;
+	ConfigData locationTools;
 	// size_t pos = 0;
 	// size_t i = 0;
+	
+	((_serverPairs.back()).getLocations()).push_back(Location());
 	size_t i = str.find(token) + token.size();
 	// size_t i = j;
 	while (start < config.end()) {
@@ -159,7 +161,7 @@ void FtParser::locationInit(std::string str, std::string token, std::vector<std:
 					// std::cout << "*it = " << *it << " >>  *start =" << *start << std::endl;
 		if (!(*beginLocation).find(*it)) {
 				// std::cout << "find token" << std::endl;
-				rootTools.locationData.push_back(*beginLocation); //???
+				// rootTools.locationData.push_back(*beginLocation); //???
 				chooseTokenInLocation(*beginLocation, *it);
 			}
 		++beginLocation;
@@ -191,55 +193,55 @@ void FtParser::chooseTokenInLocation(std::string str, std::string token) {
 			findLocationMethod(str, token);
 }
 
-		void findLocationName(std::string str, std::string token) {
+		void FtParser::findLocationName(std::string str, std::string token) {
 		std::vector<std::string> vector = FtParser::splitLineOfConfig(token, str);
 		if (vector.size() != 1)
 			throw std::runtime_error("Invalid syntax of location name");
-		( ServerPairs::_locations.back()).setLocationName(value[0]);
+		(((_serverPairs.back()).getLocations()).back()).setLocationName(vector[0]);
 		if (vector[0] == "/cgi-bin/")
-			( ServerPairs::_locations.back()).setLocationPathCgi(1);
+			(((_serverPairs.back()).getLocations()).back()).setLocationPathCgi(1);
 		}
 
-		void findLocationAutoIndex(std::string str, std::string token) {
+		void FtParser::findLocationAutoIndex(std::string str, std::string token) {
 		std::vector<std::string> vector = FtParser::splitLineOfConfig(token, str);
 		if (vector.size() != 1 || (vector[0] != "on" && vector[0] != "off"))
 			throw std::runtime_error("Invalid syntax of autoindex (location)");
 		if (vector[0] == "on")
-		(_serverPairs.back()._locations.back()).setLocationAutoIndex(1);
+		(((_serverPairs.back()).getLocations()).back()).setLocationAutoIndex(1);
 		}
 
-		void findLocationIndex(std::string str, std::string token) {
+		void FtParser::findLocationIndex(std::string str, std::string token) {
 		std::vector<std::string> vector = FtParser::splitLineOfConfig(token, str);
 		if (vector.size() != 1)
 			throw std::runtime_error("Invalid syntax of index (location)");
-		(_serverPairs.back()._locations.back()).setLocationIndex(vector[0]);
+		(((_serverPairs.back()).getLocations()).back()).setLocationIndex(vector[0]);
 		}
 
-		void findLocationRoot(std::string str, std::string token) {
+		void FtParser::findLocationRoot(std::string str, std::string token) {
 		std::vector<std::string> vector = FtParser::splitLineOfConfig(token, str);
 		if (vector.size() != 1)
 			throw std::runtime_error("Invalid syntax of root (location)");
-		(_serverPairs.back()._locations.back()).setLocationRoot(vector[0]);
+		(((_serverPairs.back()).getLocations()).back()).setLocationRoot(vector[0]);
 		}
 
-		void findLocationUpload(std::string str, std::string token) {
+		void FtParser::findLocationUpload(std::string str, std::string token) {
 		std::vector<std::string> vector = FtParser::splitLineOfConfig(token, str);
 		if (vector.size() != 1)
 			throw std::runtime_error("Invalid syntax of upload (location)");
-		(_serverPairs.back()._locations.back()).setLocationUploadPath(vector[0]);
+		(((_serverPairs.back()).getLocations()).back()).setLocationUploadPath(vector[0]);
 		}
 
-		void findLocationRedirection(std::string str, std::string token) {
+		void FtParser::findLocationRedirection(std::string str, std::string token) {
 		std::vector<std::string> vector = FtParser::splitLineOfConfig(token, str);
-		if (vector.size() != 2 || (_serverPairs.back()._locations.back()).getLocationPathCgi() == 1)
+		if (vector.size() != 2 || (((_serverPairs.back()).getLocations()).back()).getLocationPathCgi() == 1)
 			throw std::runtime_error("Invalid syntax of redirection (location)");
-		(_serverPairs.back()._locations.back()).setLocationRedirection(1);
-		(_serverPairs.back()._locations.back()).setLocationIndex(vector[1]);
+		(((_serverPairs.back()).getLocations()).back()).setLocationRedirection(1);
+		(((_serverPairs.back()).getLocations()).back()).setLocationIndex(vector[1]);
 		if (static_cast<int>(strtod(vector[1].c_str(), 0)) != 302)
 			throw std::runtime_error("Wrong redirection code (302 only)"); //???????????????
 		}
 
-		void findLocationError(std::string str, std::string token) {
+		void FtParser::findLocationError(std::string str, std::string token) {
 			std::vector<std::string> vector = FtParser::splitLineOfConfig(token, str);
 			if (vector.size() < 2)
 				throw std::runtime_error("Invalid syntax of error page (location)");
@@ -247,31 +249,31 @@ void FtParser::chooseTokenInLocation(std::string str, std::string token) {
 			std::string description = vector[1];
 			if (code == 0 || description.empty())
 				throw std::runtime_error("Invalid syntax of error page (location)");
-			(_serverPairs.back()._locations.back()).setLocationError(code, description);
+		(((_serverPairs.back()).getLocations()).back()).setLocationError(code, description);
 		}
 
-		void findLocationBinPath(std::string str, std::string token) {
+		void FtParser::findLocationBinPath(std::string str, std::string token) {
 		std::vector<std::string> vector = FtParser::splitLineOfConfig(token, str);
-		if (vector.size() != 1 || (_serverPairs.back()._locations.back()).getLocationPathCgi() == 0)
+		if (vector.size() != 1 ||(((_serverPairs.back()).getLocations()).back()).getLocationPathCgi() == 0)
 			throw std::runtime_error("Invalid syntax of binpath (location)");
-		(_serverPairs.back()._locations.back()).setLocationBinPath(vector[0]);
+	(((_serverPairs.back()).getLocations()).back()).setLocationBinPath(vector[0]);
 		}
 
 		// void findLocationPathCgi(std::string str, std::string token) {
 
 		// }
 
-		void findLocationMethod(std::string str, std::string token) {
+		void FtParser::findLocationMethod(std::string str, std::string token) {
 			std::vector<std::string> vector = FtParser::splitLineOfConfig(token, str);
 			if (vector.size() < 1 || vector.size() > 3)
 				throw std::runtime_error("Unproper count of methods (location)");
 			for (size_t i = 0; i < vector.size(); ++i) {
 				if (vector[i] == "GET")
-					(_serverPairs.back()._locations.back()).setLocationMethod("GET");
+					(((_serverPairs.back()).getLocations()).back()).setLocationMethod("GET");
 				else if (vector[i] == "POST")
-					(_serverPairs.back()._locations.back()).setLocationMethod("POST");
+				(((_serverPairs.back()).getLocations()).back()).setLocationMethod("POST");
 				else if (vector[i] == "DELETE")
-					(_serverPairs.back()._locations.back()).setLocationMethod("DELETE");
+					(((_serverPairs.back()).getLocations()).back()).setLocationMethod("DELETE");
 				else
 					throw std::runtime_error("Invalid syntax of method (location)");	
 	}

@@ -40,8 +40,6 @@ class FtParser {
 		FtParser(const char* config);
 		virtual ~FtParser();
 		void parse(std::string argv);
-		static std::vector<std::string> splitLineOfConfig(std::string token, std::string str);
-
     
     private:
 
@@ -59,6 +57,7 @@ class FtParser {
 			std::vector<std::string>::iterator& start, std::vector<std::string>::iterator& end);
 		
 		void chooseTokenInConfig(std::string str, std::string token);
+		std::vector<std::string> splitLineOfConfig(std::string token, std::string str);
 		void findListen(std::string str, std::string token);
 		std::vector<std::string> splitListen(std::string str);
 		void findServerName(std::string str, std::string token);
@@ -83,6 +82,7 @@ class FtParser {
 		void findLocationBinPath(std::string str, std::string token);
 		// void findLocationPathCgi(std::string str, std::string token);
 		void findLocationMethod(std::string str, std::string token);
+		
 
 
 
@@ -90,6 +90,18 @@ class FtParser {
 		std::vector<std::string>			_locationTools;
         std::vector<std::string>            _configTokens;
 		// std::map<std::string, int>			_configTokens;
+
+// 		FtParser::FtParser(const char *argv) : _config(argv) {
+
+//     _serverTools = {"listen", "server_name", "autoindex", "index", "root", "upload_path", 
+// 		"client_max_body_size", "error_page", "methods"};
+// 	_locationTools = {"location", "root", "autoindex", "index", "upload_path",
+// 		"redirection", "error_page", "bin_path_py", "path_cgi",  "methods" };
+// 	_configTokens = {"server",  "listen",  "server_name",  "autoindex", 
+// 		"index", "root", "upload_path", "client_max_body_size", "error_page", 
+// 		"methods", "location", "redirection", "path_cgi", "bin_path_py", 
+// 		";", "{", "}" };
+// }
 
 		std::vector<ServerPairs> _serverPairs;
 		const char* _config;
