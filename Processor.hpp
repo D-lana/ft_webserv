@@ -16,6 +16,7 @@ private:
     std::string url;
     std::string newUrl;
     std::string answer;
+    // Response *response;
 
 public:
     Processor(std::string url);

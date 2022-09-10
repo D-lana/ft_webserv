@@ -1,6 +1,6 @@
 NAME		= Server
 
-FLAGS		= -Wall -Wextra -Werror
+FLAGS		= -Wall -Wextra -Werror -g
 # -std=c++98
 
 SRCS		= main.cpp Response.cpp Request.cpp \

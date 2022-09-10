@@ -19,8 +19,8 @@ Request::Request(const char buffer[]){
     str.erase(0, pos2 + 2);
     headers = makeHeaders(str);
 
-    std::cout << "----------Print string -----------" << std::endl;
-    std::cout << "|" << url << "|" << std::endl;
+    // std::cout << "----------Print string -----------" << std::endl;
+    // std::cout << "|" << url << "|" << std::endl;
 
     proc1 = new Processor(url);
     proc1->checkFile();
@@ -30,7 +30,7 @@ Request::Request(const char buffer[]){
     // for (int i = 0; it != headers.end(); it++, i++) {
     //     std::cout << "|" << it->first << "|" << it->second << "|"<< std::endl;
     // }
-    // std::cout << "---------End printing--------" << std::endl;
+    std::cout << "---------End printing--------" << std::endl;
 }
 
  std::map<std::string, std::string> Request::makeHeaders(std::string& str)
@@ -41,9 +41,11 @@ Request::Request(const char buffer[]){
     std::size_t delimiter;
     std::map<std::string, std::string> _headers;
 
-    while (str.compare("\r\n")) {
+    while (!str.compare("\r\n")) {
         std::size_t pos = str.find("\r\n");
+        // std::cout << "pos " << pos << std::endl;
         tmpStr = str.substr(0, pos);
+        // std::cout << "tmpStr " << tmpStr << std::endl;
         delimiter = tmpStr.find(": ");
         keyHead = tmpStr.substr(0, delimiter);
         valueHead = tmpStr.substr(delimiter + 2, tmpStr.length() - keyHead.length()-2);

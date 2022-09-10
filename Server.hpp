@@ -20,7 +20,6 @@ class Server {
 			std::cerr << err_type << std::endl;
 			exit(EXIT_FAILURE);
 		}
-
 	public:
 
 			Server(int port) {
