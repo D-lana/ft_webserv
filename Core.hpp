@@ -31,7 +31,7 @@ class Core {
 		char buf[BUFSIZE];
 		socklen_t size;
 		int maxFd = 0;
-		fd_set active_set, read_set;
+		fd_set active_set, read_set, write_set;
 		int new_sock;
 
 		int i, err, opt = 1;
@@ -58,7 +58,8 @@ class Core {
 			
 			while(1) {
 				read_set = active_set;
-				if (select(maxFd, &read_set, NULL, 0, 0) < 0) {
+				write_set = active_set;
+				if (select(maxFd, &read_set, &write_set, 0, 0) < 0) {
 					error("Error: Select socket failed");
 				}
 				for (i = 0; i < maxFd; i++) {
@@ -111,7 +112,7 @@ class Core {
 			long	lenRequest;
 		
 			lenRequest = read(fd, buf, BUFSIZE);
-			request = new Request(buf);
+			//request = new Request(buf);
 			if (strstr(buf, "\n")) {
 				std::cout << "\n------- END!!! -------\n\n";
 			}
@@ -126,9 +127,10 @@ class Core {
 
 		int writeToClient(int fd) {
 			std::cout << "\n------- writeToClient!!! -------\n\n";
-			answer = request->getProcessor(); //char buffer[1000] = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello World!"; 
-			size_t readsize = answer->getAnswer().length();
-			send(fd, answer->getAnswer().c_str(), (int)readsize, 0);
+			//answer = request->getProcessor(); 
+			char buffer[1000] = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello World!"; 
+			//size_t readsize = answer->getAnswer().length();
+			send(fd, buffer, strlen(buffer), 0);
 			return (0);
 		}
 
