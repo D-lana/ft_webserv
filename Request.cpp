@@ -35,7 +35,6 @@ Request::Request(const char buffer[]){
 
  std::map<std::string, std::string> Request::makeHeaders(std::string& str)
 {
-    int i = 0;
     std::string tmpStr;
     std::string keyHead;
     std::string valueHead;
