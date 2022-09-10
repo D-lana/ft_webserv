@@ -1,5 +1,3 @@
-
-
 #include "Processor.hpp"
 
 Processor::Processor(std::string _url) {
