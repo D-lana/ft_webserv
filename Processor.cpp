@@ -7,8 +7,8 @@ Processor::Processor(std::string _url) {
     newUrl = path.append(url);
 
 
-    std::cout << "Url " << "|" << url << "|" << std::endl;
-    std::cout << "newUrl " << "|" << newUrl << "|" << std::endl;
+    std::cout << "Url " << url << std::endl;
+    std::cout << "newUrl " << newUrl << std::endl;
 
 
 }
