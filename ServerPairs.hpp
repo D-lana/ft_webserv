@@ -83,6 +83,8 @@ class ServerPairs {
         void setMethod(const std::string &method);
 
         std::vector<Location> &getLocations();
+        in_addr_t &getHost();
+        std::string &getServName();
 
     };
 

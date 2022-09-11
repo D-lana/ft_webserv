@@ -13,6 +13,14 @@
 #include "Parser.hpp"
 #define EXTENSION ".conf"
 
+
+
+#include <iostream> //del!
+#include <cstdlib> //del!
+#include <unistd.h> //del!
+
+
+
 FtParser::FtParser(const char *argv) : _config(argv) {
 
     _serverTools = {"listen", "server_name", "autoindex", "index", "root", "upload_path", 
@@ -64,6 +72,7 @@ void FtParser::parse(std::string argv) {
 
 	std::vector<std::string>::iterator it;
 	std::vector<std::string>::iterator start;
+	bool check = 0;
 	it = config.begin();
 	while (it < config.end()) {
 		if (*it == "server") {
@@ -74,14 +83,30 @@ void FtParser::parse(std::string argv) {
 			_serverPairs.push_back(ServerPairs());
 			// std::cout << "_serverPairs.size() = " << _serverPairs.size() <<  std::endl;
 			serverPairsInit(_serverPairs.size() - 1, config, start, it);
+			check = 1;
 
-			break;
+			// break;
 		}
-		if (++it == config.end()) {
+		++it;
+		if (check == 0 && it == config.end()) {
 			throw std::runtime_error("Cannot find server in config");
 		}
 	}
 	config.clear();
+	// for (size_t i = 0; i < _serverPairs.size(); ++i) {
+    //     std::cout << "_serverPairs = " << (_serverPairs.back()).getHost() <<  std::endl;
+	// 	// std::cout << "_serverPairs.servName = " << _serverPairs.servN <<  std::endl;
+	// }
+
+	for (std::vector<ServerPairs>::iterator it = _serverPairs.begin() ; it!=_serverPairs.end() ; ++it) {
+        std::cout<<(*it).getServName() <<  std::endl;
+		// std::cout<<(*it).getServName() <<  std::endl;
+		std::vector<Location> a = (*it).getLocations();
+		for (std::vector<Location>::iterator at = a.begin() ; at!=a.end() ; ++at) {
+		std::cout<< "Location cgi" << (*at).getLocationPathCgi() <<  std::endl;
+		}
+
+	}
 	// здесь дальше про порты?
 }
 
@@ -112,27 +137,34 @@ void FtParser::serverPairsInit(size_t index, std::vector<std::string> config,
 	// ConfigData locationTools;
 
 	while (++start < end) {
-			if (*start != "{" && *start != "}") {
+			if (*start != "{" && *start != "}") { //????
 				for (std::vector<std::string>::iterator it = _serverTools.begin(); it < _serverTools.end(); ++it) {
-					// std::cout << "*it = " << *it << " >>  *start =" << *start << std::endl;
+					std::cout << "*it = " << *it << " >>  *start =" << *start << std::endl;
 					if (!(*start).find(*it)) {
-						// std::cout << "find token" << std::endl;
+						std::cout << "find token, it = " << (*it) << std::endl;
+						usleep(100);
 						// rootTools.serverData.push_back(*start); //???
 						chooseTokenInConfig(*start, *it);
-						break;
+						// break;
+					}
+					else if (!(*start).find("location")) {
+						std::cout << "find location" << std::endl;
+						// rootTools.locationData.push_back(*start);
+						locationInit(*start, "location", config, start);
+						break ;
 					}
 				}
 			}
-			else if (*start == "location") {
-				std::cout << "find location" << std::endl;
-				// rootTools.locationData.push_back(*start);
-				locationInit(*start, "location", config, start);
-			}
+			// else if (*start == "location") {
+			// 	std::cout << "find location" << std::endl;
+			// 	// rootTools.locationData.push_back(*start);
+			// 	locationInit(*start, "location", config, start);
+			// }
 		}
 }
 
 
-void FtParser::locationInit(std::string str, std::string token, std::vector<std::string> config, 
+void FtParser::locationInit(std::string& str, std::string token, std::vector<std::string>& config, 
 		std::vector<std::string>::iterator& start) {
 	std::vector<std::string> vector;
 	std::vector<std::string>::iterator beginLocation = start;
@@ -140,11 +172,17 @@ void FtParser::locationInit(std::string str, std::string token, std::vector<std:
 	// size_t pos = 0;
 	// size_t i = 0;
 	
+std::cout << " 175 *start =" << *start << ", str = " << str << ", token = " << token  << std::endl;
+
 	((_serverPairs.back()).getLocations()).push_back(Location());
-	size_t i = str.find(token) + token.size();
+	// size_t i = str.find(token) + token.size();
+	size_t i = 0;
 	// size_t i = j;
+	std::cout << " 181 *start =" << *start << std::endl;
 	while (start < config.end()) {
+		std::cout << " 183 *start =" << *start << std::endl;
 		while ((*start)[i]) {
+			std::cout << " 185 *start =" << *start << std::endl;
 			if ((*start)[i] == '}') {
 				// finishLocation = start;
 				break ;
@@ -349,9 +387,9 @@ void FtParser::chooseTokenInConfig(std::string str, std::string token) {
 		vector = splitListen(vector[0]);
 		if (vector.size() > 1) {
 			(_serverPairs.back()).setHost(vector[0]);
-			std::cout << "_serverPairs.end()).getHost= "  << (_serverPairs.back()).getHost() << std::endl;
+			// std::cout << "_serverPairs.end()).getHost= "  << (_serverPairs.back()).getHost() << std::endl;
 			(_serverPairs.back()).setPort(static_cast<int>(strtod(vector[1].c_str(), 0))); // нужна ли проверка порта на валидность?
-			std::cout << "_serverPairs.end()).getPort= "  << (_serverPairs.back()).getPort() << std::endl;
+			// std::cout << "_serverPairs.end()).getPort= "  << (_serverPairs.back()).getPort() << std::endl;
 		}
 		else {
 			if (vector[0].find(".") != std::string::npos)

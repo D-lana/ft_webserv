@@ -70,7 +70,7 @@ class FtParser {
 		void findMethod(std::string str, std::string token);
 
 		void chooseTokenInLocation(std::string str, std::string token);
-		void locationInit(std::string str, std::string token, std::vector<std::string> config, 
+		void locationInit(std::string& str, std::string token, std::vector<std::string>& config, 
 			std::vector<std::string>::iterator& start);
 		void findLocationName(std::string str, std::string token);
 		void findLocationAutoIndex(std::string str, std::string token);

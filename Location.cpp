@@ -13,11 +13,9 @@
 #include "Location.hpp"
 
 Location::Location() {
-
 	};
 
 Location::~Location() {
-
 	};
 
 void Location::setLocationName(const std::string& str) {

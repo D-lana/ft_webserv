@@ -13,11 +13,9 @@
 #include "ServerPairs.hpp"
 
 ServerPairs::ServerPairs() {
-
 	};
 
 ServerPairs::~ServerPairs() {
-
 	};
 
 void ServerPairs::setPort(const int &port) {
@@ -71,4 +69,12 @@ void ServerPairs::setMethod(const std::string &method) {
 
 std::vector<Location>& ServerPairs::getLocations() {
 	return _locations;
+};
+
+in_addr_t&  ServerPairs::getHost() {
+	return _host;
+}
+
+std::string& ServerPairs::getServName() {
+	return _servName;
 };
