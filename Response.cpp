@@ -6,6 +6,8 @@
      protocol = "HTTP/1.1";
      url = _url;
 
+     std::cout << "url response " << url << std::endl;
+
  }
 Response::~Response() {
 
@@ -99,7 +101,9 @@ void Response::initMimeType() {
     mimeType["jpeg"]="image/jpeg";
     mimeType["png"]="image/png";
     mimeType["gif"]="image/gif";
-    mimeType["mp3"]="audio/mpeg3";
+    mimeType["mp3"]="audio/mpeg";
+    mimeType["mp4"]="video/mp4";
+    mimeType["html"]="text/html";
 }
 
 void Response::initCodeStatus() {

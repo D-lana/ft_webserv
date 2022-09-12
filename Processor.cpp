@@ -1,6 +1,6 @@
 #include "Processor.hpp"
 
-Processor::Processor(std::string _url) {
+Processor::Processor(std::string& _url) {
 
     path = "resources";
     url = _url;
@@ -17,6 +17,7 @@ Processor::Processor(std::string _url) {
 // std::string Processor::checkFile() {
     void Processor::checkFile() {
         char arr[newUrl.length() + 1];
+        memset (arr, 0, (newUrl.length() + 1));
         strcpy(arr, newUrl.c_str());
         Response *response = new Response(url);
         pFile = fopen(arr, "r");
@@ -27,15 +28,14 @@ Processor::Processor(std::string _url) {
         {
             response->setFileFound(true);
             // response->makeAnswer(response->getFileFound());
-            std::cout << response->makeAnswer(response->getFileFound(), newUrl) << std::endl;
+            //std::cout << response->makeAnswer(response->getFileFound(), newUrl) << std::endl;
             answer = response->makeAnswer(response->getFileFound(), newUrl);
-            // fputs ("fopen example",pFile);
             fclose (pFile);
         }
         else {
             response->setFileFound(false);
             answer = response->makeAnswer(response->getFileFound(), newUrl);
-            std::cout << response->makeAnswer(response->getFileFound(), newUrl) << std::endl;
+           // std::cout << response->makeAnswer(response->getFileFound(), newUrl) << std::endl;
         }
 
 
