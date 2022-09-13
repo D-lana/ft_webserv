@@ -23,12 +23,16 @@ void Response::setFileFound(bool _fileFound) {
 
 std::string Response::makeAnswer(bool _fileFound, std::string newUrl) {
 
+    // std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
+    // std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+
     if (_fileFound) {
         contentType = findContentType();
+  
+    // if (contentType =) {
 
+    // }
 
-        // answer = protocol + " " + "200 OK\r\n"+ "Content-Type: " + contentType + "\r\n" + "Content-Length: 22" + "\r\n\r\n" + "Hello World! tra-la-la";
-        // answer = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 22\n\nHello World! tra-la-la";
 
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
@@ -36,22 +40,23 @@ std::string Response::makeAnswer(bool _fileFound, std::string newUrl) {
          response << protocol << " 200 OK\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
          response.write(contents.data(), contents.size());
 
-
-        // answer = protocol + " 200 OK\r\n"+ "Content-Type: " + contentType + "\r\n" + "Content-Length: " + contentLength + "22" + "\r\n\r\n" + "Hello World! tra-la-la";
         // std::cout << "response_body " << response_body.str()  << std::endl;
 
-        // response << protocol << " 200 OK\r\nContent-Type: " << contentType << "\r\nContent-Length: " << response_body.str().length() << "\r\n\r\n"
-        // << response_body.str();
-
-
+        answer = response.str();
         // _fileFound = false;
+        // std::cout << "response" << response.str()  << std::endl;
+
+    } else {
+        contentType = "text/html";
+        newUrl = "errors/404.html";
+
+        std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
+        std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+
+        response << protocol << " 404 file not found\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
+        response.write(contents.data(), contents.size());
 
         answer = response.str();
-
-        // std::cout << "response" << response.str()  << std::endl;
-    }
-    else {
-        answer = "404 file not found";
     }
 
     return(answer);
@@ -68,6 +73,10 @@ std::string Response::findContentType(){
     }
     key = url.substr(++posDot, url.length());
     std::map<std::string, std::string>::iterator it = mimeType.find(key);
+    if (it == mimeType.end()) {
+        std::cout << "ContentType not found" << std::endl; // убрать
+        return(NULL);
+    }
 
     // std::cout << "key = " << key << std::endl;
     // std::cout << "value = " << it->second << std::endl;
@@ -75,11 +84,6 @@ std::string Response::findContentType(){
     return(it->second);
 }
 
-int Response::findContentLength(){
-
-    // int size = 0;
-    return(0);
-}
 
 void Response::initMimeType() {
     mimeType["txt"]="text/plain; charset=utf-8";
@@ -237,7 +241,7 @@ void Response::initMimeType() {
     mimeType["zip"]="application/x-compressed";
 }
 
-void Response::initCodeStatus() {
-    codeStatus["403"] = "Forbidden";
-    codeStatus["404"] = "Not Found";
-}
+// void Response::initCodeStatus() {
+//     codeStatus["403"] = "Forbidden";
+//     codeStatus["404"] = "Not Found";
+// }

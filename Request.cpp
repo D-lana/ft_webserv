@@ -27,6 +27,7 @@ Request::Request(const char buffer[]){
     
     method = str.substr(0, pos);
     url = str.substr(posSlesh, i - posSlesh - 1);
+    // url = str.substr(posSlesh, i - 1);
     protocol = "HTTP/1.1";
     str.erase(0, pos2 + 2);
     headers = makeHeaders(str);
@@ -74,7 +75,9 @@ Request::Request(const char buffer[]){
     return (_headers);
 }
 
-Request::~Request(){}
+Request::~Request(){
+    delete proc1;
+}
 
 Processor *Request::getProcessor() {
     return (proc1);

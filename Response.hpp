@@ -32,10 +32,8 @@ class Response {
 
         std::string makeAnswer(bool _fileFound, std::string newUrl);
         void initMimeType();
-        void initCodeStatus();
+        // void initCodeStatus();
         std::string findContentType();
-        int findContentLength();
-
 
 };
 
