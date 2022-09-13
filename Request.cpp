@@ -32,8 +32,8 @@ Request::Request(const char buffer[]){
     str.erase(0, pos2 + 2);
     headers = makeHeaders(str);
 
-    // std::cout << "----------Print string -----------" << std::endl;
-    // std::cout << "|" << url << "|" << std::endl;
+    std::cout << "----------Print string -----------" << std::endl;
+    std::cout << "|" << url << "|" << std::endl;
 
     proc1 = new Processor(url);
     proc1->checkFile();
