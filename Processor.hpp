@@ -6,6 +6,7 @@
 # include <string>
 # include <iostream>
 # include <cstring>
+# include <fstream>
 
 
 class Processor {
@@ -23,6 +24,7 @@ public:
    ~Processor();
     // std::string checkFile();
     void checkFile();
+    void makeFile();
 
     std::string getAnswer();
 };

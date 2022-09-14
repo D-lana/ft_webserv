@@ -41,6 +41,13 @@ Processor::Processor(std::string& _url) {
         delete response;
     }
 
+    void Processor::makeFile() {
+
+        std::ofstream fout;
+       // fout.open(url)
+
+    }
+
     std::string Processor::getAnswer() {
         return (answer);
     }
