@@ -3,7 +3,7 @@
 Processor::Processor(std::string& _url) {
 
     pFile = NULL;
-    path = "resources";
+    path = "resources/";
     url = _url;
     newUrl = path.append(url);
     answer = "";

@@ -4,32 +4,44 @@ Request::Request(const char buffer[]){
 
     std::string str(buffer);
     std::size_t pos;
-    std::size_t posSlesh;
-    std::size_t pos2;
+
     if ((pos = str.find(' ')) == std::string::npos) {
-        std::cout << "Request.cpp, p. 8 - symbol not found" << std::endl;  // переделать
+        std::cout << "Request.cpp, p. 9 - symbol not found" << std::endl;  // переделать
         exit(-1);
     }
-    if ((posSlesh = str.find('/')) == std::string::npos) {
-        std::cout << "Request.cpp, p. 12 - symbol not found" << std::endl;  // переделать
-        exit(-1);
-    }
-    std::size_t spase = 0;
-    if ((pos2 = str.find("\r\n")) == std::string::npos) {
-        std::cout << "Request.cpp, p. 18 - symbol not found" << std::endl;  // переделать
-        exit(-1);
-    }
-    int i = 0;
-    for ( ; spase < 2; ++i){
-        if (buffer[i] == ' ')
-            spase++;
-    }
+    // if ((posSlesh = str.find('/')) == std::string::npos) {
+    //     std::cout << "Request.cpp, p. 12 - symbol not found" << std::endl;  // переделать
+    //     exit(-1);
+    // }
+    // std::size_t spase = 0;
+    // if ((pos2 = str.find("\r\n")) == std::string::npos) {
+    //     std::cout << "Request.cpp, p. 18 - symbol not found" << std::endl;  // переделать
+    //     exit(-1);
+    // }
+    // int i = 0;
+    // for ( ; spase < 2; ++i){
+    //     if (buffer[i] == ' ')
+    //         spase++;
+    // }
     
     method = str.substr(0, pos);
-    url = str.substr(posSlesh, i - posSlesh - 1);
+    std::cout << "method" << "|" << method << "|" << std::endl;
+    str.erase(0, pos+1);
+    if ((pos = str.find(' ')) == std::string::npos) {
+        std::cout << "Request.cpp, p. 30 - symbol not found" << std::endl;  // переделать
+        exit(-1);
+    }
+    url = str.substr(1, pos - 1);
+    str.erase(0, pos+1);
+    if ((pos = str.find("\r\n")) == std::string::npos) {
+        std::cout << "Request.cpp, p. 36 - symbol not found" << std::endl;  // переделать
+        exit(-1);
+    }
+    // url = str.substr(posSlesh, i - posSlesh - 1);
     // url = str.substr(posSlesh, i - 1);
     protocol = "HTTP/1.1";
-    str.erase(0, pos2 + 2);
+    str.erase(0, pos + 2);
+    
     headers = makeHeaders(str);
 
     std::cout << "----------Print string -----------" << std::endl;
