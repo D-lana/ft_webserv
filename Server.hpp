@@ -20,7 +20,6 @@ class Server {
 			std::cerr << err_type << std::endl;
 			exit(EXIT_FAILURE);
 		}
-
 	public:
 
 			Server(int port) {
@@ -30,6 +29,8 @@ class Server {
 				error("Error: Creating socket failed");
 			}
 			setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char*)&opt, sizeof(opt));
+			setsockopt(sock, SOL_SOCKET, SO_NOSIGPIPE, (char*)&opt, sizeof(opt)); // добавила, чтобы не вылетало видео 
+			
 			addr.sin_family = AF_INET;
 			addr.sin_port = htons(port);
 			addr.sin_addr.s_addr = htonl(ADDRESS);
