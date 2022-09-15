@@ -39,7 +39,7 @@ Request::Request(std::string& buffer){
         headers = makeHeaders(buffer);
         parsHeaders = true;
     }
-
+    // std::cout << "buffer " <<"|" << buffer << "|" << std::endl;
     std::cout << "----------Print string -----------" << std::endl;
     // std::cout << "buffer " <<"|" << buffer << "|" << std::endl;
     std::cout << "url " << "|" << url << "|" << std::endl;
