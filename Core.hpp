@@ -57,6 +57,7 @@ class Core {
 			it = vectorServers.begin();
 			
 			while(1) {
+				memset(buf,0,BUFSIZE);
 				read_set = active_set;
 				if (select(maxFd, &read_set, NULL, 0, 0) < 0) {
 					error("Error: Select socket failed");
