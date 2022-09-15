@@ -1,45 +1,48 @@
 #include "Request.hpp"
 
-Request::Request(const char buffer[]){
+Request::Request(std::string& buffer){
 
     parsLine = false;
     parsHeaders = false;
 
-    std::string str(buffer);
+    // std::string str(_buffer);
     std::size_t pos;
 
     if (!parsLine) {
-        if ((pos = str.find(' ')) == std::string::npos) {
+        // std::cout << "buffer " << "|" << buffer << "|" << std::endl;
+        if ((pos = buffer.find(' ')) == std::string::npos) {
             std::cout << "Request.cpp, p. 8 - symbol not found" << std::endl;  // переделать
             exit(-1);
         }
         
-        method = str.substr(0, pos);
+        method = buffer.substr(0, pos);
         std::cout << "method" << "|" << method << "|" << std::endl;
-        str.erase(0, pos+1);
-        if ((pos = str.find(' ')) == std::string::npos) {
+        buffer.erase(0, pos+1);
+        if ((pos = buffer.find(' ')) == std::string::npos) {
             std::cout << "Request.cpp, p. 16 - symbol not found" << std::endl;  // переделать
             exit(-1);
         }
-        url = str.substr(1, pos - 1);
-        str.erase(0, pos+1);
-        if ((pos = str.find("\r\n")) == std::string::npos) {
+        url = buffer.substr(1, pos - 1);
+        buffer.erase(0, pos+1);
+        if ((pos = buffer.find("\r\n")) == std::string::npos) {
             std::cout << "Request.cpp, p. 22 - symbol not found" << std::endl;  // переделать
             exit(-1);
         }
 
         protocol = "HTTP/1.1";
-        str.erase(0, pos + 2);
+        buffer.erase(0, pos + 2);
+        // std::cout << "buffer " <<"|" << buffer << "|" << std::endl;
         parsLine = true;
 }
     if (!parsHeaders) {
         // std::cout << "AAAAAAAAA" << std::endl;
-        headers = makeHeaders(str);
+        headers = makeHeaders(buffer);
         parsHeaders = true;
     }
 
     std::cout << "----------Print string -----------" << std::endl;
-    std::cout << "|" << url << "|" << std::endl;
+    // std::cout << "buffer " <<"|" << buffer << "|" << std::endl;
+    std::cout << "url " << "|" << url << "|" << std::endl;
 
     proc1 = new Processor(url);
     if (!method.compare("GET")) {

@@ -21,7 +21,7 @@ private:
     std::string boundary;
 
 public:
-    Request(const char buffer[]);
+    Request(std::string& _buffer);
     ~Request();
     std::map<std::string, std::string> makeHeaders(std::string& str);
     Processor *getProcessor();

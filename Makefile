@@ -5,11 +5,11 @@ FLAGS		= -Wall -Wextra -Werror -g
 # -std=c++98
 
 SRCS		= main.cpp Response.cpp Request.cpp \
-			Processor.cpp
+			Processor.cpp Http.cpp
 
 HEADERS		= Core.hpp Server.hpp \
 			Response.hpp Request.hpp \
-			Processor.hpp
+			Processor.hpp Http.hpp
 
 OBJS		= $(SRCS:.cpp=.o)
 
