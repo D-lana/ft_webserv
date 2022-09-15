@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include <iostream>
 
-#define BUFSIZE 1024
 #define ADDRESS INADDR_ANY
 
 class Server {
