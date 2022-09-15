@@ -1,4 +1,3 @@
-
 #ifndef REQUESR_HPP
 # define REQUESR_HPP
 
@@ -17,6 +16,9 @@ private:
     std::string protocol;
     std::map<std::string, std::string> headers;
     Processor *proc1;
+    bool parsLine;
+    bool parsHeaders;
+    std::string boundary;
 
 public:
     Request(const char buffer[]);
