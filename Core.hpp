@@ -17,6 +17,7 @@
 #include "Server.hpp"
 #include "Request.hpp"
 #include "Response.hpp"
+#include "Http.hpp"
 
 #define BUFSIZE 1024
 
@@ -24,8 +25,9 @@
 
 class Core {
 	private:
-		Request *request;
-		Processor *answer;
+		Http *http;
+		// Request *request; // убрать?
+		// Processor *answer;
 
 		struct sockaddr_in client;
 		char buf[BUFSIZE];
@@ -112,13 +114,20 @@ class Core {
 			long	lenRequest;
 		
 			lenRequest = read(fd, buf, BUFSIZE);
-			request = new Request(buf);
+			// std::cout << "buf |" << buf << "|" << std::endl;
+			std::string buffer(buf); // добавила obeedril
+			// std::cout << "buffer_core |" << buffer << "|" << std::endl;
+			
+			// http = new Http(fd, buffer); // добавила obeedril
+
+			// request = new Request(std::string(buf));
 			if (strstr(buf, "\n")) {
 				std::cout << "\n------- END!!! -------\n\n";
 			}
 			if (lenRequest > 0) {
 				std::cout << "\n------- HTTP from brauser -------\n\n";
 				printf("%s\n", buf);
+				http = new Http(fd, buffer); // добавила obeedril
 				return (1);
 			}
 			else 
@@ -127,9 +136,11 @@ class Core {
 
 		int writeToClient(int fd) {
 			std::cout << "\n------- writeToClient!!! -------\n\n";
-			answer = request->getProcessor(); //char buffer[1000] = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello World!"; 
-			size_t readsize = answer->getAnswer().length();
-			send(fd, answer->getAnswer().c_str(), (int)readsize, 0);
+			//answer = request->getProcessor(); //char buffer[1000] = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello World!"; 
+			//size_t readsize = answer->getAnswer().length();
+			size_t readsize = http->getPartAnswer().length();
+			send(fd, http->getPartAnswer().c_str(), (int)readsize, 0);
+			// send(fd, answer->getAnswer().c_str(), (int)readsize, 0);
 			return (0);
 		}
 
