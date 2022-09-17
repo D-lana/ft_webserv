@@ -64,6 +64,7 @@ std::string Response::makeAnswer(bool _fileFound, std::string newUrl) {
         // std::cout << "response" << response.str()  << std::endl;
 
     } else {
+        
         contentType = "text/html";
         newUrl = "errors/404.html";
 
