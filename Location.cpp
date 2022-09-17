@@ -46,12 +46,20 @@ void Location::setLocationBinPath(const std::string& str) {
 	_locationBinPath = str;
 };
 
-void Location::setLocationPathCgi(const bool& cgi) {
+void Location::setIsCgi(const bool& cgi) {
+	_cgiInLocation = cgi;
+};
+
+void Location::setLocationPathCgi(const std::string& cgi) {
 	_locationPathCgi = cgi;
 };
 
-const bool& Location::getLocationPathCgi(void) {
+const std::string& Location::getLocationPathCgi(void) {
 	return(_locationPathCgi);
+};
+
+const bool& Location::getCgiInLocation(void) {
+	return(_cgiInLocation);
 };
 
 void Location::setLocationError(const int &code, 
@@ -61,4 +69,8 @@ void Location::setLocationError(const int &code,
 };
 void Location::setLocationMethod(const std::string& str) {
 	_locationMethod = str;
+};
+
+const bool& Location::getLocationRedirection(void) {
+	return _locationRedirection;	
 };

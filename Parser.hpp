@@ -25,13 +25,66 @@
 
 #define PORT 8080
 
-struct ConfigData {
+// enum serverTokens {
+// 	Host,
+// 	Port,
+// 	Server_name,
+// 	Autoindex,
+// 	Index,
+// 	Root,
+// 	Upload_path,
+// 	Client_max_body_size,
+// 	Error_page,
+// 	Methods,
+// 	Redirection // ???
+// 	};
+
+// enum locationTokens {
+// 	Location_name,
+// 	Root,
+// 	Autoindex, 
+// 	Index, 
+// 	Upload_path,
+// 	Redirection,
+// 	Error_page,
+// 	Bin_path_py,
+// 	Path_cgi, 
+// 	Methods 
+// 	};
+
+// enum configTokens {
+// 	"server",  
+// 	"listen", 
+// 	 "server_name",  \
+// 	 "autoindex",
+// 	 "index", 
+// 	 "root", 
+// 	 "upload_path", 
+// 	 "client_max_body_size", 
+// 	 "error_page", 
+// 	"methods", 
+// 	"location", 
+// 	"redirection", 
+// 	"path_cgi",
+// 	"bin_path_py", 
+// 	";", 
+// 	"{", 
+// 	"}" 
+// 	};
+
+
+struct ConfigTokens {
 		std::vector<std::string>			serverData;
 		std::vector<std::string>			locationData;
 		std::map<std::string, int>			serverTokens;
-		std::map<std::string, std::string>	errorsMap;
+		std::map<std::string, std::string>	errorMap;
 		std::vector<std::string>			errorPage;
 		std::vector<std::string>			autoindexPage;
+
+	ConfigTokens();
+	ConfigTokens(int key);
+	~ConfigTokens();
+		
 	};
 
 class FtParser {
@@ -40,6 +93,7 @@ class FtParser {
 		FtParser(const char* config);
 		virtual ~FtParser();
 		void parse(std::string argv);
+		std::vector<ServerPairs>& getServers();
     
     private:
 
@@ -51,45 +105,52 @@ class FtParser {
         std::vector<std::string> checkBraces(std::string buf);
         void bracesCounter(std::vector<std::string> res);
         void checkTokens(std::vector<std::string> res);
-        void findEndBrace(std::vector<std::string> &config, std::vector<std::string>::iterator& it);
+        std::vector<std::string>::iterator findEndBrace(std::vector<std::string> &config, 
+				std::vector<std::string>::iterator it);
 
-		void serverPairsInit(size_t index, std::vector<std::string> file, 
-			std::vector<std::string>::iterator& start, std::vector<std::string>::iterator& end);
+		void serverPairsInit(size_t index, std::vector<std::string> config, 
+				std::vector<std::string>::iterator start, std::vector<std::string>::iterator end);
 		
-		void chooseTokenInConfig(std::string str, std::string token);
+		void chooseTokenInConfig(std::string str, std::string token, size_t index);
 		std::vector<std::string> splitLineOfConfig(std::string token, std::string str);
-		void findListen(std::string str, std::string token);
+		void findListen(std::string str, std::string token, size_t index);
 		std::vector<std::string> splitListen(std::string str);
-		void findServerName(std::string str, std::string token);
-		void findAutoIndex(std::string str, std::string token);
-		void findIndex(std::string str, std::string token);
-		void findRoot(std::string str, std::string token);
-		void findUpload(std::string str, std::string token);
-		void findBodySize(std::string str, std::string token);
-		void findError(std::string str, std::string token);
-		void findMethod(std::string str, std::string token);
+		void findServerName(std::string str, std::string token, size_t index);
+		void findAutoIndex(std::string str, std::string token, size_t index);
+		void findIndex(std::string str, std::string token, size_t index);
+		void findRoot(std::string str, std::string token, size_t index);
+		void findUpload(std::string str, std::string token, size_t index);
+		void findBodySize(std::string str, std::string token, size_t index);
+		void findError(std::string str, std::string token, size_t index);
+		void findMethod(std::string str, std::string token, size_t index);
 
-		void chooseTokenInLocation(std::string str, std::string token);
-		void locationInit(std::string& str, std::string token, std::vector<std::string>& config, 
-			std::vector<std::string>::iterator& start);
-		void findLocationName(std::string str, std::string token);
-		void findLocationAutoIndex(std::string str, std::string token);
-		void findLocationIndex(std::string str, std::string token);
-		void findLocationRoot(std::string str, std::string token);
-		void findLocationUpload(std::string str, std::string token);
-		void findLocationRedirection(std::string str, std::string token);
-		void findLocationError(std::string str, std::string token);
-		void findLocationBinPath(std::string str, std::string token);
-		// void findLocationPathCgi(std::string str, std::string token);
-		void findLocationMethod(std::string str, std::string token);
+		void chooseTokenInLocation(std::string token, std::string str, Location& location);
+		
+		std::vector<std::string>::iterator locationInit(size_t index, std::vector<std::string>& config, 
+	std::vector<std::string>::iterator start, std::vector<std::string>::iterator end);
+
+		void findLocationName(std::string str, std::string token, Location& location);
+		void findLocationAutoIndex(std::string str, std::string token, Location& location);
+		void findLocationIndex(std::string str, std::string token, Location& location);
+		void findLocationRoot(std::string str, std::string token, Location& location);
+		void findLocationUpload(std::string str, std::string token, Location& location);
+		void findLocationRedirection(std::string str, std::string token, Location& location);
+		void findLocationError(std::string str, std::string token, Location& location);
+		void findLocationBinPath(std::string str, std::string token, Location& location);
+		// void findLocationPathCgi(std::string str, std::string token, Location& location);
+		void findLocationMethod(std::string str, std::string token, Location& location);
+
+		void checkInfo(void);
 		
 
 
 
-        std::vector<std::string>			_serverTools;
-		std::vector<std::string>			_locationTools;
-        std::vector<std::string>            _configTokens;
+        // std::vector<std::string>			_serverTools;
+		// std::vector<std::string>			_locationTools;
+        // std::vector<std::string>            _configTokens;
 		// std::map<std::string, int>			_configTokens;
+		ConfigTokens			_configTokens;//  ft::ValidConfigKeys _validConfigParams;
+
 
 // 		FtParser::FtParser(const char *argv) : _config(argv) {
 

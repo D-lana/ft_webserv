@@ -15,23 +15,6 @@
 
 #include <vector>
 #include <iostream>
-// #include <map>
-// #include <types.h>
-
-// class Location : public ALocation {
-// class Location {
-
-//     private:
-
-//         std::string _url;
-// 		// std::string _binPathPy;
-//         // std::string _binPathSh;
-// //		std::string _uploadPath;
-//         bool _folder;
-//         bool _redirect;
-//         bool _cgi;
-//         int _returnCode;
-//         std::map<int, std::string> _error;
 
         class Location {
         
@@ -44,12 +27,13 @@
             std::string _locationUploadPath;
             bool        _locationRedirection;
             std::string _locationBinPath;
-            bool        _locationPathCgi;
+            std::string _locationPathCgi;
             int         _locationErrorCode;
             std::string _locationErrorDescription;
             std::string _locationMethod;
+            bool        _cgiInLocation;
 
-    public:
+        public:
             Location();
             virtual ~Location();
 
@@ -61,47 +45,16 @@
             void setLocationRedirection(const bool& redirection);
             // void setLocationRedirectionCode(const bool& code);
             void setLocationBinPath(const std::string& str);
-            void setLocationPathCgi(const bool& cgi);
+            void setIsCgi(const bool& cgi);
+            void setLocationPathCgi(const std::string&);
             void setLocationError(const int &code, const std::string &description);
             void setLocationMethod(const std::string& str);
 
-            const bool& getLocationPathCgi(void);
-        };
+            const std::string& getLocationPathCgi(void);
+            const bool& getCgiInLocation(void);
+            const bool& getLocationRedirection(void);
 
+};
 
-
-
-
-	// public:
-
-    //     FtLocation();
-    //     // FtLocation &operator=(const FtLocation &other);
-    //     virtual ~FtLocation();
-
-	// 	void setUrl(const std::string &url);
-    //     const std::string &getUrl() const;
-
-		// void setBinPathPy(const std::string &path);
-		// const std::string &getBinPathPy() const;
-
-        // void setBinPathSh(const std::string &path);
-        // const std::string &getBinPathSh() const;
-
-//		void setUploadPath(const std::string &path);
-//		const std::string &getUploadPath() const;
-
-//         void setFolder(const bool &status);
-//         const bool &getCheckFolder() const;
-
-//         void seRedirect(const bool &status);
-//         const bool &getCheckRedirect() const;
-
-//         void setCgi(const bool &status);
-//         const bool &getCheckCgi() const;
-
-//         void setReturnCode(const int &redirectionCode);
-//         const int &getReturnCode() const;
-
-// };
 
 #endif

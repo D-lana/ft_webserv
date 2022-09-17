@@ -13,7 +13,7 @@
 
 SRCS		=	main.cpp Parser.cpp Processor.cpp Request.cpp \
 				Response.cpp Server.cpp ServerPairs.cpp \
-				Location.cpp
+				Location.cpp ConfigTokens.cpp
 INC			=	Parser.hpp Core.hpp Processor.hpp \
 				Request.hpp Response.hpp Server.hpp \
 				ServerPairs.hpp Location.hpp
@@ -25,7 +25,7 @@ NAME		=	webserv
 CC			=	g++
 
 RM				= rm -Rf
-FLAGS			= -Wall -Wextra -Werror -std=c++98
+FLAGS			= -Wall -Wextra -Werror -std=c++98 -fsanitize=address
 
 all:			$(NAME)
 

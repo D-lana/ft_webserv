@@ -71,10 +71,6 @@ std::vector<Location>& ServerPairs::getLocations() {
 	return _locations;
 };
 
-in_addr_t&  ServerPairs::getHost() {
-	return _host;
-}
-
-std::string& ServerPairs::getServName() {
+const std::string& ServerPairs::getServName() {
 	return _servName;
 };

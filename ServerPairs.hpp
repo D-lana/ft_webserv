@@ -21,17 +21,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <iostream>
-// #include "Parser.hpp"
  #include "Location.hpp"
-
-// struct ConfigData { // struct ValidConfigKeys
-// 		std::vector<std::string>			serverData;
-// 		std::vector<std::string>			locationData;
-// 		std::map<std::string, int>			serverTokens;
-// 		std::map<std::string, std::string>	errorsMap;
-// 		std::vector<std::string>			errorPage;
-// 		std::vector<std::string>			autoindexPage;
-// 	};
 
 class ServerPairs {
 
@@ -48,7 +38,6 @@ class ServerPairs {
         int _errorCode;
         std::string _errorDescription;
         std::string _method;
-        // ConfigData* tokens;
         std::vector<Location> _locations;
 
 
@@ -59,13 +48,10 @@ class ServerPairs {
         virtual ~ServerPairs();
 
         void setPort(const int &port);
-        const u_short &getPort() const;
 
         void setHost(const std::string &host);
-        const in_addr_t &getHost() const;
 
         void setServName(const std::string &serverName);
-        // const std::string &getServName() const;
 
        void setAutoIndex(const bool &autoIndex);
 //        const bool &getAutoIndex() const;
@@ -77,14 +63,15 @@ class ServerPairs {
         void setUpload(const std::string &path);
 
         void setMaxBodySize(const int &maxBodySize);
-        // const int &getMaxBodySize() const;
 
         void setError(const int &code, const std::string &description);
         void setMethod(const std::string &method);
 
         std::vector<Location> &getLocations();
-        in_addr_t &getHost();
-        std::string &getServName();
+        const u_short &getPort() const;
+        const std::string &getRoot();
+        const std::string &getServName();
+        const in_addr_t &getHost() const;
 
     };
 
