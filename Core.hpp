@@ -44,6 +44,7 @@ class Core {
 	public:
 
 		Core(std::vector<Server *> vectorServers_) : vectorServers(vectorServers_) {
+			http = new Http();
 			end = vectorServers.end();
 			
 			FD_ZERO(&active_set);
@@ -115,7 +116,7 @@ class Core {
 		
 			lenRequest = read(fd, buf, BUFSIZE);
 			// std::cout << "buf |" << buf << "|" << std::endl;
-			std::string buffer(buf); // добавила obeedril
+			// std::string buffer(buf); // добавила obeedril
 			// std::cout << "buffer_core |" << buffer << "|" << std::endl;
 			
 			// http = new Http(fd, buffer); // добавила obeedril
@@ -127,7 +128,9 @@ class Core {
 			if (lenRequest > 0) {
 				std::cout << "\n------- HTTP from brauser -------\n\n";
 				printf("%s\n", buf);
-				http = new Http(fd, buffer); // добавила obeedril
+				std::string buffer(buf);
+				http->initRequest(fd, buffer);
+				//http = new Http(fd, buffer); // добавила obeedril
 				return (1);
 			}
 			else 
@@ -138,8 +141,8 @@ class Core {
 			std::cout << "\n------- writeToClient!!! -------\n\n";
 			//answer = request->getProcessor(); //char buffer[1000] = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello World!"; 
 			//size_t readsize = answer->getAnswer().length();
-			size_t readsize = http->getPartAnswer().length();
-			send(fd, http->getPartAnswer().c_str(), (int)readsize, 0);
+			size_t readsize = http->getPartAnswer(fd).length();
+			send(fd, http->getPartAnswer(fd).c_str(), (int)readsize, 0);
 			// send(fd, answer->getAnswer().c_str(), (int)readsize, 0);
 			return (0);
 		}

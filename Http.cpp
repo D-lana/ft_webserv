@@ -1,27 +1,40 @@
 #include "Http.hpp"
 
-Http::Http(int _fd, std::string& _buffer) {
+Http::Http() {
 
-    fd = _fd;
-   buffer = _buffer;
+//     fd = _fd;
+//    buffer = _buffer;
 
-    request = new Request(buffer);
+    // request = new Request(buffer);
 }
 
 Http::~Http() {
-    delete request;
+    // delete request;
 }
 
-Request *Http::getRequest() {
-    return (request);
+Request *Http::getRequest(int fd) {
+    std::map<int, Request*>::iterator it = requests.find(fd);
+    return (it->second);
 }
 
-std::string Http::getPartAnswer() {
+std::string Http::getPartAnswer(int fd) {
     std::string partAnswer;
-    Processor *proc = request->getProcessor();
+    Processor *proc = getRequest(fd)->getProcessor();
 
     partAnswer = proc->getAnswer();
     return (partAnswer);
 
+
+}
+
+void Http::initRequest(int _fd, std::string _buffer) {
+
+    std::map<int, Request*>::iterator it = requests.find(_fd);
+    if (it == requests.end()) {
+        Request *request = new Request(_buffer);
+        requests.insert (std::pair<int, Request*>(_fd, request));
+    } else {
+        it->second->setBuffer(_buffer);
+    }
 
 }
