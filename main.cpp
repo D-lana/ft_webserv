@@ -20,6 +20,6 @@ int main() {
 		std::cout << vectorServers.back() << "\n"; // проверка адреса ячейки
 	}
 
-	Core *main_core = new Core(vectorServers);
-	std::cout << main_core  << "\n"; // проверка адреса ячейки
+	Core main_core(vectorServers);
+	std::cout << &main_core  << "\n"; // проверка адреса ячейки
 }
