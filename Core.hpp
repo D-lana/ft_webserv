@@ -17,6 +17,7 @@
 #include "Server.hpp"
 #include "Request.hpp"
 #include "Response.hpp"
+#include "Http.hpp"
 
 #define BUFSIZE 10024
 
@@ -24,8 +25,9 @@
 
 class Core {
 	private:
-		Request *request;
-		Processor *answer;
+		Http *http;
+		// Request *request; // убрать?
+		// Processor *answer;
 
 		struct sockaddr_in client;
 		//char buf[BUFSIZE];
@@ -144,17 +146,34 @@ class Core {
 			
 			
 			long	lenRequest;
-			char buf[BUFSIZE];
 
-			lenRequest = recv(fd, buf, BUFSIZE, 0);
+			//char buf[BUFSIZE];
+
+			//lenRequest = recv(fd, buf, BUFSIZE, 0);
 			//request = new Request(buf);
 			// if (strstr(buf, "\n")) {
 			// 	std::cout << "\n------- END!!! -------\n\n";
 			// }
+
+		
+			lenRequest = read(fd, buf, BUFSIZE);
+			// std::cout << "buf |" << buf << "|" << std::endl;
+			std::string buffer(buf); // добавила obeedril
+			// std::cout << "buffer_core |" << buffer << "|" << std::endl;
+			
+			// http = new Http(fd, buffer); // добавила obeedril
+
+			// request = new Request(std::string(buf));
+			if (strstr(buf, "\n")) {
+				std::cout << "\n------- END!!! -------\n\n";
+			}
 			if (lenRequest > 0) {
 				std::cout << "\x1b[1;31m" << "\n> HTTP from brauser___fd: " << fd << "\n\n" << "\x1b[0m";
 				printf("%s\n", buf);
-				std::cout << "\x1b[1;31m" << "> HTTP from brauser END___fd: " << fd << "\n" << "\x1b[0m";
+
+				//std::cout << "\x1b[1;31m" << "> HTTP from brauser END___fd: " << fd << "\n" << "\x1b[0m";
+
+				http = new Http(fd, buffer); // добавила obeedril
 				return (1);
 			}
 			else 
@@ -192,25 +211,33 @@ class Core {
 		}
 
 		int writeToClient(int fd) {
+
 			//answer = request->getProcessor(); //
 			//char buffer[1000] = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello World!"; 
 
 			//size_t readsize = answer->getAnswer().length();
 			//send(fd, answer->getAnswer().c_str(), (int)readsize, 0);
-			char buffer[1000] = "HTTP/1.1 200 OK\nContent-Type: text/html\n\n";; // Content-Type - тип запрашиваемого файла
-			size_t readsize = strlen(buffer);
-			send(fd, buffer, (int)readsize, 0); // отправили заголовок
-			char filename[21] = "resources/post.html"; 
-				FILE *file = fopen(filename, "r"); // открываем файл для отправки
-				if (file == NULL) {
-					exit(-2);
-				}
-				while ((readsize = fread(buffer, sizeof(char), 1000, file)) != 0) {
-					send(fd, buffer, (int)readsize, 0);
-				} // читаем и отправляем файл по чуть-чуть
-				fclose(file);
-			send(fd, buffer, strlen(buffer), 0);
-			std::cout << "\x1b[1;92m" << "\n> Send Message To Browser!___fd: " << fd << "\n\n" << "\x1b[0m";
+			//char buffer[1000] = "HTTP/1.1 200 OK\nContent-Type: text/html\n\n";; // Content-Type - тип запрашиваемого файла
+			//size_t readsize = strlen(buffer);
+			//send(fd, buffer, (int)readsize, 0); // отправили заголовок
+			//char filename[21] = "resources/post.html"; 
+				//FILE *file = fopen(filename, "r"); // открываем файл для отправки
+				//if (file == NULL) {
+				//	exit(-2);
+				//}
+				//while ((readsize = fread(buffer, sizeof(char), 1000, file)) != 0) {
+				//	send(fd, buffer, (int)readsize, 0);
+				//} // читаем и отправляем файл по чуть-чуть
+			//	fclose(file);
+			//send(fd, buffer, strlen(buffer), 0);
+			//std::cout << "\x1b[1;92m" << "\n> Send Message To Browser!___fd: " << fd << "\n\n" << "\x1b[0m";
+
+			std::cout << "\n------- writeToClient!!! -------\n\n";
+			//answer = request->getProcessor(); //char buffer[1000] = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello World!"; 
+			//size_t readsize = answer->getAnswer().length();
+			size_t readsize = http->getPartAnswer().length();
+			send(fd, http->getPartAnswer().c_str(), (int)readsize, 0);
+			// send(fd, answer->getAnswer().c_str(), (int)readsize, 0);
 			return (0);
 		}
 

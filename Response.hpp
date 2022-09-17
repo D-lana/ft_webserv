@@ -9,6 +9,8 @@
 # include <map>
 # include <vector>
 
+#define READ_BUFSIZE 1024
+
 
 class Response {
     private:
@@ -20,6 +22,8 @@ class Response {
         std::string contentType;
         std::string contentLength;
         std::string url;
+
+        int streamPos = 0;
 
         std::stringstream response; // сюда будет записываться ответ клиенту
         std::stringstream response_body; // тело ответа
