@@ -39,15 +39,32 @@ std::string Response::makeAnswer(bool _fileFound, std::string newUrl) {
 
          response << protocol << " 200 OK\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
          
-         response.write(contents.data(), contents.size());
+         answer = response.str();
+
+        stream.seekg(streamPos);
+
+        // response.write(contents.data(), READ_BUFSIZE);
+
+        response.write(contents.data(), contents.size());
+
+
+
+
 
         // std::cout << "response_body " << response_body.str()  << std::endl;
 
         answer = response.str();
+        // std::cout << "streamPos " << streamPos  << std::endl;
+        // streamPos += READ_BUFSIZE;
+
+        // if (stream.end()) {
+
+        // }
         // _fileFound = false;
         // std::cout << "response" << response.str()  << std::endl;
 
     } else {
+        
         contentType = "text/html";
         newUrl = "errors/404.html";
 
