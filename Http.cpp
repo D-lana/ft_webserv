@@ -8,6 +8,10 @@ Http::Http() {
     // request = new Request(buffer);
 }
 
+Http::Http() {
+
+}
+
 Http::~Http() {
     // delete request;
 }
