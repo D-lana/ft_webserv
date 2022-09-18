@@ -2,14 +2,6 @@
 
 Http::Http() {
 
-//     fd = _fd;
-//    buffer = _buffer;
-
-    // request = new Request(buffer);
-}
-
-Http::Http() {
-
 }
 
 Http::~Http() {

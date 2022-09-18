@@ -42,14 +42,14 @@ Request::Request(std::string& _buffer){
         boundary = preBoundary.substr(preBoundary.rfind('-') + 1);
         std::cout << "boundary |" << boundary << "|" << std::endl;
 
-        std::size_t pos = 0;
-        while (buffer.find(boundary + "--")){
-            if ((pos = buffer.find("filename="+10))) {
-                buffer.erase(0, pos+10);
-                filename = buffer.substr(0, buffer.find("\""));
-                std::cout << "filename |" << filename << "|" << std::endl;
-            }
-        }
+        //std::size_t pos = 0;
+        // while (buffer.find(boundary + "--")){
+        //     if ((pos = buffer.find("filename="+10))) {
+        //         buffer.erase(0, pos+10);
+        //         filename = buffer.substr(0, buffer.find("\""));
+        //         std::cout << "filename |" << filename << "|" << std::endl;
+        //     }
+        // }
 
         //proc1->checkFile();
     }

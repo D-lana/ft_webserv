@@ -15,11 +15,10 @@ int main() {
 	std::vector<Server*> vectorServers;
 	for (int i = 0; i < count_server; i++) {
 		Server *one_serv = new Server(ports[i]);
-		std::cout << one_serv << "\n"; // проверка адреса ячейки
+		//std::cout << one_serv << "\n"; // проверка адреса ячейки
 		vectorServers.push_back(one_serv);
-		std::cout << vectorServers.back() << "\n"; // проверка адреса ячейки
+		//std::cout << vectorServers.back() << "\n"; // проверка адреса ячейки
 	}
-
 	Core main_core(vectorServers);
-	std::cout << &main_core  << "\n"; // проверка адреса ячейки
+	//std::cout << &main_core  << "\n"; // проверка адреса ячейки
 }
