@@ -12,6 +12,7 @@ class Request {
 
 private:
     std::string method;
+    std::string buffer;
     std::string url;
     std::string protocol;
     std::map<std::string, std::string> headers;
@@ -19,12 +20,17 @@ private:
     bool parsLine;
     bool parsHeaders;
     std::string boundary;
+    std::string filename;
+    std::map<std::string, std::string> bodyData;
 
 public:
     Request(std::string& _buffer);
     ~Request();
-    std::map<std::string, std::string> makeHeaders(std::string& str);
+    std::map<std::string, std::string> makeHeaders();
+    void parsFirstLine();
     Processor *getProcessor();
+    void setBuffer(std::string& _buffer);
+
 };
 
 #endif

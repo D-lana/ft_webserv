@@ -3,24 +3,30 @@
 
 # include "Request.hpp"
 # include <string>
+# include <map>
 
 class Http {
 
     private:
-        int fd;
-        std::string buffer;
-        Request *request;
+        // int fd = 0;
+        // std::string buffer;
+        // Request *request;
+
+        std::map<int, Request*> requests;
         // Processor *answer;
 
 
 
     public:
-        Http(int _fd, std::string& _buffer);
+
         Http();
+        // Http(int _fd, std::string& _buffer);
+
         ~Http();
 
-        Request* getRequest();
-        std::string getPartAnswer();
+        Request* getRequest(int fd);
+        std::string getPartAnswer(int fd);
+        void initRequest(int _fd, std::string _buffer);
 
 
 };
