@@ -8,6 +8,10 @@ Http::Http(int _fd, std::string& _buffer) {
     request = new Request(buffer);
 }
 
+Http::Http() {
+
+}
+
 Http::~Http() {
     delete request;
 }

@@ -16,6 +16,7 @@ class Http {
 
     public:
         Http(int _fd, std::string& _buffer);
+        Http();
         ~Http();
 
         Request* getRequest();
