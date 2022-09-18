@@ -20,6 +20,8 @@ private:
     bool parsLine;
     bool parsHeaders;
     std::string boundary;
+    std::string filename;
+    std::map<std::string, std::string> bodyData;
 
 public:
     Request(std::string& _buffer);
@@ -28,6 +30,7 @@ public:
     void parsFirstLine();
     Processor *getProcessor();
     void setBuffer(std::string& _buffer);
+
 };
 
 #endif

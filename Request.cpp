@@ -19,6 +19,13 @@ Request::Request(std::string& _buffer){
     // std::cout << "buffer " <<"|" << buffer << "|" << std::endl;
     std::cout << "url " << "|" << url << "|" << std::endl;
 
+    std::cout << "----------Print map-----------" << std::endl;
+    std::map<std::string, std::string>::iterator it = headers.begin();
+    for (int i = 0; it != headers.end(); it++, i++) {
+        std::cout << "|" << it->first << "|" << it->second << "|"<< std::endl;
+    }
+    std::cout << "---------End printing--------" << std::endl;
+
     proc1 = new Processor(url);
     if (!method.compare("GET")) {
         proc1->checkFile();
@@ -31,20 +38,28 @@ Request::Request(std::string& _buffer){
         }
         std::string preBoundary;
         preBoundary = it->second.substr(it->second.find("boundary=") + 9);
-        std::cout << "preBoundary |" << preBoundary << "|" << std::endl;
+        // std::cout << "preBoundary |" << preBoundary << "|" << std::endl;
         boundary = preBoundary.substr(preBoundary.rfind('-') + 1);
         std::cout << "boundary |" << boundary << "|" << std::endl;
 
+        std::size_t pos = 0;
+        while (buffer.find(boundary + "--")){
+            if ((pos = buffer.find("filename="+10))) {
+                buffer.erase(0, pos+10);
+                filename = buffer.substr(0, buffer.find("\""));
+                std::cout << "filename |" << filename << "|" << std::endl;
+            }
+        }
 
         //proc1->checkFile();
     }
     
-    std::cout << "----------Print map-----------" << std::endl;
-    std::map<std::string, std::string>::iterator it = headers.begin();
-    for (int i = 0; it != headers.end(); it++, i++) {
-        std::cout << "|" << it->first << "|" << it->second << "|"<< std::endl;
-    }
-    std::cout << "---------End printing--------" << std::endl;
+    // std::cout << "----------Print map-----------" << std::endl;
+    // std::map<std::string, std::string>::iterator it = headers.begin();
+    // for (int i = 0; it != headers.end(); it++, i++) {
+    //     std::cout << "|" << it->first << "|" << it->second << "|"<< std::endl;
+    // }
+    // std::cout << "---------End printing--------" << std::endl;
 }
 
     void Request::parsFirstLine() {

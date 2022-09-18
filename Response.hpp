@@ -22,6 +22,7 @@ class Response {
         std::string contentType;
         std::string contentLength;
         std::string url;
+    
 
         int streamPos = 0;
 
