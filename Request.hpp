@@ -23,7 +23,7 @@ private:
     std::string boundary;
     std::string endBoundary;
     std::string filename;
-    std::map<std::string, std::string> bodyData;
+    // std::map<std::string, std::string> bodyData;
 
 public:
     Request(std::string& _buffer);
@@ -33,6 +33,8 @@ public:
     Processor *getProcessor();
     void setBuffer(std::string& _buffer);
     void requestParsing();
+    void bodyParsing();
+    void bodyParsingOther();
 
 };
 

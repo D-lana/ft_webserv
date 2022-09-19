@@ -64,32 +64,8 @@ Request::Request(std::string& _buffer){
         }
     }
 
-    void Request::requestParsing() {
+    void Request::bodyParsing(){
 
-        if (!parsLine) {
-            parsFirstLine();
-            parsLine = true;
-        }
-        if (!parsHeaders) {
-            makeHeaders();
-            parsHeaders = true;
-        }
-        // std::cout << "----------Print map-----------" << std::endl;
-        // std::map<std::string, std::string>::iterator it = headers.begin();
-        // for (int i = 0; it != headers.end(); it++, i++) {
-        //     std::cout << "|" << it->first << "|" << it->second << "|"<< std::endl;
-        // }
-        // std::cout << "---------End printing--------" << std::endl;
-        
-        proc1 = new Processor(url);
-        if (!method.compare("GET")) {
-            proc1->checkFile();
-            parsLine = false;
-            parsHeaders = false;
-        } else if (!method.compare("POST")) {
-        // std::cout << "buffer body |" << buffer << "|" << std::endl;
-        
-        
         std::map<std::string, std::string>::iterator it = headers.find("Content-Type");
         if (it == headers.end()) {
             std::cout << "ContentType not found" << std::endl; // убрать
@@ -115,6 +91,58 @@ Request::Request(std::string& _buffer){
             fout.close();
             buffer.erase(0, posEof + boundary.length());
         }
+
+    }
+
+    void Request::bodyParsingOther(){
+
+        std::map<std::string, std::string>::iterator it = headers.find("Content-Type");
+        if (it == headers.end()) {
+            std::cout << "ContentType not found" << std::endl; // убрать
+        }
+        std::string preBoundary;
+        preBoundary = it->second.substr(it->second.find("boundary=") + 9);
+        boundary = preBoundary.substr(preBoundary.rfind('-') + 1);
+        endBoundary = boundary + "--";
+
+        // std::size_t posEndOfBody = buffer.find("\r\n");
+
+        std::ofstream fout;
+        fout.open("/tmp/tmpfile");
+        while (buffer.find(endBoundary) != std::string::npos){
+            fout << buffer;
+            buffer.erase(0, READ_BUFSIZE);
+        }
+        fout.close();
+
+    }
+
+    void Request::requestParsing() {
+
+        if (!parsLine) {
+            parsFirstLine();
+            parsLine = true;
+        }
+        if (!parsHeaders) {
+            makeHeaders();
+            parsHeaders = true;
+        }
+        // std::cout << "----------Print map-----------" << std::endl;
+        // std::map<std::string, std::string>::iterator it = headers.begin();
+        // for (int i = 0; it != headers.end(); it++, i++) {
+        //     std::cout << "|" << it->first << "|" << it->second << "|"<< std::endl;
+        // }
+        // std::cout << "---------End printing--------" << std::endl;
+        
+        proc1 = new Processor(url);
+        if (!method.compare("GET")) {
+            proc1->checkFile();
+            parsLine = false;
+            parsHeaders = false;
+        } else if (!method.compare("POST")) {
+        // std::cout << "buffer body |" << buffer << "|" << std::endl;
+            bodyParsing();
+            // bodyParsingOther();
     }
 }
 
