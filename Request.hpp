@@ -6,6 +6,7 @@
 # include <string>
 # include <map>
 # include <iostream>
+# include <fstream>
 # include <iterator>
 
 class Request {
@@ -20,16 +21,18 @@ private:
     bool parsLine;
     bool parsHeaders;
     std::string boundary;
+    std::string endBoundary;
     std::string filename;
     std::map<std::string, std::string> bodyData;
 
 public:
     Request(std::string& _buffer);
     ~Request();
-    std::map<std::string, std::string> makeHeaders();
+    void makeHeaders();
     void parsFirstLine();
     Processor *getProcessor();
     void setBuffer(std::string& _buffer);
+    void requestParsing();
 
 };
 

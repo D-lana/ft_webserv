@@ -9,8 +9,8 @@ Processor::Processor(std::string& _url) {
     answer = "";
 
 
-    std::cout << "Url " << url << std::endl;
-    std::cout << "newUrl " << newUrl << std::endl;
+    // std::cout << "Url " << url << std::endl;
+    // std::cout << "newUrl " << newUrl << std::endl;
 
 
 }

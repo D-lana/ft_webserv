@@ -6,7 +6,7 @@
      protocol = "HTTP/1.1";
      url = _url;
 
-     std::cout << "url response " << url << std::endl;
+    //  std::cout << "url response " << url << std::endl;
 
  }
 Response::~Response() {

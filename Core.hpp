@@ -22,7 +22,7 @@
 #include "Response.hpp"
 #include "Http.hpp"
 
-#define BUFSIZE 10000
+#define BUFSIZE 1000
 
 typedef struct {
 	int						new_sock;
@@ -142,7 +142,7 @@ class Core {
 			std::string buffer(buf); // добавила obeedril
 			if (lenRequest > 0) {
 				std::cout << "\x1b[1;31m" << "\n> HTTP from brauser___fd: " << fd << "\n\n" << "\x1b[0m";
-				printf("%s\n", buf);
+				//printf("%s\n", buf);
         std::cout << "\x1b[1;31m" << "> HTTP from brauser END___fd: " << fd << "\n" << "\x1b[0m";
 				std::string buffer(buf);
 				http->initRequest(fd, buffer);
