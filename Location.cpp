@@ -13,6 +13,18 @@
 #include "Location.hpp"
 
 Location::Location() {
+	_locationName.clear();
+    _locationAutoIndex = 0;;
+    _locationRoot.clear();
+    _locationIndex.clear();
+    _locationUploadPath.clear();
+    _locationRedirection = 0;
+    _locationBinPath.clear();
+    _locationPathCgi.clear();
+    _locationErrorCode = 0;
+    _locationErrorDescription.clear();
+    _locationMethod.clear();
+    _cgiInLocation = 0;
 	};
 
 Location::~Location() {
@@ -54,14 +66,6 @@ void Location::setLocationPathCgi(const std::string& cgi) {
 	_locationPathCgi = cgi;
 };
 
-const std::string& Location::getLocationPathCgi(void) {
-	return(_locationPathCgi);
-};
-
-const bool& Location::getCgiInLocation(void) {
-	return(_cgiInLocation);
-};
-
 void Location::setLocationError(const int &code, 
 		const std::string &description) {
 	_locationErrorDescription = description;
@@ -73,4 +77,32 @@ void Location::setLocationMethod(const std::string& str) {
 
 const bool& Location::getLocationRedirection(void) {
 	return _locationRedirection;	
+};
+
+const std::string& Location::getLocationName(void) {
+	return _locationName;
+};
+
+const std::string& Location::getLocationIndex() {
+	return _locationIndex;
+};
+
+const std::string& Location::getLocationRoot() {
+	return _locationRoot;
+};
+
+const std::string& Location::getLocationUpload() {
+	return _locationUploadPath;
+};
+
+const std::string& Location::getLocationPathCgi(void) {
+	return _locationPathCgi;
+};
+
+const bool& Location::getCgiInLocation(void) {
+	return _cgiInLocation;
+};
+
+const std::string& Location::getLocationBinPath(void) {
+	return _locationBinPath;
 };

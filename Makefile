@@ -12,10 +12,10 @@
 
 
 SRCS		=	main.cpp Parser.cpp Processor.cpp Request.cpp \
-				Response.cpp Server.cpp ServerPairs.cpp \
+				Response.cpp Http.cpp Server.cpp ServerPairs.cpp \
 				Location.cpp ConfigTokens.cpp
 INC			=	Parser.hpp Core.hpp Processor.hpp \
-				Request.hpp Response.hpp Server.hpp \
+				Request.hpp Http.hpp Response.hpp Server.hpp \
 				ServerPairs.hpp Location.hpp
 
 OBJS		=	$(SRCS:.cpp=.o)

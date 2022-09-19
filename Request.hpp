@@ -1,4 +1,3 @@
-
 #ifndef REQUESR_HPP
 # define REQUESR_HPP
 
@@ -13,16 +12,25 @@ class Request {
 
 private:
     std::string method;
+    std::string buffer;
     std::string url;
     std::string protocol;
     std::map<std::string, std::string> headers;
     Processor *proc1;
+    bool parsLine;
+    bool parsHeaders;
+    std::string boundary;
+    std::string filename;
+    std::map<std::string, std::string> bodyData;
 
 public:
-    Request(const char buffer[]);
+    Request(std::string& _buffer);
     ~Request();
-    std::map<std::string, std::string> makeHeaders(std::string& str);
+    std::map<std::string, std::string> makeHeaders();
+    void parsFirstLine();
     Processor *getProcessor();
+    void setBuffer(std::string& _buffer);
+
 };
 
 #endif

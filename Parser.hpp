@@ -111,7 +111,7 @@ class FtParser {
 		void serverPairsInit(size_t index, std::vector<std::string> config, 
 				std::vector<std::string>::iterator start, std::vector<std::string>::iterator end);
 		
-		void chooseTokenInConfig(std::string str, std::string token, size_t index);
+		void chooseTokenInConfig(std::string str, std::string token, size_t index, size_t num);
 		std::vector<std::string> splitLineOfConfig(std::string token, std::string str);
 		void findListen(std::string str, std::string token, size_t index);
 		std::vector<std::string> splitListen(std::string str);
@@ -124,7 +124,7 @@ class FtParser {
 		void findError(std::string str, std::string token, size_t index);
 		void findMethod(std::string str, std::string token, size_t index);
 
-		void chooseTokenInLocation(std::string token, std::string str, Location& location);
+		void chooseTokenInLocation(std::string token, std::string str, Location& location, size_t num);
 		
 		std::vector<std::string>::iterator locationInit(size_t index, std::vector<std::string>& config, 
 	std::vector<std::string>::iterator start, std::vector<std::string>::iterator end);

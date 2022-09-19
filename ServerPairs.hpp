@@ -67,11 +67,14 @@ class ServerPairs {
         void setError(const int &code, const std::string &description);
         void setMethod(const std::string &method);
 
-        std::vector<Location> &getLocations();
-        const u_short &getPort() const;
-        const std::string &getRoot();
-        const std::string &getServName();
-        const in_addr_t &getHost() const;
+        std::vector<Location>& getLocations();
+        const u_short& getPort() const;
+        const std::string& getRoot();
+        const std::string& getIndex();
+        const std::string& getServName();
+        const in_addr_t& getHost() const;
+        const std::string& getUpload();
+        const int& getBodySize();
 
     };
 

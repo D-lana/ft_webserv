@@ -1,4 +1,3 @@
-
 #ifndef PROCESSOR_HPP
 # define PROCESSOR_HPP
 
@@ -7,6 +6,7 @@
 # include <string>
 # include <iostream>
 # include <cstring>
+# include <fstream>
 
 
 class Processor {
@@ -17,12 +17,14 @@ private:
     std::string url;
     std::string newUrl;
     std::string answer;
+    // Response *response;
 
 public:
-    Processor(std::string url);
+    Processor(std::string& url);
    ~Processor();
     // std::string checkFile();
     void checkFile();
+    void makeFile();
 
     std::string getAnswer();
 };

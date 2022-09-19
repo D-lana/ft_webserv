@@ -51,8 +51,14 @@
             void setLocationMethod(const std::string& str);
 
             const std::string& getLocationPathCgi(void);
+            const std::string& getLocationName(void);
             const bool& getCgiInLocation(void);
             const bool& getLocationRedirection(void);
+            const std::string& getLocationIndex();
+            const std::string& getLocationRoot();
+            const std::string& getLocationUpload();
+            const std::string& getLocationBinPath(void);
+            
 
 };
 

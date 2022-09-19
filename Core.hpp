@@ -13,143 +13,193 @@
 #include <fcntl.h>
 #include <poll.h>
 #include <vector>
+#include <map>
 
+#include <algorithm>
+
+#include "Server.hpp"
 #include "Request.hpp"
 #include "Response.hpp"
-#include "Server.hpp"
+#include "Http.hpp"
 
-#define PORT 8080
-#define BUFSIZE 1024
-#define ADDRESS INADDR_ANY
+#define BUFSIZE 10000
 
-//favicon.ico - запрос на иконку
+typedef struct {
+	int						new_sock;
+	struct sockaddr_in		client_addr;
+	socklen_t				size_client_addr;
+
+} Client;
 
 class Core {
 	private:
-		int sock_any;
-		Request *request;
-		Processor *answer;
+		Http					*http;
+		// добавить переменную на keep_alive/keep_stop - обрубить соединение клиента или нет
+
+		fd_set					active_read, read_set;
+		fd_set					active_write, write_set;
+		int						maxFd;
+
+		std::map<int, Client>	vectorClient;
 		
-		int new_sock;
-		fd_set active_set, read_set, write_set;
-		int maxFd = 0;
+		int						new_sock;
+		struct sockaddr_in		client_addr;
+		socklen_t				size_client_addr;
+
+		std::vector<Server *>	vectorServers;
+		int						count_servers;
+
+	public:
+
+		Core(std::vector<Server *> vectorServers_) : vectorServers(vectorServers_) {
+			http = new Http(); // добавила obeedril
+			maxFd = 0;
+			count_servers = vectorServers.size();
+
+			FD_ZERO(&active_read);
+			FD_ZERO(&active_write);
+			std::cout << count_servers  << "\n";
+
+			for (int i = 0; i < count_servers; ++i) {
+				FD_SET(vectorServers[i]->getFdSocket(), &active_read);
+				std::cout << "\x1b[1;92m" << "> Listen Socked: " << vectorServers[i]->getFdSocket() << "\n" << "\x1b[0m";
+				if (vectorServers[i]->getFdSocket()  >= maxFd) {
+					maxFd = vectorServers[i]->getFdSocket() + 1;
+				}
+			}
+
+			while(1) {
+				read_set = active_read;
+				write_set = active_write;
+				std::cout << "\x1b[1;31m" << "> Select block " << "\n" << "\x1b[0m";
+				if (select(maxFd, &read_set, &write_set, 0, 0) < 0) {
+					error("Error: Select socket failed");
+				}
+				for (int i = 0; i < maxFd; i++) {
+					std::cout << "Found active socket......." << i << "\n";
+					if (FD_ISSET(i, &read_set)) {
+						std::cout << "\x1b[1;96m" << "\n> Found Read socket___fd: " << i << "\n" << "\x1b[0m";
+						std::cout << getFDListenSocket(i) << "\n";
+						int num_serv = getFDListenSocket(i);
+						if (num_serv != -1) {
+							size_client_addr = sizeof(client_addr);
+							new_sock = accept(vectorServers[num_serv]->getFdSocket(), (struct sockaddr *)&client_addr, &size_client_addr);
+							if (new_sock < 0) {
+								error("Error: Accept socket failed");
+							}
+							// Client tmp;
+							// tmp.new_sock = new_sock;
+							// tmp.client_addr = client_addr;
+							// tmp.size_client_addr = size_client_addr;
+							// vectorClient.insert(std::pair<int, Client>(new_sock, tmp));
+							std::cout << "\x1b[1;92m" << "> Create NEW Socket to Read: " << new_sock << "\n" << "\x1b[0m";
+							FD_SET(new_sock, &active_read);
+							if (new_sock >= maxFd) {
+								maxFd = new_sock + 1;
+							}
+						}
+					}
+				}
+				for (int i = 0; i < maxFd; i++) {
+					if (FD_ISSET(i, &read_set)) {
+							if (readFromClient(i) < 0) {
+								std::cout << "End of file, read_sock: " << i << "\n";
+								//close (i);
+								FD_CLR(i, &read_set);
+								FD_CLR(i, &active_write);
+							}
+							else {
+								FD_SET(i, &active_write);
+							}
+					}
+					if (FD_ISSET(i, &write_set)) {
+						std::cout << "\x1b[1;96m" << "\n> Found Write socket___fd: " << i << "\n\n" << "\x1b[0m";
+						writeToClient(i);
+						//close (i);
+						FD_CLR(i, &active_write);
+					}
+				}
+				std::cout << "\x1b[1;33m" << "> End of Found Circle: " << new_sock << "\n" << "\x1b[0m";
+			}
+			std::cout << "Exit\n";
+		}
+
+		~Core() {
+			
+		}
 
 		int error (const char* err_type) {
 			std::cerr << err_type << std::endl;
 			exit(EXIT_FAILURE);
 		}
 
-		// struct sockaddr_in addr;
-		socklen_t size;
-		char buf[BUFSIZE];
-		struct sockaddr_in client;
+		int readFromClient(int fd) { //// Сюда приходят данные от браузера GET POST и тд
+			long	lenRequest;
+			char	buf[BUFSIZE];
 
-		std::vector<Server>::iterator it;
-		std::vector<Server>::iterator end;
-
-	public:
-	Core (std::vector<Server> vectorServers) {
-		FD_ZERO(&active_set);
-		it = vectorServers.begin();
-		end = vectorServers.end();
-		while (it < end) {
-			FD_SET(it->getFdSocket(), &active_set);
-			it++;
-		}
-	}
-
-	int runServer() {
-		while(1) { // Проверим не появились ли данные в каком-либо сокете
-			read_set = active_set;
-			if (select(maxFd, &read_set, NULL, 0, 0) < 0) {
-				error("Error: Select socket failed");
+			lenRequest = read(fd, buf, BUFSIZE);
+			
+			std::string buffer(buf); // добавила obeedril
+			if (lenRequest > 0) {
+				std::cout << "\x1b[1;31m" << "\n> HTTP from brauser___fd: " << fd << "\n\n" << "\x1b[0m";
+				printf("%s\n", buf);
+        std::cout << "\x1b[1;31m" << "> HTTP from brauser END___fd: " << fd << "\n" << "\x1b[0m";
+				std::string buffer(buf);
+				http->initRequest(fd, buffer);
+				return (1);
 			}
-			// данные появились, проверяем в каком фд есть запрос на чтение
-			for (int fd = 0; fd < maxFd; fd++) {
-				//std::cout << "New connection";
-				if (FD_ISSET(fd, &read_set)) {
-					sock_any = getAllSockets(fd);
-					if (sock_any != 0) {
-						// пришел запрос на новое соединение
-						std::cout << "NEW SOCK - " << fd << "\n";
-						size = sizeof(client);
-						new_sock = accept(sock_any, (struct sockaddr *)&client, &size);
-						if (new_sock < 0) {
-							error("Error: Accept socket failed");
-						}
-						std::cout << "Server connect from host\n";
-						//fcntl(new_sock, F_SETFL, O_NONBLOCK); /// НЕБЛОКИРУЮЩИЙ СОКЕТ 
-						FD_SET(new_sock, &active_set);
-						if (new_sock >= maxFd) {
-							maxFd = new_sock + 1;
-						}
-						FD_SET(new_sock, &active_set);
-						//fcntl(new_sock, F_SETFL, O_NONBLOCK); /// НЕБЛОКИРУЮЩИЙ СОКЕТ 
-					}
-					else {
-						// пришли данные в существующем соединении
-						if (readFromClient(fd, buf) < 0) {
-							// ошибка или конец данных
-							std::cout << "End of file\n";
-							close (fd);
-							//error("Error: readFromClient failed");
-							FD_CLR(fd, &active_set);
-						}
-						else if (strstr(buf, "stop")) {
-							std::cout << "Stop\n";
-							close (fd);
-							FD_CLR(fd, &active_set);
-						}
-						else {
-							writeToClient(fd);
-						}
-					}
+			else 
+				return (-1);
+		}
+
+		int writeToClient(int fd) {
+
+			//answer = request->getProcessor(); //
+			//char buffer[1000] = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello World!"; 
+
+
+			size_t readsize = http->getPartAnswer(fd).length();
+			send(fd, http->getPartAnswer(fd).c_str(), (int)readsize, 0);
+      std::cout << "\x1b[1;92m" << "\n> Send Message To Client!___fd: " << fd << "\n\n" << "\x1b[0m";
+			// send(fd, answer->getAnswer().c_str(), (int)readsize, 0);
+      
+
+			//send(fd, answer->getAnswer().c_str(), (int)readsize, 0);
+			//char buffer[1000] = "HTTP/1.1 200 OK\nContent-Type: text/html\n\n";; // Content-Type - тип запрашиваемого файла
+			//size_t readsize = strlen(buffer);
+			//send(fd, buffer, (int)readsize, 0); // отправили заголовок
+			//char filename[21] = "resources/post.html"; 
+				//FILE *file = fopen(filename, "r"); // открываем файл для отправки
+				//if (file == NULL) {
+				//	exit(-2);
+				//}
+				//while ((readsize = fread(buffer, sizeof(char), 1000, file)) != 0) {
+				//	send(fd, buffer, (int)readsize, 0);
+				//} // читаем и отправляем файл по чуть-чуть
+			//	fclose(file);
+			//send(fd, buffer, strlen(buffer), 0);
+			//std::cout << "\x1b[1;92m" << "\n> Send Message To Browser!___fd: " << fd << "\n\n" << "\x1b[0m";
+
+			//char buffer[1000] = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello World!"; 
+			//send(fd, buffer, strlen(buffer), 0);
+			//size_t readsize = http->getPartAnswer().length();
+			//send(fd, http->getPartAnswer().c_str(), (int)readsize, 0);
+
+			return (0);
+		}
+
+		int getFDListenSocket(int fd) {
+			for (int num_serv = 0; num_serv < count_servers; ++num_serv) {
+				if (vectorServers[num_serv]->getFdSocket() == fd) {
+					return(num_serv);
 				}
 			}
+			return(-1);
 		}
-		return (0);
-	}
 
-	~Core () {
-
-	}
-
-	int  getAllSockets(int fd) {
-		int res = 0;
-		while (it < end) {
-			if (it->getFdSocket() == fd) {
-				res = fd;
-				break;
-			}
-			it++;
-		}
-		return(res);
-	}
-
-	int readFromClient(int fd_socket, char *buf) { //// Сюда приходят данные от браузера GET POST и тд 
-		long	lenRequest;
-		
-		lenRequest = read(fd_socket, buf, BUFSIZE);
-		request = new Request(buf);
-		if (strstr(buf, "\n")) {
-			std::cout << "\n------- END!!! -------\n\n";
-		}
-		else if (lenRequest > 0) {
-			std::cout << "\n------- HTTP from brauser -------\n\n";
-			printf("%s\n", buf);
-			return (1);
-		}
-		else 
-			return (-1);
-		return (1);
-	} 
-
-	int writeToClient(int fd_socket) {
-		answer = request->getProcessor(); //char buffer[1000] = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello World!"; 
-		size_t readsize = answer->getAnswer().length();
-		send(fd_socket, answer->getAnswer().c_str(), (int)readsize, 0);
-		return 0;
-	}
+		// std::vector<Client>	getClients() {
+		// 	return (vectorClient);
+		// }
 };
 
 #endif

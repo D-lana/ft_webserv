@@ -13,6 +13,17 @@
 #include "ServerPairs.hpp"
 
 ServerPairs::ServerPairs() {
+	_port = 0;
+    _host = 0;
+    _servName.clear();
+    _autoIndex = 0;
+    _root.clear();
+    _index.clear();
+    _uploadPath.clear();
+    _maxBodySize = -1;
+    _errorCode = 0;
+    _errorDescription.clear();
+    _method.clear();
 	};
 
 ServerPairs::~ServerPairs() {
@@ -24,14 +35,6 @@ void ServerPairs::setPort(const int &port) {
 
 void ServerPairs::setHost(const std::string &host) {
 	_host = inet_addr(host.c_str());
-};
-
-const u_short& ServerPairs::getPort() const {
-	return _port;
-};
-
-const in_addr_t& ServerPairs::getHost() const {
-	return _host;
 };
 
 void ServerPairs::setServName(const std::string &serverName) {
@@ -73,4 +76,27 @@ std::vector<Location>& ServerPairs::getLocations() {
 
 const std::string& ServerPairs::getServName() {
 	return _servName;
+};
+
+const u_short& ServerPairs::getPort() const {
+	return _port;
+};
+
+const in_addr_t& ServerPairs::getHost() const {
+	return _host;
+};
+
+const std::string& ServerPairs::getRoot() {
+	return _root;
+};
+
+const std::string& ServerPairs::getIndex() {
+	return _index;
+};
+
+const std::string& ServerPairs::getUpload() {
+	return _uploadPath;
+};
+const int& ServerPairs::getBodySize() {
+	return _maxBodySize;
 };
