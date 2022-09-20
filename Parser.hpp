@@ -94,6 +94,8 @@ class FtParser {
 		virtual ~FtParser();
 		void parse(std::string argv);
 		std::vector<ServerPairs>& getServers();
+		std::vector<u_short>& getPorts();
+		// u_short* getPorts();
     
     private:
 
@@ -165,6 +167,7 @@ class FtParser {
 // }
 
 		std::vector<ServerPairs> _serverPairs;
+		std::vector<u_short> _allPorts;
 		const char* _config;
 
 	};

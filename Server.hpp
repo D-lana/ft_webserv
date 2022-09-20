@@ -32,11 +32,12 @@ class Server {
 				error("Error: Creating socket failed");
 			}
 			setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char*)&opt, sizeof(opt));
-			// setsockopt(sock, SOL_SOCKET, SO_NOSIGPIPE, (char*)&opt, sizeof(opt)); // добавила, чтобы не вылетало видео 
-			//  закоммитила, т.к. у меня не работает этот флаг
+			setsockopt(sock, SOL_SOCKET, SO_NOSIGPIPE, (char*)&opt, sizeof(opt)); // добавила, чтобы не вылетало видео 
+
 			
 			addr.sin_family = AF_INET;
 			addr.sin_port = htons(port);
+			std::cout << "CHECK: sin_port = " << addr.sin_port << std::endl;
 			addr.sin_addr.s_addr = htonl(ADDRESS);
 			if (bind(sock, (struct sockaddr*)&addr, sizeof(addr)) < 0) {
 				error("Error: Binding socket failed");

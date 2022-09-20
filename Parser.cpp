@@ -23,6 +23,10 @@ std::vector<ServerPairs>& FtParser::getServers() {
 	return _serverPairs;
 }
 
+std::vector<u_short>& FtParser::getPorts() {
+	return _allPorts;
+};
+    
 
 //   *** основной метод парсинга ***
 
@@ -150,7 +154,6 @@ void FtParser::serverPairsInit(size_t index, std::vector<std::string> config,
 	while (++start < end) {
 		for (size_t i = 0; i < data.serverData.size(); ++i) {
 			if (!(*start).find(data.serverData[i])) {
-					std::cout << "str = " << *start << "; find token, data.serverData[i] = " << data.serverData[i] << std::endl;
 					chooseTokenInConfig(data.serverData[i], *start, index, i);
 			}
 			else if (!(*start).find("location")) {
@@ -422,6 +425,7 @@ void FtParser::findListen(std::string str, std::string token, size_t index) {
 		else
 			_serverPairs[index].setPort(static_cast<int>(strtod(vector[0].c_str(), 0)));
 	}
+		_allPorts.push_back(_serverPairs[index].getPort());
 }
 
 //   *** если есть сервер server_name ***

@@ -36,24 +36,34 @@ int main(int argc, const char* argv[])
         std::cout << e.what() << std::endl;
     }
 	
-	/* код девочек
+	
+	// /* код девочек
 
-	int count_server = 2;
-	int ports[3] = {8080, 8090};
+	int count_server = parser->getServers().size();
+	// std::cout << "CHECK: count_server = " << count_server << std::endl;
+	// int ports[3] = {8080, 8090};
+
 	// config
 
 	std::vector<Server*> vectorServers;
 	for (int i = 0; i < count_server; i++) {
-		Server *one_serv = new Server(ports[i]);
-		std::cout << one_serv << "\n"; // проверка адреса ячейки
+		// Server *one_serv = new Server(ports[i]);
+		Server *one_serv = new Server(parser->getPorts()[i]);
+		std::cout << "CHECK: parser->getPorts()[i] = " << parser->getPorts()[i] << std::endl;
+		std::cout << "проверка адреса ячейки  one_serv >>> " << one_serv << "\n"; // проверка адреса ячейки
 		vectorServers.push_back(one_serv);
-		std::cout << vectorServers.back() << "\n"; // проверка адреса ячейки
+		std::cout << "проверка адреса ячейки vectorServers.back() >>> " << vectorServers.back() << "\n"; // проверка адреса ячейки
 	}
 
 	Core main_core(vectorServers);
-	std::cout << &main_core  << "\n"; // проверка адреса ячейки
+	std::cout << "проверка адреса ячейки main_core >>> " << &main_core  << "\n"; // проверка адреса ячейки
 
-	*/
+	// */
+	// добавила чистку:
+	delete parser;
+	for (int i = 0; i < count_server; i++) {
+		delete vectorServers[i];
+	}
 }
 
 
