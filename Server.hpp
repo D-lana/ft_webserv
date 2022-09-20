@@ -37,7 +37,6 @@ class Server {
 			
 			addr.sin_family = AF_INET;
 			addr.sin_port = htons(port);
-			std::cout << "CHECK: sin_port = " << addr.sin_port << std::endl;
 			addr.sin_addr.s_addr = htonl(ADDRESS);
 			if (bind(sock, (struct sockaddr*)&addr, sizeof(addr)) < 0) {
 				error("Error: Binding socket failed");
