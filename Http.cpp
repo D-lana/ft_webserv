@@ -1,12 +1,12 @@
 #include "Http.hpp"
 
-Http::Http() {
+// Http::Http() {
 
-//     fd = _fd;
-//    buffer = _buffer;
+// //     fd = _fd;
+// //    buffer = _buffer;
 
-    // request = new Request(buffer);
-}
+//     // request = new Request(buffer);
+// }
 
 Http::Http() {
 
