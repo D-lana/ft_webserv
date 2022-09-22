@@ -34,7 +34,7 @@ public:
     void setBuffer(std::string& _buffer);
     void requestParsing();
     void bodyParsing();
-    void bodyParsingOther();
+    void bodyParsingToFile();
 
 };
 

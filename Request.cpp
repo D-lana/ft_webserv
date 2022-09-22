@@ -61,11 +61,17 @@ Request::Request(std::string& _buffer){
             headers.insert(std::pair<std::string, std::string> (keyHead, valueHead));
             buffer.erase(0, pos+2);
             // str = "";
+            std::cout << "buffer0 |" << buffer << "|" << std::endl;
         }
     }
 
     void Request::bodyParsing(){
 
+        std::ifstream ifs;
+
+        ifs.open ("/tmp/tmpfile", std::ifstream::in|std::ifstream::out);
+
+
         std::map<std::string, std::string>::iterator it = headers.find("Content-Type");
         if (it == headers.end()) {
             std::cout << "ContentType not found" << std::endl; // убрать
@@ -75,45 +81,77 @@ Request::Request(std::string& _buffer){
         boundary = preBoundary.substr(preBoundary.rfind('-') + 1);
         endBoundary = boundary + "--";
 
-        std::size_t pos;
-        while (buffer.find(endBoundary) != std::string::npos){
-            if ((pos = buffer.find("filename=")) != std::string::npos) {
-                buffer.erase(0, pos+10);
-                filename = buffer.substr(0, buffer.find("\""));
-                buffer.erase(0, buffer.find("\r\n\r\n") + 4);
+        
+        while (!ifs.eof()) {
+        // if (ifs) {
+            // std::size_t pos = 0;
+            size_t i = 0;
+            std::string str;
+            while (getline(ifs, str)) {
+            // getline(ifs, str);
+            if ((i = str.find("filename=")) != std::string::npos) {
+                // str.erase(0, pos+10);
+                i += 10;
+                filename = str.substr(i, str.find("\""));
+                // ifs.erase(0, ifs.find("\r\n\r\n") + 4);
             }
-            std::ofstream fout;
-            fout.open("downloads/" + filename);
-            std::size_t posEof = buffer.find(boundary);
-            std::size_t posEndOfBody = buffer.find("\r\n");
 
-            fout << buffer.substr(0, posEndOfBody);
-            fout.close();
-            buffer.erase(0, posEof + boundary.length());
+
+            // std::ofstream fout;
+            // fout.open("downloads/" + filename);
+            // std::size_t posEof = ifs.find(boundary);
+            // std::size_t posEndOfBody = ifs.find("\r\n");
+
+            // fout << ifs.substr(0, posEndOfBody);
+            // fout.close();
+            // ifs.erase(0, posEof + boundary.length());
+
+            }
+        }
+        ifs.close();
+        std::cout << "filename |" << filename << "|" <<std::endl;
+
+        // std::size_t pos;
+        // while (buffer.find(endBoundary) != std::string::npos){
+        //     if ((pos = buffer.find("filename=")) != std::string::npos) {
+        //         buffer.erase(0, pos+10);
+        //         filename = buffer.substr(0, buffer.find("\""));
+        //         buffer.erase(0, buffer.find("\r\n\r\n") + 4);
+        //     }
+        //     std::ofstream fout;
+        //     fout.open("downloads/" + filename);
+        //     std::size_t posEof = buffer.find(boundary);
+        //     std::size_t posEndOfBody = buffer.find("\r\n");
+
+        //     fout << buffer.substr(0, posEndOfBody);
+        //     fout.close();
+        //     buffer.erase(0, posEof + boundary.length());
         }
 
-    }
+    void Request::bodyParsingToFile(){
 
-    void Request::bodyParsingOther(){
-
-        std::map<std::string, std::string>::iterator it = headers.find("Content-Type");
-        if (it == headers.end()) {
-            std::cout << "ContentType not found" << std::endl; // убрать
-        }
-        std::string preBoundary;
-        preBoundary = it->second.substr(it->second.find("boundary=") + 9);
-        boundary = preBoundary.substr(preBoundary.rfind('-') + 1);
-        endBoundary = boundary + "--";
+        // std::cout << "buffer1 |" << buffer << "|" << std::endl;
+        //  std::cout << "filename |" << filename << "|" << std::endl;
+        // std::map<std::string, std::string>::iterator it = headers.find("Content-Type");
+        // if (it == headers.end()) {
+        //     std::cout << "ContentType not found" << std::endl; // убрать
+        // }
+        // std::string preBoundary;
+        // preBoundary = it->second.substr(it->second.find("boundary=") + 9);
+        // boundary = preBoundary.substr(preBoundary.rfind('-') + 1);
+        // endBoundary = boundary + "--";
 
         // std::size_t posEndOfBody = buffer.find("\r\n");
 
         std::ofstream fout;
-        fout.open("/tmp/tmpfile");
-        while (buffer.find(endBoundary) != std::string::npos){
+        fout.open("/tmp/tmpfile", std::ofstream::app);
+          while (buffer != ""){
+            // std::cout << "buffer2 |" << buffer << "|" << std::endl;
             fout << buffer;
-            buffer.erase(0, READ_BUFSIZE);
+            buffer.erase(0, buffer.length());
         }
         fout.close();
+        bodyParsing();
 
     }
 
@@ -140,9 +178,18 @@ Request::Request(std::string& _buffer){
             parsLine = false;
             parsHeaders = false;
         } else if (!method.compare("POST")) {
+            std::map<std::string, std::string>::iterator it = headers.find("Content-Type");
+            if (it == headers.end()) {
+                std::cout << "ContentType not found" << std::endl; // убрать
+            }
+            std::string preBoundary;
+            preBoundary = it->second.substr(it->second.find("boundary=") + 9);
+            boundary = preBoundary.substr(preBoundary.rfind('-') + 1);
+            endBoundary = boundary + "--";
+
         // std::cout << "buffer body |" << buffer << "|" << std::endl;
-            bodyParsing();
-            // bodyParsingOther();
+            // bodyParsing();
+            bodyParsingToFile();
     }
 }
 

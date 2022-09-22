@@ -9,7 +9,7 @@
 # include <map>
 # include <vector>
 
-#define READ_BUFSIZE 1024
+#define READ_BUFSIZE 1000
 
 
 class Response {
