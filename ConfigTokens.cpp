@@ -34,7 +34,7 @@ ConfigTokens::ConfigTokens() {
 }
 
 ConfigTokens::ConfigTokens(int key) {
-	std::cout << "self-constructor \n";
+	std::cout << "Error! \n";
 	std::string errorConstructor[] = {
 		"<html>",
 		"<head>",
