@@ -8,14 +8,16 @@
 # include <iostream>
 # include <fstream>
 # include <iterator>
+# include <cstdlib>
 
 class Request {
 
 private:
     std::string method;
-    std::string buffer;
+    std::string buffer = "";
     std::string url;
     std::string protocol;
+    std::string fullBuffer;
     std::map<std::string, std::string> headers;
     Processor *proc1;
     bool parsLine;
@@ -34,6 +36,7 @@ public:
     void setBuffer(std::string& _buffer);
     void requestParsing();
     void bodyParsing();
+    void makeFullBuffer();
     void bodyParsingToFile();
 
 };

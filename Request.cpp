@@ -5,6 +5,7 @@ Request::Request(std::string& _buffer){
     parsLine = false;
     parsHeaders = false;
     buffer = _buffer;
+    fullBuffer = "";
 }
 
     void Request::parsFirstLine() {
@@ -65,105 +66,29 @@ Request::Request(std::string& _buffer){
         }
     }
 
-    void Request::bodyParsing(){
+    void Request::makeFullBuffer(){
 
-        std::ifstream ifs;
-        std::size_t posStartBody = 0;
-        bool openFile = false;
-
-        ifs.open ("/tmp/tmpfile", std::ifstream::in|std::ifstream::out);
-
-
-        std::map<std::string, std::string>::iterator it = headers.find("Content-Type");
+        // bodyParsingToFile();
+        // size_t len;
+        std::map<std::string, std::string>::iterator it = headers.find("Content-Length");
         if (it == headers.end()) {
-            std::cout << "ContentType not found" << std::endl; // убрать
+            std::cout << "ContentLength not found" << std::endl; // убрать
         }
-        std::string preBoundary;
-        preBoundary = it->second.substr(it->second.find("boundary=") + 9);
-        boundary = preBoundary.substr(preBoundary.rfind('-') + 1);
-        endBoundary = boundary + "--";
-
-        
-        while (!ifs.eof()) {
-        // if (ifs) {
-            // std::size_t pos = 0;
-            size_t i = 0;
-            std::string str;
-            while (getline(ifs, str)) {
-            // getline(ifs, str);
-                if (str.find("filename=") != std::string::npos) {
-                    // str.erase(0, pos+10);
-                    i += 10;
-                    filename = str.substr(i, str.find("\""));
-                    // ifs.erase(0, ifs.find("\r\n\r\n") + 4);
-                }
-                if (str.find(endBoundary) != std::string::npos) {
-                    break;
-                }
-                if (str.find(boundary) != std::string::npos) {
-                    std::ofstream fout;
-                    openFile = true;
-                    // posStartBody = i + boundary.length();
-                    // if ((posStartBody = str.find("\r\n\r\n", i)) != std::string::npos){
-                    // posStartBody += 4;
-                    // }
-
-                    // fout.open("upload/" + filename);
-                    // fout << str.substr(i);
-
-                    // while ()
-                }
-                if (str.find("\r\n\r\n") && openFile == true){
-                    posStartBody = i + boundary.length();
-                }
-                i += str.length();
-
-
-            // std::ofstream fout;
-            // fout.open("downloads/" + filename);
-            // std::size_t posEof = ifs.find(boundary);
-            // std::size_t posEndOfBody = ifs.find("\r\n");
-
-            // fout << ifs.substr(0, posEndOfBody);
-            // fout.close();
-            // ifs.erase(0, posEof + boundary.length());
-
-            }
+        // len = (size_t)atol(it->second.c_str());
+        // if (fullBuffer.length() < len){
+            if (buffer != ""){
+                fullBuffer.append(buffer);
+                // std::cout << "cont_length " << std::atoi(it->second.c_str()) << std::endl;
+                // std::cout << "length_buf " << fullBuffer.length() << std::endl;
+                // std::cout << "fullBuffer |" << fullBuffer << "|" << std::endl;
         }
-        ifs.close();
-        std::cout << "filename |" << filename << "|" <<std::endl;
 
-        // std::size_t pos;
-        // while (buffer.find(endBoundary) != std::string::npos){
-        //     if ((pos = buffer.find("filename=")) != std::string::npos) {
-        //         buffer.erase(0, pos+10);
-        //         filename = buffer.substr(0, buffer.find("\""));
-        //         buffer.erase(0, buffer.find("\r\n\r\n") + 4);
-        //     }
-        //     std::ofstream fout;
-        //     fout.open("downloads/" + filename);
-        //     std::size_t posEof = buffer.find(boundary);
-        //     std::size_t posEndOfBody = buffer.find("\r\n");
-
-        //     fout << buffer.substr(0, posEndOfBody);
-        //     fout.close();
-        //     buffer.erase(0, posEof + boundary.length());
-        }
+        buffer = "";
+        // std::cout << "length " << std::atoi(it->second.c_str()) << std::endl;
+    }
 
     void Request::bodyParsingToFile(){
 
-        // std::cout << "buffer1 |" << buffer << "|" << std::endl;
-        //  std::cout << "filename |" << filename << "|" << std::endl;
-        // std::map<std::string, std::string>::iterator it = headers.find("Content-Type");
-        // if (it == headers.end()) {
-        //     std::cout << "ContentType not found" << std::endl; // убрать
-        // }
-        // std::string preBoundary;
-        // preBoundary = it->second.substr(it->second.find("boundary=") + 9);
-        // boundary = preBoundary.substr(preBoundary.rfind('-') + 1);
-        // endBoundary = boundary + "--";
-
-        // std::size_t posEndOfBody = buffer.find("\r\n");
 
         std::ofstream fout;
         fout.open("/tmp/tmpfile", std::ofstream::app);
@@ -173,9 +98,33 @@ Request::Request(std::string& _buffer){
             buffer.erase(0, buffer.length());
         }
         fout.close();
-        bodyParsing();
+        // bodyParsing();
 
     }
+
+    void Request::bodyParsing(){
+
+        // std::cout << "filename |" << filename << "|" <<std::endl;
+
+        std::size_t pos;
+        while (fullBuffer.find(endBoundary) != std::string::npos){
+            if ((pos = fullBuffer.find("filename=")) != std::string::npos) {
+                fullBuffer.erase(0, pos+10);
+                filename = fullBuffer.substr(0, fullBuffer.find("\""));
+                std::cout << "filename |" << filename << "|" <<std::endl;
+                fullBuffer.erase(0, fullBuffer.find("\r\n\r\n") + 4);
+            }
+            std::ofstream fout;
+            fout.open("uploads/" + filename, std::ofstream::out);
+            std::size_t posEof = fullBuffer.find(boundary);
+            std::size_t posEndOfBody = fullBuffer.find("\r\n");
+
+            fout << fullBuffer.substr(0, posEndOfBody);
+            fout.close();
+            fullBuffer.erase(0, posEof + boundary.length());
+        }
+
+     }
 
     void Request::requestParsing() {
 
@@ -187,12 +136,12 @@ Request::Request(std::string& _buffer){
             makeHeaders();
             parsHeaders = true;
         }
-        // std::cout << "----------Print map-----------" << std::endl;
-        // std::map<std::string, std::string>::iterator it = headers.begin();
-        // for (int i = 0; it != headers.end(); it++, i++) {
-        //     std::cout << "|" << it->first << "|" << it->second << "|"<< std::endl;
-        // }
-        // std::cout << "---------End printing--------" << std::endl;
+        std::cout << "----------Print map-----------" << std::endl;
+        std::map<std::string, std::string>::iterator it = headers.begin();
+        for (int i = 0; it != headers.end(); it++, i++) {
+            std::cout << "|" << it->first << "|" << it->second << "|"<< std::endl;
+        }
+        std::cout << "---------End printing--------" << std::endl;
         
         proc1 = new Processor(url);
         if (!method.compare("GET")) {
@@ -211,7 +160,9 @@ Request::Request(std::string& _buffer){
 
         // std::cout << "buffer body |" << buffer << "|" << std::endl;
             // bodyParsing();
-            bodyParsingToFile();
+            // bodyParsingToFile();
+            makeFullBuffer();
+            bodyParsing();
     }
 }
 
@@ -224,5 +175,6 @@ Processor *Request::getProcessor() {
 }
 
 void Request::setBuffer(std::string& _buffer) {
+    // buffer = "";
     buffer = _buffer;
 }
