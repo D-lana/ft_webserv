@@ -37,7 +37,7 @@ public:
     void requestParsing();
     void bodyParsing();
     void makeFullBuffer();
-    void bodyParsingToFile();
+    // void bodyParsingToFile();
 
 };
 
