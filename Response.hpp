@@ -14,7 +14,7 @@
 
 class Response {
     private:
-        bool fileFound;
+        // bool fileFound;
         std::string answer;
         std::map<std::string, std::string> mimeType;
         std::map<std::string, std::string> codeStatus;
@@ -32,10 +32,10 @@ class Response {
     public:
         Response(std::string url);
         ~Response();
-        bool getFileFound();
-        void setFileFound(bool _fileFound);
+        // bool getFileFound();
+        // void setFileFound(bool _fileFound);
 
-        std::string makeAnswer(bool _fileFound, std::string newUrl);
+        std::string makeAnswer(std::string newUrl, int code);
         void initMimeType();
         // void initCodeStatus();
         std::string findContentType();

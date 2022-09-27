@@ -102,7 +102,7 @@ Request::Request(std::string& _buffer){
             if ((pos = fullBuffer.find("filename=")) != std::string::npos) {
                 fullBuffer.erase(0, pos+10);
                 filename = fullBuffer.substr(0, fullBuffer.find("\""));
-                std::cout << "filename |" << filename << "|" <<std::endl;
+                // std::cout << "filename |" << filename << "|" <<std::endl;
                 fullBuffer.erase(0, fullBuffer.find("\r\n\r\n") + 4);
             }
             std::ofstream fout;
@@ -128,12 +128,12 @@ Request::Request(std::string& _buffer){
             makeHeaders();
             parsHeaders = true;
         }
-        std::cout << "----------Print map-----------" << std::endl;
-        std::map<std::string, std::string>::iterator it = headers.begin();
-        for (int i = 0; it != headers.end(); it++, i++) {
-            std::cout << "|" << it->first << "|" << it->second << "|"<< std::endl;
-        }
-        std::cout << "---------End printing--------" << std::endl;
+        // std::cout << "----------Print map-----------" << std::endl;
+        // std::map<std::string, std::string>::iterator it = headers.begin();
+        // for (int i = 0; it != headers.end(); it++, i++) {
+        //     std::cout << "|" << it->first << "|" << it->second << "|"<< std::endl;
+        // }
+        // std::cout << "---------End printing--------" << std::endl;
         
         proc1 = new Processor(url);
         if (!method.compare("GET")) {
@@ -150,12 +150,13 @@ Request::Request(std::string& _buffer){
             boundary = preBoundary.substr(preBoundary.rfind('-') + 1);
             endBoundary = boundary + "--";
 
-        // std::cout << "buffer body |" << buffer << "|" << std::endl;
-            // bodyParsing();
-            // bodyParsingToFile();
             makeFullBuffer();
             bodyParsing();
-    }
+        } else if (!method.compare("DELETE")){
+
+            std::cout << "DELETE" << std::endl;
+
+        }
 }
 
 Request::~Request(){

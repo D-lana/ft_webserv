@@ -1,7 +1,7 @@
 #include "Response.hpp"
 
  Response::Response(std::string _url){
-     fileFound = false;
+    //  fileFound = false;
      initMimeType();
      protocol = "HTTP/1.1";
      url = _url;
@@ -13,57 +13,32 @@ Response::~Response() {
 
 }
 
-bool Response::getFileFound() {
-    return(fileFound);
-}
+// bool Response::getFileFound() {
+//     return(fileFound);
+// }
 
-void Response::setFileFound(bool _fileFound) {
-    fileFound = _fileFound;
-}
+// void Response::setFileFound(bool _fileFound) {
+//     fileFound = _fileFound;
+// }
 
-std::string Response::makeAnswer(bool _fileFound, std::string newUrl) {
+std::string Response::makeAnswer(std::string newUrl, int code) {
 
     // std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
     // std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
 
-    if (_fileFound) {
+    if (code == 200) {
         contentType = findContentType();
   
-    // if (contentType =) {
-
-    // }
-
-
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
 
-         response << protocol << " 200 OK\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
-         
-         answer = response.str();
-
-        stream.seekg(streamPos);
-
-        // response.write(contents.data(), READ_BUFSIZE);
-
-        response.write(contents.data(), contents.size());
-
-
-
-
-
-        // std::cout << "response_body " << response_body.str()  << std::endl;
-
+        response << protocol << " 200 OK\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
         answer = response.str();
-        // std::cout << "streamPos " << streamPos  << std::endl;
-        // streamPos += READ_BUFSIZE;
+        stream.seekg(streamPos);
+        response.write(contents.data(), contents.size());
+        answer = response.str();
 
-        // if (stream.end()) {
-
-        // }
-        // _fileFound = false;
-        // std::cout << "response" << response.str()  << std::endl;
-
-    } else {
+    } else if (code == 404){
         
         contentType = "text/html";
         newUrl = "errors/404.html";
