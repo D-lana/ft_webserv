@@ -68,23 +68,14 @@ Request::Request(std::string& _buffer){
 
     void Request::makeFullBuffer(){
 
-        // bodyParsingToFile();
-        // size_t len;
         std::map<std::string, std::string>::iterator it = headers.find("Content-Length");
         if (it == headers.end()) {
             std::cout << "ContentLength not found" << std::endl; // убрать
         }
-        // len = (size_t)atol(it->second.c_str());
-        // if (fullBuffer.length() < len){
-            if (buffer != ""){
-                fullBuffer.append(buffer);
-                // std::cout << "cont_length " << std::atoi(it->second.c_str()) << std::endl;
-                // std::cout << "length_buf " << fullBuffer.length() << std::endl;
-                // std::cout << "fullBuffer |" << fullBuffer << "|" << std::endl;
+        if (buffer != ""){
+            fullBuffer.append(buffer);
         }
-
         buffer = "";
-        // std::cout << "length " << std::atoi(it->second.c_str()) << std::endl;
     }
 
     // void Request::bodyParsingToFile(){
@@ -107,9 +98,6 @@ Request::Request(std::string& _buffer){
         // std::cout << "filename |" << filename << "|" <<std::endl;
 
         std::size_t pos;
-        // std::size_t nullPos;
-        std::string tmpString; // ???
-        // while (fullBuffer != ""){
         while (fullBuffer.find(endBoundary) != std::string::npos){
             if ((pos = fullBuffer.find("filename=")) != std::string::npos) {
                 fullBuffer.erase(0, pos+10);
@@ -120,31 +108,10 @@ Request::Request(std::string& _buffer){
             std::ofstream fout;
             fout.open("uploads/" + filename, std::ofstream::out);
             std::size_t posEof = fullBuffer.find(boundary);
-            std::size_t posEndOfFile = fullBuffer.find("\r\n");
+            std::size_t posN = fullBuffer.rfind("\n", posEof);
+           
+            fout << fullBuffer.substr(0, posN-1);
             
-            // if ((nullPos = fullBuffer.find('\0')) != std::string::npos) {
-            //     std::cout << "AAAAAAA" << std::endl;
-            //     while ((nullPos < posEndOfFile) && nullPos != '\0') {
-            //         std::cout << "BBBBBB" << std::endl;
-            //         fout << fullBuffer.substr(0, nullPos);
-            //         fullBuffer.erase(0, nullPos);
-            //         posEndOfFile = fullBuffer.find("\r\n");
-            //         nullPos = fullBuffer.find('\0');
-    
-            //         // i = nullPos+1;
-            //     }
-            //     fout << fullBuffer.substr(0, posEndOfFile);
-            // } else {
-            //     fout << fullBuffer.substr(0, posEndOfFile);
-            // }
-            
-        fout << fullBuffer.substr(0, posEndOfFile);
-
-
-            // fullBuffer.resize(fullBuffer.length() - 2);
-            // fout << fullBuffer;
-
-        
             fout.close();
             fullBuffer.erase(0, posEof + boundary.length());
         }
