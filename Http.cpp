@@ -33,7 +33,6 @@ void Http::initRequest(int _fd, std::string _buffer) {
         request->requestParsing();
     } else {
         it->second->setBuffer(_buffer);
-        // it->second->makeFullBuffer();
         it->second->requestParsing();
     }
 

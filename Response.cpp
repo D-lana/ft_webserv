@@ -50,6 +50,16 @@ std::string Response::makeAnswer(std::string newUrl, int code) {
         response.write(contents.data(), contents.size());
 
         answer = response.str();
+    } else if (code == 400) {
+        contentType = "text/html";
+        newUrl = "errors/400.html";
+
+        std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
+        std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+
+        response << protocol << " Bad Request\r\n\r\n";
+        response.write(contents.data(), contents.size());
+
     }
 
     return(answer);

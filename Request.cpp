@@ -106,7 +106,7 @@ Request::Request(std::string& _buffer){
                 fullBuffer.erase(0, fullBuffer.find("\r\n\r\n") + 4);
             }
             std::ofstream fout;
-            fout.open("uploads/" + filename, std::ofstream::out);
+            fout.open("upload/" + filename, std::ofstream::out);
             std::size_t posEof = fullBuffer.find(boundary);
             std::size_t posN = fullBuffer.rfind("\n", posEof);
            
@@ -152,10 +152,14 @@ Request::Request(std::string& _buffer){
 
             makeFullBuffer();
             bodyParsing();
+            proc1->checkPostReq();
+            
         } else if (!method.compare("DELETE")){
 
             std::cout << "DELETE" << std::endl;
 
+        } else {
+            std::cout << "UNDEFINED" << std::endl;
         }
 }
 

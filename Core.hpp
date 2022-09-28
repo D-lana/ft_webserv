@@ -139,15 +139,13 @@ class Core {
 
 			lenRequest = read(fd, buf, BUFSIZE);
 			std::string buffer;
-			// buffer.append(buf, lenRequest);
 			
-			// std::string buffer(buf); // добавила obeedril
 			if (lenRequest > 0) {
 				std::cout << "\x1b[1;31m" << "\n> HTTP from brauser___fd: " << fd << "\n\n" << "\x1b[0m";
 				//printf("%s\n", buf);
         std::cout << "\x1b[1;31m" << "> HTTP from brauser END___fd: " << fd << "\n" << "\x1b[0m";
 				// std::string buffer(buf);
-				buffer.append(buf, lenRequest);
+				buffer.append(buf, lenRequest); //добавила obeedril
 				http->initRequest(fd, buffer);
 				return (1);
 			}

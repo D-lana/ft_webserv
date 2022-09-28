@@ -41,6 +41,15 @@ Processor::Processor(std::string& _url) {
         delete response;
     }
 
+    void Processor::checkPostReq(){
+
+        Response *response = new Response(url);
+        answer = response->makeAnswer(newUrl, 200);
+
+        delete response;
+
+    }
+
     void Processor::makeFile() {
 
         std::ofstream fout;
@@ -52,4 +61,6 @@ Processor::Processor(std::string& _url) {
         return (answer);
     }
 
-Processor::~Processor() {}
+Processor::~Processor() {
+
+}
