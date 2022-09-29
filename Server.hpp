@@ -25,7 +25,7 @@ class Server {
 
 			Server(int port) {
 			opt = 1;
-			sock = socket(PF_INET, SOCK_STREAM, 0);
+			sock = socket(AF_INET, SOCK_STREAM, 0);
 			if (sock < 0) {
 				error("Error: Creating socket failed");
 			}

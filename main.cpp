@@ -51,8 +51,8 @@ int main(int argc, const char* argv[])
 		vectorServers.push_back(one_serv);
 		std::cout << "проверка адреса ячейки vectorServers.back() >>> " << vectorServers.back() << "\n"; // проверка адреса ячейки
 	}
-
 	Core main_core(vectorServers);
+
 	std::cout << "проверка адреса ячейки main_core >>> " << &main_core  << "\n"; // проверка адреса ячейки
 
 	// */
