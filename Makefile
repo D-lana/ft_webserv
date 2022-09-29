@@ -1,34 +1,45 @@
-NAME		= Server
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: marvin <marvin@student.42.fr>              +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/08/29 22:46:08 by marvin            #+#    #+#              #
+#    Updated: 2022/08/29 22:46:08 by marvin           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-FLAGS		= -Wall -Wextra -Werror -g
-# -fsanitize=address
-# -std=c++98
 
-SRCS		= main.cpp Response.cpp Request.cpp \
-			Processor.cpp Http.cpp
+SRCS		=	main.cpp Parser.cpp Processor.cpp Request.cpp \
+				Response.cpp Http.cpp Server.cpp ServerPairs.cpp \
+				Location.cpp ConfigTokens.cpp
+				
+INC			=	Parser.hpp Core.hpp Processor.hpp \
+				Request.hpp Http.hpp Response.hpp Server.hpp \
+				ServerPairs.hpp Location.hpp
 
-HEADERS		= Core.hpp Server.hpp \
-			Response.hpp Request.hpp \
-			Processor.hpp Http.hpp
+OBJS		=	$(SRCS:.cpp=.o)
 
-OBJS		= $(SRCS:.cpp=.o)
+NAME		=	webserv
 
-RM			= rm -f
+CC			=	g++
 
-all:		$(NAME)
+RM				= rm -Rf
+FLAGS			= -Wall -Wextra -Werror -std=c++98 -g 
+#-fsanitize=address
 
-$(NAME):	$(OBJS)
-			g++ -o $(NAME) $(OBJS)
+all:			$(NAME)
 
-%.o: %.cpp	Makefile $(HEADERS)
-			g++ $(FLAGS) -c $< -o $@
-
+$(NAME):		$(OBJS) $(INC)
+				$(CC) $(FLAGS) -o $(NAME) $(OBJS)
+ 
 clean:
-			$(RM) $(OBJS)
+				$(RM) $(OBJS)
 
-fclean:		clean
-			$(RM) $(NAME)
+fclean:			clean
+				$(RM) $(NAME)
 
-re:			fclean all
+re:				fclean $(NAME)
 
-.PHONY:		all clean fclean re
+.PHONY:			all clean fclean re
