@@ -24,7 +24,7 @@ class Response {
         std::string url;
     
 
-        int streamPos = 0;
+        int streamPos;
 
         std::stringstream response; // сюда будет записываться ответ клиенту
         std::stringstream response_body; // тело ответа

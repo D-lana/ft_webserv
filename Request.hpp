@@ -14,7 +14,7 @@ class Request {
 
 private:
     std::string method;
-    std::string buffer = "";
+    std::string buffer;
     std::string url;
     std::string protocol;
     std::string fullBuffer;
@@ -25,6 +25,7 @@ private:
     std::string boundary;
     std::string endBoundary;
     std::string filename;
+    bool endBody;
     // std::map<std::string, std::string> bodyData;
 
 public:
@@ -37,6 +38,7 @@ public:
     void requestParsing();
     void bodyParsing();
     void makeFullBuffer();
+    bool getEndBody();
     // void bodyParsingToFile();
 
 };

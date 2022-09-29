@@ -11,7 +11,7 @@ class Http {
         // int fd = 0;
         // std::string buffer;
         // Request *request;
-
+        
         std::map<int, Request*> requests;
         // Processor *answer;
 
@@ -24,8 +24,8 @@ class Http {
 
         Request* getRequest(int fd);
         std::string getPartAnswer(int fd);
-        void initRequest(int _fd, std::string _buffer);
-
+        bool initRequest(int _fd, std::string _buffer);
+         
 };
 
 

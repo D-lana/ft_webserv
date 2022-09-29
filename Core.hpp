@@ -142,10 +142,13 @@ class Core {
 				printf("%s\n", buf);
     			std::cout << "\x1b[1;31m" << "> HTTP from brauser END___fd: " << fd << "\n" << "\x1b[0m";
 				buffer.append(buf, lenRequest); //добавила obeedril
-				http->initRequest(fd, buffer);
-				if (buffer.find("\r\n\r\n") != std::string::npos || buffer.find("\n\n") != std::string::npos) {
+				//http->initRequest(fd, buffer);
+				if (http->initRequest(fd, buffer) == true) {
 					return (-1);
 				}
+				// if (buffer.find("\r\n\r\n") != std::string::npos || buffer.find("\n\n") != std::string::npos) {
+				// 	return (-1);
+				// }
 				return (1);
 			}
 			else 
