@@ -1,45 +1,35 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: marvin <marvin@student.42.fr>              +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/08/29 22:46:08 by marvin            #+#    #+#              #
-#    Updated: 2022/08/29 22:46:08 by marvin           ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+NAME		= Server
 
+FLAGS		= -Wall -Wextra -Werror 
+#-g
+# -fsanitize=address
+# -std=c++98
 
-SRCS		=	main.cpp Parser.cpp Processor.cpp Request.cpp \
-				Response.cpp Http.cpp Server.cpp ServerPairs.cpp \
-				Location.cpp ConfigTokens.cpp
-				
-INC			=	Parser.hpp Core.hpp Processor.hpp \
-				Request.hpp Http.hpp Response.hpp Server.hpp \
-				ServerPairs.hpp Location.hpp
+SRCS		= main.cpp Response.cpp Request.cpp Location.cpp \
+			Processor.cpp Http.cpp Parser.cpp ServerPairs.cpp ConfigTokens.cpp
 
-OBJS		=	$(SRCS:.cpp=.o)
+HEADERS		= Core.hpp Server.hpp \
+			Response.hpp Request.hpp Location.hpp \
+			Processor.hpp Http.hpp Parser.hpp ServerPairs.hpp ConfigTokens.hpp
 
-NAME		=	webserv
+OBJS		= $(SRCS:.cpp=.o)
 
-CC			=	g++
+RM			= rm -f
 
-RM				= rm -Rf
-FLAGS			= -Wall -Wextra -Werror -std=c++98 -g 
-#-fsanitize=address
+all:		$(NAME)
 
-all:			$(NAME)
+$(NAME):	$(OBJS)
+			g++ -o $(NAME) $(OBJS)
 
-$(NAME):		$(OBJS) $(INC)
-				$(CC) $(FLAGS) -o $(NAME) $(OBJS)
- 
+%.o: %.cpp	Makefile $(HEADERS)
+			g++ $(FLAGS) -c $< -o $@
+
 clean:
-				$(RM) $(OBJS)
+			$(RM) $(OBJS)
 
-fclean:			clean
-				$(RM) $(NAME)
+fclean:		clean
+			$(RM) $(NAME)
 
-re:				fclean $(NAME)
+re:			fclean all
 
-.PHONY:			all clean fclean re
+.PHONY:		all clean fclean re

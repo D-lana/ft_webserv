@@ -13,7 +13,7 @@
 #include "Parser.hpp"
 #define EXTENSION ".conf"
 
-FtParser::FtParser(const char *argv) : _config(argv), _configTokens()  {
+FtParser::FtParser(const char *argv) : _configTokens(), _config(argv) {
 }
 
 FtParser::~FtParser() {
@@ -47,7 +47,7 @@ void FtParser::parse(std::string argv) {
 			start = end;
 			end = findEndBrace(config, end);
 			_serverPairs.push_back(ServerPairs());
-			serverPairsInit(_serverPairs.size() - 1, config, start, end);
+			serverPairsInit(_serverPairs.size() - 1,  start, end);
 			check = 1;
 		}
 		++end;
@@ -146,7 +146,7 @@ std::vector<std::string> FtParser::splitLineOfConfig(std::string token, std::str
 
 //   *** инициализация серверов: ищем токены и локейшн***
 
-void FtParser::serverPairsInit(size_t index, std::vector<std::string> config, 
+void FtParser::serverPairsInit(size_t index,  
 	std::vector<std::string>::iterator start, std::vector<std::string>::iterator end) {
 	
 	ConfigTokens data;
@@ -157,14 +157,14 @@ void FtParser::serverPairsInit(size_t index, std::vector<std::string> config,
 					chooseTokenInConfig(data.serverData[i], *start, index, i);
 			}
 			else if (!(*start).find("location")) {
-				start = locationInit(index, config, start, end);
+				start = locationInit(index,  start, end);
 			}
 		}
 	}
 }
 
 //   *** инициализация локейшнов ***
-std::vector<std::string>::iterator FtParser::locationInit(size_t index, std::vector<std::string>& config, 
+std::vector<std::string>::iterator FtParser::locationInit(size_t index,  
 	std::vector<std::string>::iterator start, std::vector<std::string>::iterator end) {
 
 	ConfigTokens data;

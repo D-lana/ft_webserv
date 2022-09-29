@@ -23,16 +23,23 @@ std::string Http::getPartAnswer(int fd) {
 
 }
 
-void Http::initRequest(int _fd, std::string _buffer) {
+bool Http::initRequest(int _fd, std::string _buffer) {
 
     std::map<int, Request*>::iterator it = requests.find(_fd);
     if (it == requests.end()) {
         Request *request = new Request(_buffer);
         requests.insert (std::pair<int, Request*>(_fd, request));
         request->requestParsing();
+        //request->getEndBody();
+        return(request->getEndBody());
     } else {
         it->second->setBuffer(_buffer);
         it->second->requestParsing();
-    }
-
+       //it->second->getEndBody();
+        return(it->second->getEndBody());
+    } 
 }
+
+// bool Request::getEndBody(){
+//     return (endBody);
+// }

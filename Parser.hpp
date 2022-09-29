@@ -19,6 +19,7 @@
 #include <cstring>
 #include <fstream>
 #include "ServerPairs.hpp"
+#include "ConfigTokens.hpp"
 #include <cstdio>
 #include <algorithm>
 #include <iostream>
@@ -55,7 +56,7 @@
 // enum configTokens {
 // 	"server",  
 // 	"listen", 
-// 	 "server_name",  \
+// 	 "server_name",  
 // 	 "autoindex",
 // 	 "index", 
 // 	 "root", 
@@ -73,19 +74,19 @@
 // 	};
 
 
-struct ConfigTokens {
-		std::vector<std::string>			serverData;
-		std::vector<std::string>			locationData;
-		std::map<std::string, int>			serverTokens;
-		std::map<std::string, std::string>	errorMap;
-		std::vector<std::string>			errorPage;
-		std::vector<std::string>			autoindexPage;
+// struct ConfigTokens {
+// 		std::vector<std::string>			serverData;
+// 		std::vector<std::string>			locationData;
+// 		std::map<std::string, int>			serverTokens;
+// 		std::map<std::string, std::string>	errorMap;
+// 		std::vector<std::string>			errorPage;
+// 		std::vector<std::string>			autoindexPage;
 
-	ConfigTokens();
-	ConfigTokens(int key);
-	~ConfigTokens();
+// 	ConfigTokens();
+// 	ConfigTokens(int key);
+// 	~ConfigTokens();
 		
-	};
+// 	};
 
 class FtParser {
 	public:
@@ -110,7 +111,7 @@ class FtParser {
         std::vector<std::string>::iterator findEndBrace(std::vector<std::string> &config, 
 				std::vector<std::string>::iterator it);
 
-		void serverPairsInit(size_t index, std::vector<std::string> config, 
+		void serverPairsInit(size_t index,
 				std::vector<std::string>::iterator start, std::vector<std::string>::iterator end);
 		
 		void chooseTokenInConfig(std::string str, std::string token, size_t index, size_t num);
@@ -128,7 +129,7 @@ class FtParser {
 
 		void chooseTokenInLocation(std::string token, std::string str, Location& location, size_t num);
 		
-		std::vector<std::string>::iterator locationInit(size_t index, std::vector<std::string>& config, 
+		std::vector<std::string>::iterator locationInit(size_t index, 
 	std::vector<std::string>::iterator start, std::vector<std::string>::iterator end);
 
 		void findLocationName(std::string str, std::string token, Location& location);

@@ -6,6 +6,7 @@ Request::Request(std::string& _buffer){
     parsHeaders = false;
     buffer = _buffer;
     fullBuffer = "";
+    endBody = false;
 }
 
     void Request::parsFirstLine() {
@@ -74,6 +75,9 @@ Request::Request(std::string& _buffer){
         }
         if (buffer != ""){
             fullBuffer.append(buffer);
+            if (fullBuffer.find(endBoundary)!= std::string::npos) {
+                endBody = true;
+            }
         }
         buffer = "";
     }
@@ -99,12 +103,15 @@ Request::Request(std::string& _buffer){
 
         std::size_t pos;
         while (fullBuffer.find(endBoundary) != std::string::npos){
+            std::cout << "AAA" << std::endl;
             if ((pos = fullBuffer.find("filename=")) != std::string::npos) {
+                std::cout << "BBB" << std::endl;
                 fullBuffer.erase(0, pos+10);
                 filename = fullBuffer.substr(0, fullBuffer.find("\""));
                 // std::cout << "filename |" << filename << "|" <<std::endl;
                 fullBuffer.erase(0, fullBuffer.find("\r\n\r\n") + 4);
             }
+            std::cout << "CCC" << std::endl;
             std::ofstream fout;
             fout.open("upload/" + filename, std::ofstream::out);
             std::size_t posEof = fullBuffer.find(boundary);
@@ -114,6 +121,7 @@ Request::Request(std::string& _buffer){
             
             fout.close();
             fullBuffer.erase(0, posEof + boundary.length());
+            std::cout << "END" << std::endl;
         }
 
      }
@@ -138,6 +146,7 @@ Request::Request(std::string& _buffer){
         proc1 = new Processor(url);
         if (!method.compare("GET")) {
             proc1->checkFile();
+            endBody = true;
             // parsLine = false;
             // parsHeaders = false;
         } else if (!method.compare("POST")) {
@@ -152,7 +161,7 @@ Request::Request(std::string& _buffer){
 
             makeFullBuffer();
             bodyParsing();
-            proc1->checkPostReq();
+            // proc1->checkPostReq();
             
         } else if (!method.compare("DELETE")){
 
@@ -174,4 +183,8 @@ Processor *Request::getProcessor() {
 void Request::setBuffer(std::string& _buffer) {
     // buffer = "";
     buffer = _buffer;
+}
+
+bool Request::getEndBody(){
+    return (endBody);
 }

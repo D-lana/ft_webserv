@@ -30,7 +30,8 @@ ServerPairs::~ServerPairs() {
 	};
 
 void ServerPairs::setPort(const int &port) {
-	_port = htons(port);
+	// _port = htons(port);
+	_port = port;
 };
 
 void ServerPairs::setHost(const std::string &host) {

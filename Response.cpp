@@ -5,6 +5,7 @@
      initMimeType();
      protocol = "HTTP/1.1";
      url = _url;
+     streamPos = 0;
 
     //  std::cout << "url response " << url << std::endl;
 
