@@ -29,8 +29,10 @@ void Http::initRequest(int _fd, std::string _buffer) {
     if (it == requests.end()) {
         Request *request = new Request(_buffer);
         requests.insert (std::pair<int, Request*>(_fd, request));
+        request->requestParsing();
     } else {
         it->second->setBuffer(_buffer);
+        it->second->requestParsing();
     }
 
 }

@@ -25,6 +25,7 @@ public:
     // std::string checkFile();
     void checkFile();
     void makeFile();
+    void checkPostReq(); // ????
 
     std::string getAnswer();
 };

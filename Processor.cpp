@@ -9,8 +9,8 @@ Processor::Processor(std::string& _url) {
     answer = "";
 
 
-    std::cout << "Url " << url << std::endl;
-    std::cout << "newUrl " << newUrl << std::endl;
+    // std::cout << "Url " << url << std::endl;
+    // std::cout << "newUrl " << newUrl << std::endl;
 
 
 }
@@ -25,20 +25,29 @@ Processor::Processor(std::string& _url) {
         
         if (pFile!=NULL)
         {
-            response->setFileFound(true);
+            // response->setFileFound(true);
             // response->makeAnswer(response->getFileFound());
             //std::cout << response->makeAnswer(response->getFileFound(), newUrl) << std::endl;
-            answer = response->makeAnswer(response->getFileFound(), newUrl);
+            answer = response->makeAnswer(newUrl, 200);
             fclose (pFile);
-            response->setFileFound(false); // нужно ли???
+            // response->setFileFound(false); // нужно ли???
         }
         else {
-            response->setFileFound(false);
-            answer = response->makeAnswer(response->getFileFound(), newUrl);
+            // response->setFileFound(false);
+            answer = response->makeAnswer(newUrl, 404);
            // std::cout << response->makeAnswer(response->getFileFound(), newUrl) << std::endl;
         }
 
         delete response;
+    }
+
+    void Processor::checkPostReq(){
+
+        Response *response = new Response(url);
+        answer = response->makeAnswer(newUrl, 200);
+
+        delete response;
+
     }
 
     void Processor::makeFile() {
@@ -52,4 +61,6 @@ Processor::Processor(std::string& _url) {
         return (answer);
     }
 
-Processor::~Processor() {}
+Processor::~Processor() {
+
+}

@@ -23,6 +23,7 @@
 #include "Response.hpp"
 #include "Http.hpp"
 #include "Socket.hpp"
+//#include "CGI.hpp"
 
 #define BUFSIZE 1024
 
@@ -33,6 +34,7 @@ typedef struct s_Client
 	struct sockaddr_in		client_addr;
 	socklen_t				size_client_addr;
 	int						ready_to_send;
+	int 					send_end;
 
 }							t_Client;
 
@@ -108,9 +110,12 @@ class Core {
 					if (FD_ISSET(it_clients->sock, &write_set) && it_clients->ready_to_send == 1) {
 						std::cout << "\x1b[1;96m" << "\n> Found Write socket fd: " << it_clients->sock << "\n\n" << "\x1b[0m";
 						writeToClient(it_clients->sock);
+						it_clients->send_end = 1; //////////////добавить из HTTP!!!!!!!
 						//close (i);
-						it_clients->ready_to_send = -1;
-						FD_CLR(it_clients->sock, &active_write);
+						if (it_clients->send_end == 1) {
+							it_clients->ready_to_send = -1;
+							FD_CLR(it_clients->sock, &active_write);
+						}
 					}
 				}
 			}
@@ -131,15 +136,16 @@ class Core {
 			char	buf[BUFSIZE];
 
 			lenRequest = read(fd, buf, BUFSIZE);
-			std::string buffer(buf);
+			std::string buffer;
 			if (lenRequest > 0) {
 				std::cout << "\x1b[1;31m" << "\n> HTTP from brauser___fd: " << fd << "\n\n" << "\x1b[0m";
 				printf("%s\n", buf);
     			std::cout << "\x1b[1;31m" << "> HTTP from brauser END___fd: " << fd << "\n" << "\x1b[0m";
-				if  (buffer.find("\r\n\r\n") != std::string::npos) {
+				buffer.append(buf, lenRequest); //добавила obeedril
+				http->initRequest(fd, buffer);
+				if (buffer.find("\r\n\r\n") != std::string::npos || buffer.find("\n\n") != std::string::npos) {
 					return (-1);
 				}
-				//http->initRequest(fd, buffer);
 				return (1);
 			}
 			else 
@@ -165,6 +171,7 @@ class Core {
 						tmp.client_addr = client_addr;
 						tmp.size_client_addr = size_client_addr;
 						tmp.ready_to_send = -1;
+						tmp.send_end = 0;
 						list_clients.push_back(tmp);
 						std::cout << "\x1b[1;92m" << "> Create NEW Socket: " << new_sock << "\n" << "\x1b[0m";
 						fcntl(new_sock, F_SETFL, O_NONBLOCK);
@@ -180,14 +187,17 @@ class Core {
 
 		int writeToClient(int fd) {
 
-			char buffer[1000] = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello World!"; 
-			send(fd, buffer, strlen(buffer), 0);
+			size_t readsize = http->getPartAnswer(fd).length();
+			send(fd, http->getPartAnswer(fd).c_str(), (int)readsize, 0);
+			
+			//char buffer[1000] = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello World!"; 
+			//send(fd, buffer, strlen(buffer), 0);
 
 			//size_t readsize = http->getPartAnswer(fd).length();
 			//send(fd, http->getPartAnswer(fd).c_str(), (int)readsize, 0);
       		std::cout << "\x1b[1;92m" << "\n> Send Message To Client!___fd: " << fd << "\n\n" << "\x1b[0m";
 			// send(fd, answer->getAnswer().c_str(), (int)readsize, 0);
-      
+
 
 			//send(fd, answer->getAnswer().c_str(), (int)readsize, 0);
 			//char buffer[1000] = "HTTP/1.1 200 OK\nContent-Type: text/html\n\n";; // Content-Type - тип запрашиваемого файла
@@ -222,9 +232,7 @@ class Core {
 			return(-1);
 		}
 
-		// std::vector<Client>	getClients() {
-		// 	return (vectorClient);
-		// }
+		
 };
 
 #endif
