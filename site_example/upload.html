@@ -54,12 +54,22 @@ rel='stylesheet' type='text/css'>
 			<form action = "weather.py" method = "POST"">
 					<input type = "submit" value = "Проверить погоду">
 			</form>
+
+			<form action = "delete.sh" method = "POST"">
+				<input type = "submit" value = "Удалить тучи">
+		</form>
+
 		</div>
 		<div>
 			<br> </br>
-			<a href=""><img src="../resources/graphics/index.jpg" width="400" height="400" alt=""/></a>
+			<a href=""><img src="../resources/graphics/index.jpg" width="400" height="400" alt="Место для лапы котика"/></a>
+			<a href=""><img src="../resources/graphics/cloud.jpg" width="400" height="400" alt="Здесь раньше были тучи"/></a>
 		</div> 
+		<form action="cgi-bin/cookies.py" method="POST">
+			<input type="submit" value="Сохранить cookies"></input>
+		</form>
 		</div>
+
 </div>
 </section>
 </body>

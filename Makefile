@@ -1,4 +1,4 @@
-NAME		= Server
+NAME		= webserv
 
 FLAGS		= -Wall -Wextra -Werror 
 #-g
