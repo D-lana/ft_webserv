@@ -49,25 +49,25 @@ rel='stylesheet' type='text/css'>
 			<input type="submit" value="Отправить"></p>
 		   </form> 
 
-		   <div>
-			<p>Британские ученые доказали, что котики снимают грусть и разгоняют тучи</p>
-			<form action = "weather.py" method = "POST"">
-					<input type = "submit" value = "Проверить погоду">
-			</form>
+		   <a href=""><img src="../resources/graphics/index.jpg" width="400" height="400" alt="Место для лапы котика"/></a>
 
-			<form action = "delete.sh" method = "POST"">
-				<input type = "submit" value = "Удалить тучи">
-		</form>
+		   <script type="text/javascript">
+			function delCat() {
+			confirm('Досвидули?');
+			fetch('../resources/graphics/index.jpg', {
+				method: "DELETE",
+				headers: {
+					'Content-type': 'application/json'
+				}
+			})
+			
+			}
+		  </script>
 
-		</div>
-		<div>
-			<br> </br>
-			<a href=""><img src="../resources/graphics/index.jpg" width="400" height="400" alt="Место для лапы котика"/></a>
-			<a href=""><img src="../resources/graphics/cloud.jpg" width="400" height="400" alt="Здесь раньше были тучи"/></a>
-		</div> 
-		<form action="cgi-bin/cookies.py" method="POST">
-			<input type="submit" value="Сохранить cookies"></input>
-		</form>
+		<form>
+			<input type = "submit" value = "Удалить лапу" onclick=delCat()>
+					</form>
+ 
 		</div>
 
 </div>

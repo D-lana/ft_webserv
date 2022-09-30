@@ -19,7 +19,8 @@ Location::Location() {
     _locationIndex.clear();
     _locationUploadPath.clear();
     _locationRedirection = 0;
-    _locationBinPath.clear();
+    _locationBinPathPy.clear();
+	_locationBinPathSh.clear();
     _locationPathCgi.clear();
     _locationErrorCode = 0;
     _locationErrorDescription.clear();
@@ -54,8 +55,12 @@ void Location::setLocationRedirection(const bool& redirection) {
 	_locationRedirection = redirection;
 }
 
-void Location::setLocationBinPath(const std::string& str) {
-	_locationBinPath = str;
+void Location::setLocationBinPathPy(const std::string& str) {
+	_locationBinPathPy = str;
+};
+
+void Location::setLocationBinPathSh(const std::string& str) {
+	_locationBinPathSh = str;
 };
 
 void Location::setIsCgi(const bool& cgi) {
@@ -103,6 +108,10 @@ const bool& Location::getCgiInLocation(void) {
 	return _cgiInLocation;
 };
 
-const std::string& Location::getLocationBinPath(void) {
-	return _locationBinPath;
+const std::string& Location::getLocationBinPathPy(void) {
+	return _locationBinPathPy;
+};
+
+const std::string& Location::getLocationBinPathSh(void) {
+	return _locationBinPathSh;
 };

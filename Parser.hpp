@@ -139,7 +139,8 @@ class FtParser {
 		void findLocationUpload(std::string str, std::string token, Location& location);
 		void findLocationRedirection(std::string str, std::string token, Location& location);
 		void findLocationError(std::string str, std::string token, Location& location);
-		void findLocationBinPath(std::string str, std::string token, Location& location);
+		void findLocationBinPathPy(std::string str, std::string token, Location& location);
+		void findLocationBinPathSh(std::string str, std::string token, Location& location);
 		// void findLocationPathCgi(std::string str, std::string token, Location& location);
 		void findLocationMethod(std::string str, std::string token, Location& location);
 

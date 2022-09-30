@@ -36,6 +36,7 @@ void ServerPairs::setPort(const int &port) {
 
 void ServerPairs::setHost(const std::string &host) {
 	_host = inet_addr(host.c_str());
+	// _host = host; // ????
 };
 
 void ServerPairs::setServName(const std::string &serverName) {

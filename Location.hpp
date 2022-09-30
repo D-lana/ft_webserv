@@ -26,7 +26,8 @@
             std::string _locationIndex;
             std::string _locationUploadPath;
             bool        _locationRedirection;
-            std::string _locationBinPath;
+            std::string _locationBinPathPy;
+            std::string _locationBinPathSh;
             std::string _locationPathCgi;
             int         _locationErrorCode;
             std::string _locationErrorDescription;
@@ -44,7 +45,8 @@
             void setLocationUploadPath(const std::string& str);
             void setLocationRedirection(const bool& redirection);
             // void setLocationRedirectionCode(const bool& code);
-            void setLocationBinPath(const std::string& str);
+            void setLocationBinPathPy(const std::string& str);
+            void setLocationBinPathSh(const std::string& str);
             void setIsCgi(const bool& cgi);
             void setLocationPathCgi(const std::string&);
             void setLocationError(const int &code, const std::string &description);
@@ -57,9 +59,8 @@
             const std::string& getLocationIndex();
             const std::string& getLocationRoot();
             const std::string& getLocationUpload();
-            const std::string& getLocationBinPath(void);
-            
-
+            const std::string& getLocationBinPathPy(void);
+            const std::string& getLocationBinPathSh(void);
 };
 
 

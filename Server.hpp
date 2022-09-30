@@ -7,8 +7,7 @@
 #include <iostream>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-
-#define ADDRESS INADDR_ANY
+#include "ServerPairs.hpp"
 
 class Server {
 	
@@ -16,6 +15,7 @@ class Server {
 		int opt;
 		int sock;
 		struct sockaddr_in addr;
+		const ServerPairs& _serv;  //pveeta: предлагаю добавить
 
 		int error (const char* err_type) {
 			std::cerr << err_type << std::endl;
@@ -23,34 +23,10 @@ class Server {
 		}
 	public:
 
-			Server(int port) {
-			opt = 1;
-			sock = socket(AF_INET, SOCK_STREAM, 0);
-			if (sock < 0) {
-				error("Error: Creating socket failed");
-			}
-			setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char*)&opt, sizeof(opt));
-			setsockopt(sock, SOL_SOCKET, SO_NOSIGPIPE, (char*)&opt, sizeof(opt)); // добавила, чтобы не вылетало видео 
-			
-			addr.sin_family = AF_INET;
-			addr.sin_port = htons(port);
-			addr.sin_addr.s_addr = htonl(ADDRESS);
-			if (bind(sock, (struct sockaddr*)&addr, sizeof(addr)) < 0) {
-				error("Error: Binding socket failed");
-			}
-			if (listen(sock, 32) < 0) {
-				error("Error: Listening socket failed");
-			}
-		}
-
-		~Server() {
-			close(sock);
-		}
-
-		int getFdSocket() {
-			return (sock);
-		}
-
+		Server(int port); //pveeta: предлагаю удалить
+		Server(const ServerPairs& serv); //pveeta: альтернатива
+		~Server();
+		int getFdSocket();
 };
 
 #endif

@@ -219,15 +219,18 @@ void FtParser::chooseTokenInLocation(std::string token, std::string str, Locatio
 				findLocationError(str, token, location);
 				break;
 			case 5:
-				findLocationBinPath(str, token, location);
+				findLocationBinPathPy(str, token, location);
 				break;
 			case 6:
-				findLocationIndex(str, token, location);
-				break;
-			case 7:
-				findLocationUpload(str, token, location);
+				findLocationBinPathSh(str, token, location);
 				break;
 			case 8:
+				findLocationIndex(str, token, location);
+				break;
+			case 9:
+				findLocationUpload(str, token, location);
+				break;
+			case 10:
 				findLocationAutoIndex(str, token, location);
 				break;
 		}
@@ -315,13 +318,22 @@ void FtParser::chooseTokenInLocation(std::string token, std::string str, Locatio
 		location.setLocationError(code, description);
 	}
 
-//   *** если есть локейшн BinPath ***
-	void FtParser::findLocationBinPath(std::string str, std::string token, Location& location) {
+//   *** если есть локейшн BinPathPy ***
+	void FtParser::findLocationBinPathPy(std::string str, std::string token, Location& location) {
 
 	std::vector<std::string> vector = FtParser::splitLineOfConfig(token, str);
-	if (vector.size() != 1 || location.getCgiInLocation() == 0 || !location.getLocationBinPath().empty())
-		throw std::runtime_error("Invalid syntax of binpath (location)");
-	location.setLocationBinPath(vector[0]);
+	if (vector.size() != 1 || location.getCgiInLocation() == 0 || !location.getLocationBinPathPy().empty())
+		throw std::runtime_error("Invalid syntax of binpath.py (location)");
+	location.setLocationBinPathPy(vector[0]);
+	}
+
+//   *** если есть локейшн BinPathSh ***
+	void FtParser::findLocationBinPathSh(std::string str, std::string token, Location& location) {
+
+	std::vector<std::string> vector = FtParser::splitLineOfConfig(token, str);
+	if (vector.size() != 1 || location.getCgiInLocation() == 0 || !location.getLocationBinPathSh().empty())
+		throw std::runtime_error("Invalid syntax of binpath.sh (location)");
+	location.setLocationBinPathSh(vector[0]);
 	}
 
 //   *** если есть локейшн methods ***

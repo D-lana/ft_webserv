@@ -49,3 +49,42 @@ body {
 	background:  url(images/articles/html_coding_banner.jpg) no-repeat;
 	background-size: 100% 100%;
   }
+  */
+
+  blockquote {
+	margin: 0;
+	/* background: white; */
+	/* border-top: 5px solid #EAF9F9;
+	border-bottom: 5px solid #EAF9F9; */
+	color: #3A3C55;
+	padding: 30px 30px 30px 490px;
+	position: relative;
+	font-family: 'Lato', sans-serif;
+	font-weight: 300;
+	}
+	blockquote:before {
+	content: "\201C";
+	font-family: serif;
+	position: absolute;
+	left: 420px;
+	top: 20px;
+	color: white;
+	background: #FB6652;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	font-size: 50px;
+	line-height: 1.35;
+	text-align: center;
+	}
+	blockquote p {
+	margin: 0 0 16px;
+	font-size: 22px;
+	letter-spacing: .05em;
+	line-height: 1.4;
+	}
+	blockquote cite {
+	font-style: normal;
+	}
+
+  

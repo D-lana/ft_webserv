@@ -1,35 +1,42 @@
 NAME		= webserv
 
-FLAGS		= -Wall -Wextra -Werror 
-#-g
-# -fsanitize=address
+FLAGS		= -Wall -Wextra -Werror -g 
+#-fsanitize=address -fvisibility=hidden -fvisibility-inlines-hidden
 # -std=c++98
 
-SRCS		= main.cpp Response.cpp Request.cpp Location.cpp \
+SRCS		= main.cpp Core.cpp Server.cpp Response.cpp Request.cpp Location.cpp \
 			Processor.cpp Http.cpp Parser.cpp ServerPairs.cpp ConfigTokens.cpp
 
 HEADERS		= Core.hpp Server.hpp \
 			Response.hpp Request.hpp Location.hpp \
 			Processor.hpp Http.hpp Parser.hpp ServerPairs.hpp ConfigTokens.hpp
 
-OBJS		= $(SRCS:.cpp=.o)
+OBJS		=	$(SRCS:.cpp=.o)
 
-RM			= rm -f
+CC			=	g++
 
-all:		$(NAME)
+RM				= rm -Rf
+FLAGS			= -Wall -Wextra -Werror -g 
+#-fsanitize=address
+# -std=c++98
 
-$(NAME):	$(OBJS)
-			g++ -o $(NAME) $(OBJS)
+all:			$(NAME)
 
-%.o: %.cpp	Makefile $(HEADERS)
-			g++ $(FLAGS) -c $< -o $@
+test:			$(NAME)
+				@./$(NAME) configs/test.conf
+
+$(NAME):		$(OBJS) $(HEADERS)
+				$(CC) -o $(NAME) $(OBJS)
+
+%.o: %.cpp		Makefile $(HEADERS)
+				$(CC) $(FLAGS) -c $< -o $@
 
 clean:
-			$(RM) $(OBJS)
+				$(RM) $(OBJS)
 
-fclean:		clean
-			$(RM) $(NAME)
+fclean:			clean
+				$(RM) $(NAME)
 
-re:			fclean all
+re:				fclean $(NAME)
 
-.PHONY:		all clean fclean re
+.PHONY:			all clean fclean re
