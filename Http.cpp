@@ -18,13 +18,12 @@ std::string Http::getPartAnswer(int fd) {
     Processor *proc = getRequest(fd)->getProcessor();
 
     partAnswer = proc->getAnswer();
+
     return (partAnswer);
-
-
 }
 
-bool Http::initRequest(int _fd, std::string _buffer) {
-
+bool Http::initRequest(int _fd, std::string _buffer, std::string root) {
+    root = "";
     std::map<int, Request*>::iterator it = requests.find(_fd);
     if (it == requests.end()) {
         Request *request = new Request(_buffer);

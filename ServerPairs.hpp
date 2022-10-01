@@ -69,7 +69,7 @@ class ServerPairs {
 
         std::vector<Location>& getLocations();
         const u_short& getPort() const;
-        const std::string& getRoot();
+        const std::string& getRoot() const; //dlana
         const std::string& getIndex();
         const std::string& getServName();
         const in_addr_t& getHost() const;

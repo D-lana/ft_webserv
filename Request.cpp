@@ -33,7 +33,7 @@ Request::Request(std::string& _buffer){
         std::cout << "url " << "|" << url << "|" << std::endl;
         buffer.erase(0, pos+1);
          if (url.find("cgi-bin") != std::string::npos) {
-            cgi.createDynamicHtml();
+            cgi.createDynamicHtml(url);
             if ((pos = url.find('.')) != std::string::npos) {
                 url = url.substr(0, pos+1) + "html";
                 std::cout << "url BIN " << "|" << url << "|" << std::endl;
@@ -159,8 +159,8 @@ Request::Request(std::string& _buffer){
         if (!method.compare("GET")) {
             proc1->checkFile();
             endBody = true;
-            // parsLine = false;
-            // parsHeaders = false;
+            parsLine = false;
+            parsHeaders = false;
         } else if (!method.compare("POST")) {
             std::map<std::string, std::string>::iterator it = headers.find("Content-Type");
             if (it == headers.end()) {
