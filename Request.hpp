@@ -28,6 +28,7 @@ private:
     std::string endBoundary;
     std::string filename;
     bool endBody;
+    std::string root;
     // std::map<std::string, std::string> bodyData;
 
 public:
@@ -41,6 +42,7 @@ public:
     void bodyParsing();
     void makeFullBuffer();
     bool getEndBody();
+    void setRoot(std::string& _root);
     // void bodyParsingToFile();
 
 };

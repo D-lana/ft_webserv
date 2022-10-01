@@ -20,7 +20,7 @@ private:
     // Response *response;
 
 public:
-    Processor(std::string& url);
+    Processor(std::string& url, std::string& _root);
    ~Processor();
     // std::string checkFile();
     void checkFile();

@@ -18,17 +18,21 @@ std::string Http::getPartAnswer(int fd) {
     Processor *proc = getRequest(fd)->getProcessor();
 
     partAnswer = proc->getAnswer();
+
+    // requests.erase(fd); //переделать
+    
     return (partAnswer);
 
 
 }
 
-bool Http::initRequest(int _fd, std::string _buffer) {
+bool Http::initRequest(int _fd, std::string _buffer, std::string _root) {
 
     std::map<int, Request*>::iterator it = requests.find(_fd);
     if (it == requests.end()) {
         Request *request = new Request(_buffer);
         requests.insert (std::pair<int, Request*>(_fd, request));
+        request->setRoot(_root);
         request->requestParsing();
         //request->getEndBody();
         return(request->getEndBody());

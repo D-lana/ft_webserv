@@ -1,11 +1,13 @@
 #include "Response.hpp"
 
- Response::Response(std::string _url){
+ Response::Response(std::string& _url){
     //  fileFound = false;
      initMimeType();
+
      protocol = "HTTP/1.1";
      url = _url;
      streamPos = 0;
+     answer = "";
 
     //  std::cout << "url response " << url << std::endl;
 
@@ -22,7 +24,7 @@ Response::~Response() {
 //     fileFound = _fileFound;
 // }
 
-std::string Response::makeAnswer(std::string newUrl, int code) {
+std::string Response::makeAnswer(std::string& newUrl, int code) {
 
     // std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
     // std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
@@ -37,7 +39,7 @@ std::string Response::makeAnswer(std::string newUrl, int code) {
 
         response << protocol << " 200 OK\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
         answer = response.str();
-        stream.seekg(streamPos);
+        // stream.seekg(streamPos);
         response.write(contents.data(), contents.size());
         answer = response.str();
 
@@ -72,9 +74,10 @@ std::string Response::findContentType(){
     size_t posDot = 0;
     
     std::string key;
+    std::cout << "url response p 77 |" << url << "|" << std::endl;
     posDot = url.rfind('.');
     if (posDot == std::string::npos) {
-        std::cout << "Response.cpp, p. 64 - Dot not found" << std::endl;  // переделать
+        std::cout << "Response.cpp, p. 79 - Dot not found" << std::endl;  // переделать
         exit(-1);
     }
     key = url.substr(++posDot, url.length());
