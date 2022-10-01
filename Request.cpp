@@ -2,6 +2,9 @@
 
 Request::Request(std::string& _buffer){
 
+    buffer = "";
+    url = "";
+    method = "";
     parsLine = false;
     parsHeaders = false;
     buffer = _buffer;
@@ -27,7 +30,15 @@ Request::Request(std::string& _buffer){
             exit(-1);
         }
         url = buffer.substr(1, pos - 1);
+        std::cout << "url " << "|" << url << "|" << std::endl;
         buffer.erase(0, pos+1);
+         if (url.find("cgi-bin") != std::string::npos) {
+            cgi.createDynamicHtml(url);
+            if ((pos = url.find('.')) != std::string::npos) {
+                url = url.substr(0, pos+1) + "html";
+                std::cout << "url BIN " << "|" << url << "|" << std::endl;
+            }
+        }
         if ((pos = buffer.find("\r\n")) == std::string::npos) {
             std::cout << "Request.cpp, p. 22 - symbol not found" << std::endl;  // переделать
             exit(-1);
@@ -136,19 +147,20 @@ Request::Request(std::string& _buffer){
             makeHeaders();
             parsHeaders = true;
         }
-        // std::cout << "----------Print map-----------" << std::endl;
-        // std::map<std::string, std::string>::iterator it = headers.begin();
-        // for (int i = 0; it != headers.end(); it++, i++) {
-        //     std::cout << "|" << it->first << "|" << it->second << "|"<< std::endl;
-        // }
-        // std::cout << "---------End printing--------" << std::endl;
+        std::cout << "----------Print map-----------" << std::endl;
+        std::map<std::string, std::string>::iterator it = headers.begin();
+        for (int i = 0; it != headers.end(); it++, i++) {
+            std::cout << "|" << it->first << "|" << it->second << "|"<< std::endl;
+        }
+        std::cout << "---------End printing--------" << std::endl;
         
         proc1 = new Processor(url);
+        url = "";
         if (!method.compare("GET")) {
             proc1->checkFile();
             endBody = true;
-            // parsLine = false;
-            // parsHeaders = false;
+            parsLine = false;
+            parsHeaders = false;
         } else if (!method.compare("POST")) {
             std::map<std::string, std::string>::iterator it = headers.find("Content-Type");
             if (it == headers.end()) {
@@ -170,6 +182,7 @@ Request::Request(std::string& _buffer){
         } else {
             std::cout << "UNDEFINED" << std::endl;
         }
+        method = "";
 }
 
 Request::~Request(){

@@ -1,6 +1,6 @@
 #!/usr/local/bin/python3
 
-f = open("Test.html", "w")
+f = open("cgi-bin/hello.html", "w")
   
 # the html code which will go in the file GFG.html
 html_template = """<html>

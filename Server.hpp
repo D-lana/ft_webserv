@@ -12,21 +12,21 @@
 class Server {
 	
 	private:
+
 		int opt;
 		int sock;
 		struct sockaddr_in addr;
-		const ServerPairs& _serv;  //pveeta: предлагаю добавить
+		const ServerPairs& serv_pairs;
 
-		int error (const char* err_type) {
-			std::cerr << err_type << std::endl;
-			exit(EXIT_FAILURE);
-		}
+		int error (const char* err_type);
+
 	public:
 
-		Server(int port); //pveeta: предлагаю удалить
-		Server(const ServerPairs& serv); //pveeta: альтернатива
+		Server(const ServerPairs& serv); 
 		~Server();
 		int getFdSocket();
+		const std::string& getRootFromConfig() const;
+		// const ServerPairs& getServerPairs() const;
 };
 
 #endif

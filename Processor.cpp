@@ -3,7 +3,7 @@
 Processor::Processor(std::string& _url) {
 
     pFile = NULL;
-    path = "resources/";
+    path = "";
     url = _url;
     newUrl = path.append(url);
     answer = "";
@@ -19,6 +19,8 @@ Processor::Processor(std::string& _url) {
         char arr[newUrl.length() + 1];
         memset (arr, 0, (newUrl.length() + 1));
         strcpy(arr, newUrl.c_str());
+         std::cout << "\x1b[1;95m" << "\b\b>>>>> URLLLL <<<<<\n" << newUrl << "\x1b[0m";
+         std::cout << "\x1b[1;95m" << "\b\b>>>>> ARR <<<<<\n" << arr << "\x1b[0m"; 
         Response *response = new Response(url);
         pFile = fopen(arr, "r");
         // unsigned long size = 0;
@@ -30,6 +32,7 @@ Processor::Processor(std::string& _url) {
             //std::cout << response->makeAnswer(response->getFileFound(), newUrl) << std::endl;
             answer = response->makeAnswer(newUrl, 200);
             fclose (pFile);
+            
             // response->setFileFound(false); // нужно ли???
         }
         else {
@@ -58,6 +61,7 @@ Processor::Processor(std::string& _url) {
     }
 
     std::string Processor::getAnswer() {
+        
         return (answer);
     }
 
