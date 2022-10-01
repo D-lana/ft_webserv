@@ -46,7 +46,7 @@ class CGI {
 
 		}
 
-		int my_fork() {
+		int createDynamicHtml() {
 			pid_t	pid;
 			char *cmd[3] = {NULL, NULL, NULL};
 
@@ -73,14 +73,14 @@ class CGI {
 			return (0);
 		}
 
-		int enviroment() {
-			char *key;
-			char *value;
-			key = strdup("PATH_INFO=");
-			key = strdup("PATH_TRANSLATED=");
-			key = strdup("QUERY_STRING=");
-			return (0);
-		}
+		// int enviroment() {
+		// 	char *key;
+		// 	char *value;
+		// 	key = strdup("PATH_INFO=");
+		// 	key = strdup("PATH_TRANSLATED=");
+		// 	key = strdup("QUERY_STRING=");
+		// 	return (0);
+		// }
 		
 };
 

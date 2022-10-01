@@ -3,6 +3,7 @@
 
 # include "Processor.hpp"
 # include "Response.hpp"
+# include "CGI.hpp"
 # include <string>
 # include <map>
 # include <iostream>
@@ -13,6 +14,7 @@
 class Request {
 
 private:
+    CGI cgi;
     std::string method;
     std::string buffer;
     std::string url;
