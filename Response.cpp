@@ -47,6 +47,7 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
         
         contentType = "text/html";
         newUrl = "errors/404.html";
+        
 
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
