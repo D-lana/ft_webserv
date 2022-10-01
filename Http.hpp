@@ -24,7 +24,7 @@ class Http {
 
         Request* getRequest(int fd);
         std::string getPartAnswer(int fd);
-        bool initRequest(int _fd, std::string _buffer, std::string root);
+        bool initRequest(int _fd, std::string _buffer, std::string _root);
          
 };
 

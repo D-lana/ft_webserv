@@ -32,13 +32,15 @@ Request::Request(std::string& _buffer){
         url = buffer.substr(1, pos - 1);
         std::cout << "url " << "|" << url << "|" << std::endl;
         buffer.erase(0, pos+1);
-         if (url.find("cgi-bin") != std::string::npos) {
+        std::cout << "url before Req p35 " << "|" << url << "|" << std::endl;
+        if (url.find("cgi-bin") != std::string::npos) {
             cgi.createDynamicHtml(url);
             if ((pos = url.find('.')) != std::string::npos) {
                 url = url.substr(0, pos+1) + "html";
                 std::cout << "url BIN " << "|" << url << "|" << std::endl;
             }
         }
+        std::cout << "url after Req p43 " << "|" << url << "|" << std::endl;
         if ((pos = buffer.find("\r\n")) == std::string::npos) {
             std::cout << "Request.cpp, p. 22 - symbol not found" << std::endl;  // переделать
             exit(-1);
@@ -114,15 +116,15 @@ Request::Request(std::string& _buffer){
 
         std::size_t pos;
         while (fullBuffer.find(endBoundary) != std::string::npos){
-            std::cout << "AAA" << std::endl;
+            // std::cout << "AAA" << std::endl;
             if ((pos = fullBuffer.find("filename=")) != std::string::npos) {
-                std::cout << "BBB" << std::endl;
+                // std::cout << "BBB" << std::endl;
                 fullBuffer.erase(0, pos+10);
                 filename = fullBuffer.substr(0, fullBuffer.find("\""));
                 // std::cout << "filename |" << filename << "|" <<std::endl;
                 fullBuffer.erase(0, fullBuffer.find("\r\n\r\n") + 4);
             }
-            std::cout << "CCC" << std::endl;
+            // std::cout << "CCC" << std::endl;
             std::ofstream fout;
             fout.open("upload/" + filename, std::ofstream::out);
             std::size_t posEof = fullBuffer.find(boundary);
@@ -154,8 +156,9 @@ Request::Request(std::string& _buffer){
         }
         std::cout << "---------End printing--------" << std::endl;
         
-        proc1 = new Processor(url);
-        url = "";
+        std::cout << "ROOT" << root << std::endl;
+        std::cout << "request url" << url << std::endl;
+        proc1 = new Processor(url, root);
         if (!method.compare("GET")) {
             proc1->checkFile();
             endBody = true;
@@ -182,7 +185,8 @@ Request::Request(std::string& _buffer){
         } else {
             std::cout << "UNDEFINED" << std::endl;
         }
-        method = "";
+        // method = "";
+       // url = "";
 }
 
 Request::~Request(){
@@ -200,4 +204,12 @@ void Request::setBuffer(std::string& _buffer) {
 
 bool Request::getEndBody(){
     return (endBody);
+}
+
+void Request::setRoot(std::string& _root){
+    root = _root;
+}
+
+const std::string Request::getRoot() const {
+    return(root);
 }

@@ -19,15 +19,19 @@ std::string Http::getPartAnswer(int fd) {
 
     partAnswer = proc->getAnswer();
 
+
     return (partAnswer);
 }
 
-bool Http::initRequest(int _fd, std::string _buffer, std::string root) {
-    root = "";
+bool Http::initRequest(int _fd, std::string _buffer, std::string _root) {
+
     std::map<int, Request*>::iterator it = requests.find(_fd);
     if (it == requests.end()) {
         Request *request = new Request(_buffer);
         requests.insert (std::pair<int, Request*>(_fd, request));
+        std::cout << "_root p31 |" << _root << "|" << std::endl;
+        request->setRoot(_root);
+         std::cout << "root http p32 |" << request->getRoot() << "|" << std::endl;
         request->requestParsing();
         //request->getEndBody();
         return(request->getEndBody());

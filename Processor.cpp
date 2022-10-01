@@ -1,11 +1,15 @@
 #include "Processor.hpp"
 
-Processor::Processor(std::string& _url) {
+Processor::Processor(std::string& _url, std::string& _root) {
+
+     std::cout << "processor ROOT" << _root << "\n";
+     std::cout << "processor url" << _url << "\n";
 
     pFile = NULL;
-    path = "";
+    path = _root; 
     url = _url;
     newUrl = path.append(url);
+    std::cout << "processor newurl" << newUrl << "\n";
     answer = "";
 
 
@@ -19,8 +23,8 @@ Processor::Processor(std::string& _url) {
         char arr[newUrl.length() + 1];
         memset (arr, 0, (newUrl.length() + 1));
         strcpy(arr, newUrl.c_str());
-         std::cout << "\x1b[1;95m" << "\b\b>>>>> URLLLL <<<<<\n" << newUrl << "\x1b[0m";
-         std::cout << "\x1b[1;95m" << "\b\b>>>>> ARR <<<<<\n" << arr << "\x1b[0m"; 
+         std::cout << "NEWURLLLL processor " << newUrl << "\n";
+         std::cout << "ARR processor " << arr << "\n"; 
         Response *response = new Response(url);
         pFile = fopen(arr, "r");
         // unsigned long size = 0;
@@ -32,7 +36,7 @@ Processor::Processor(std::string& _url) {
             //std::cout << response->makeAnswer(response->getFileFound(), newUrl) << std::endl;
             answer = response->makeAnswer(newUrl, 200);
             fclose (pFile);
-            
+
             // response->setFileFound(false); // нужно ли???
         }
         else {
@@ -47,7 +51,7 @@ Processor::Processor(std::string& _url) {
     void Processor::checkPostReq(){
 
         Response *response = new Response(url);
-        answer = response->makeAnswer(newUrl, 200);
+        // answer = response->makeAnswer(newUrl, 200);
 
         delete response;
 

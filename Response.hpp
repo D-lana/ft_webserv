@@ -30,12 +30,12 @@ class Response {
         std::stringstream response_body; // тело ответа
 
     public:
-        Response(std::string url);
+        Response(std::string& url);
         ~Response();
         // bool getFileFound();
         // void setFileFound(bool _fileFound);
 
-        std::string makeAnswer(std::string newUrl, int code);
+        std::string makeAnswer(std::string& newUrl, int code);
         void initMimeType();
         // void initCodeStatus();
         std::string findContentType();

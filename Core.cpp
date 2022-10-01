@@ -92,7 +92,9 @@ int Core::readFromClient(int fd) { //// Сюда приходят данные �
 		printf("%s\n", buf);
 		std::cout << "\x1b[1;31m" << "> HTTP from brauser END___fd: " << fd << "\n" << "\x1b[0m";
 		buffer.append(buf, lenRequest); 
-		if (http->initRequest(fd, buffer, getRootFromConfig(fd)) == true) {
+		//int f = getFDListenSocket(fd);
+		std::cout << "\x1b[1;31m" << "> CORE 96 fd: " << vectorServers[0]->getRootFromConfig() << "\n" << "\x1b[0m";
+		if (http->initRequest(fd, buffer, vectorServers[0]->getRootFromConfig()) == true) {
 			return (-1);
 		}
 		return (1);
