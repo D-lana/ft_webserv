@@ -19,6 +19,7 @@ std::string Http::getPartAnswer(int fd) {
 
     partAnswer = proc->getAnswer();
 
+
     return (partAnswer);
 }
 
