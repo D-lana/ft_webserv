@@ -13,9 +13,10 @@
 #include "Core.hpp"
 
 Core::Core(std::vector<Server *> vectorServers_) : vectorServers(vectorServers_) {
-	http = new Http(); // добавила obeedril
+	http = new Http();
 	maxFd = 0;
 	count_servers = vectorServers.size();
+	root = "";
 
 	FD_ZERO(&active_read);
 	FD_ZERO(&active_write);
@@ -24,6 +25,7 @@ Core::Core(std::vector<Server *> vectorServers_) : vectorServers(vectorServers_)
 	for (int i = 0; i < count_servers; ++i) {
 		FD_SET(vectorServers[i]->getFdSocket(), &active_read);
 		std::cout << "\x1b[1;92m" << "> Listen Socked: " << vectorServers[i]->getFdSocket() << "\n" << "\x1b[0m";
+		std::cout << "\x1b[1;92m" << vectorServers[i]->getRootFromConfig() << "\n" << "\x1b[0m";
 		if (vectorServers[i]->getFdSocket()  >= maxFd) {
 			maxFd = vectorServers[i]->getFdSocket() + 1;
 		}
@@ -32,13 +34,12 @@ Core::Core(std::vector<Server *> vectorServers_) : vectorServers(vectorServers_)
 
 void Core::run() {
 
-	// while(1) {
 		this->read_set = this->active_read;
 		this->write_set = this->active_write;
 		//std::cout << "\x1b[1;31m" << "> Select block " << "\n" << "\x1b[0m";
 		if (select(maxFd, &this->read_set, &this->write_set, 0, 0) < 0) {
 			// continue;
-			return;
+			return ;
 			//error("Error: Select socket failed");
 		}
 		createNewSocket();
@@ -72,8 +73,6 @@ void Core::run() {
 				}
 			}
 		}
-	// }
-	// std::cout << "Exit\n";
 }
 
 		
@@ -92,14 +91,12 @@ int Core::readFromClient(int fd) { //// Сюда приходят данные �
 		std::cout << "\x1b[1;31m" << "\n> HTTP from brauser___fd: " << fd << "\n\n" << "\x1b[0m";
 		printf("%s\n", buf);
 		std::cout << "\x1b[1;31m" << "> HTTP from brauser END___fd: " << fd << "\n" << "\x1b[0m";
-		buffer.append(buf, lenRequest); //добавила obeedril
-		//http->initRequest(fd, buffer);
-		if (http->initRequest(fd, buffer, "resources/") == true) {
+		buffer.append(buf, lenRequest); 
+		//int f = getFDListenSocket(fd);
+		std::cout << "\x1b[1;31m" << "> CORE 96 fd: " << vectorServers[0]->getRootFromConfig() << "\n" << "\x1b[0m";
+		if (http->initRequest(fd, buffer, vectorServers[0]->getRootFromConfig()) == true) {
 			return (-1);
 		}
-		// if (buffer.find("\r\n\r\n") != std::string::npos || buffer.find("\n\n") != std::string::npos) {
-		// 	return (-1);
-		// }
 		return (1);
 	}
 	else 
@@ -150,6 +147,7 @@ int Core::writeToClient(int fd) {
 	//size_t readsize = http->getPartAnswer(fd).length();
 	//send(fd, http->getPartAnswer(fd).c_str(), (int)readsize, 0);
 	std::cout << "\x1b[1;92m" << "\n> Send Message To Client!___fd: " << fd << "\n\n" << "\x1b[0m";
+	std::cout << http->getPartAnswer(fd).c_str() << "\n\n";
 	// send(fd, answer->getAnswer().c_str(), (int)readsize, 0);
 
 
@@ -184,6 +182,24 @@ int Core::getFDListenSocket(int fd) {
 		}
 	}
 	return(-1);
+}
+
+const std::string& Core::getRootFromConfig(int fd) const {
+	for (int num_serv = 0; num_serv < count_servers; ++num_serv) {
+		if (vectorServers[num_serv]->getFdSocket() == fd) {
+			return (vectorServers[num_serv]->getRootFromConfig());
+		}
 	}
+	return (root);
+}
+
+// const ServerPairs& Core::getServerPairs(int fd) const {
+// 	for (int num_serv = 0; num_serv < count_servers; ++num_serv) {
+// 		if (vectorServers[num_serv]->getFdSocket() == fd) {
+// 			return (vectorServers[num_serv]->getServerPairs());
+// 		}
+// 	}
+// 	return ;
+// }
 
 	

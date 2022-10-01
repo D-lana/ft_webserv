@@ -65,6 +65,7 @@ Processor::Processor(std::string& _url, std::string& _root) {
     }
 
     std::string Processor::getAnswer() {
+        
         return (answer);
     }
 

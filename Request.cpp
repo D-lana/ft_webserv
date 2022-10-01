@@ -34,7 +34,7 @@ Request::Request(std::string& _buffer){
         buffer.erase(0, pos+1);
         std::cout << "url before Req p35 " << "|" << url << "|" << std::endl;
         if (url.find("cgi-bin") != std::string::npos) {
-            cgi.createDynamicHtml();
+            cgi.createDynamicHtml(url);
             if ((pos = url.find('.')) != std::string::npos) {
                 url = url.substr(0, pos+1) + "html";
                 std::cout << "url BIN " << "|" << url << "|" << std::endl;
@@ -208,4 +208,8 @@ bool Request::getEndBody(){
 
 void Request::setRoot(std::string& _root){
     root = _root;
+}
+
+const std::string Request::getRoot() const {
+    return(root);
 }

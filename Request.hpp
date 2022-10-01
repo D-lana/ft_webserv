@@ -43,6 +43,7 @@ public:
     void makeFullBuffer();
     bool getEndBody();
     void setRoot(std::string& _root);
+    const std::string getRoot() const;
     // void bodyParsingToFile();
 
 };

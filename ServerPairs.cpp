@@ -88,7 +88,7 @@ const in_addr_t& ServerPairs::getHost() const {
 	return _host;
 };
 
-const std::string& ServerPairs::getRoot() {
+const std::string& ServerPairs::getRoot() const { //dlana
 	return _root;
 };
 

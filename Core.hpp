@@ -60,6 +60,8 @@ class Core {
 		
 		int						close_connection;
 
+		std::string				root;
+
 	public:
 
 		Core(std::vector<Server *> vectorServers_);
@@ -70,6 +72,8 @@ class Core {
 		int createNewSocket();
 		int writeToClient(int fd);
 		int getFDListenSocket(int fd);
+		const std::string& getRootFromConfig(int fd) const;
+		// const ServerPairs& getServerPairs(int fd) const;
 };
 
 #endif
