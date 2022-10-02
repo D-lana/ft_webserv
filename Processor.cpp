@@ -6,7 +6,7 @@ Processor::Processor(std::string& _url, std::string& _root) {
      std::cout << "processor url" << _url << "\n";
 
     pFile = NULL;
-    path = _root; 
+    path = ""; ////////////!!!!!!!!!!!!!!!!!!!!!!!!!!
     url = _url;
     newUrl = path.append(url);
     std::cout << "processor newurl" << newUrl << "\n";
@@ -19,7 +19,7 @@ Processor::Processor(std::string& _url, std::string& _root) {
 
 }
 
-    void Processor::checkFile() {
+    void Processor::checkFile(bool cgi_request) {
         char arr[newUrl.length() + 1];
         memset (arr, 0, (newUrl.length() + 1));
         strcpy(arr, newUrl.c_str());
@@ -28,8 +28,12 @@ Processor::Processor(std::string& _url, std::string& _root) {
         Response *response = new Response(url);
         pFile = fopen(arr, "r");
         // unsigned long size = 0;
-        
-        if (pFile!=NULL)
+         std::cout << "cgi_request|||||||||||| " << cgi_request << arr << "\n"; 
+        if (cgi_request == true) {
+            answer = response->makeAnswer(newUrl, 100);
+            //fclose (pFile);
+        }  
+        else if (pFile!=NULL)
         {
             // response->setFileFound(true);
             // response->makeAnswer(response->getFileFound());
@@ -48,12 +52,18 @@ Processor::Processor(std::string& _url, std::string& _root) {
         delete response;
     }
 
-    void Processor::checkPostReq(){
+    void Processor::checkPostReq(bool cgi_request) {
 
-        Response *response = new Response(url);
+        if (cgi_request == true) {
+            Response *response = new Response(url);
+            answer = response->makeAnswer(newUrl, 100);
+
+            delete response;
+        }
+        // Response *response = new Response(url);
         // answer = response->makeAnswer(newUrl, 200);
 
-        delete response;
+        // delete response;
 
     }
 

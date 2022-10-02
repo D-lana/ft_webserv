@@ -1,0 +1,5 @@
+200 OK
+Content-type: text/html
+Set-cookie: lastvisit=' + time + ; name=Somebody; path=/cgi-bin/; httponly
+Done cookies!
+

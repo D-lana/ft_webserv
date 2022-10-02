@@ -15,6 +15,7 @@ class Request {
 
 private:
     CGI cgi;
+    bool cgi_request;
     std::string method;
     std::string buffer;
     std::string url;

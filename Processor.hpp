@@ -23,9 +23,9 @@ public:
     Processor(std::string& url, std::string& _root);
    ~Processor();
     // std::string checkFile();
-    void checkFile();
+    void checkFile(bool cgi_request);
     void makeFile();
-    void checkPostReq(); // ????
+    void checkPostReq(bool cgi_request); // ????
 
     std::string getAnswer();
 };

@@ -66,10 +66,10 @@ void Core::run() {
 				std::cout << "\x1b[1;96m" << "\n> Found Write socket fd: " << it_clients->sock << "\n\n" << "\x1b[0m";
 				writeToClient(it_clients->sock);
 				it_clients->send_end = 1; //////////////добавить из HTTP!!!!!!!
-				//close (i);
 				if (it_clients->send_end == 1) {
 					it_clients->ready_to_send = -1;
 					FD_CLR(it_clients->sock, &active_write);
+					////// Сдесь запустить функцию удаления из HTTP
 				}
 			}
 		}

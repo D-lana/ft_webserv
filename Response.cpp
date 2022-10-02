@@ -1,5 +1,7 @@
 #include "Response.hpp"
 
+
+
  Response::Response(std::string& _url){
     //  fileFound = false;
      initMimeType();
@@ -28,7 +30,44 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
 
     // std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
     // std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+    std::cout << "\x1b[1;92m" << "> |||||||||||makeAnswer 33 Response CGI " << code << "\n" << "\x1b[0m";
+    if (code == 100) {
+        std::fstream fs;
+        fs.open("site_example/cgi-bin/cookies.txt", std::ifstream::in | std::ifstream::app);
+        if (!fs.is_open()) {
+             std::cout << "\x1b[1;32m" << "> ERROR ANSWER " << "\n" << "\x1b[0m";
+        }
+        std::string msg;
+        while (!fs.eof()) {
+            msg = "";
+            fs >> msg;
+            answer.append(msg); 
+            std::cout << msg << std::endl;
+        }
+        std::cout << "\x1b[1;92m" << "> answer: " << answer  << "\n" << "\x1b[0m";
+        // std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
+        // std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+       
+        // std::string line;
+        // std::ifstream file_cgi("site_example/cgi-bin/cookies.txt", std::ifstream::in | std::ifstream::app); // окрываем файл для чтения
+        // response << protocol;
+        // answer.append(response.str()); 
+        // if (file_cgi.is_open()) {
+        //     while (getline(file_cgi, line)) {
+        //         //response << line;
+        //         answer.append(line); 
+        //     }
+        // }
+        // //answer = response.str();
+        // std::cout << "\x1b[1;92m" << "> answer: " << answer  << "\n" << "\x1b[0m";
+        // // in.close();
+        // // FILE *cgi_bin;
+        // // cgi_bin = fopen("site_example/cgi-bin/cookies.txt", "r");
+        // // response << cgi_bin;
+        // response.write(contents.data(), contents.size());
+        // answer = response.str();
 
+    }
     if (code == 200) {
         contentType = findContentType();
 

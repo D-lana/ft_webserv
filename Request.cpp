@@ -10,6 +10,7 @@ Request::Request(std::string& _buffer){
     buffer = _buffer;
     fullBuffer = "";
     endBody = false;
+    cgi_request = false;
 }
 
     void Request::parsFirstLine() {
@@ -38,6 +39,7 @@ Request::Request(std::string& _buffer){
             if ((pos = url.find('.')) != std::string::npos) {
                 url = url.substr(0, pos+1) + "html";
                 std::cout << "url BIN " << "|" << url << "|" << std::endl;
+                 cgi_request = true;
             }
         }
         std::cout << "url after Req p43 " << "|" << url << "|" << std::endl;
@@ -160,7 +162,7 @@ Request::Request(std::string& _buffer){
         std::cout << "request url" << url << std::endl;
         proc1 = new Processor(url, root);
         if (!method.compare("GET")) {
-            proc1->checkFile();
+            proc1->checkFile(cgi_request); // CGI проверить нужен ли он тут вообще
             endBody = true;
             parsLine = false;
             parsHeaders = false;
@@ -176,7 +178,7 @@ Request::Request(std::string& _buffer){
 
             makeFullBuffer();
             bodyParsing();
-            // proc1->checkPostReq();
+            proc1->checkPostReq(cgi_request);
             
         } else if (!method.compare("DELETE")){
 

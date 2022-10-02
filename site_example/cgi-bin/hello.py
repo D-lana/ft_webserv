@@ -1,7 +1,9 @@
 #!/usr/local/bin/python3
+try:
+    f = open("site_example/cgi-bin/hello.html", "w")
+except OSError:
+    print("NOT OPEN FILE!")
 
-f = open("cgi-bin/hello.html", "w")
-  
 # the html code which will go in the file GFG.html
 html_template = """<html>
 <head>
