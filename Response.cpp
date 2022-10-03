@@ -28,57 +28,45 @@ Response::~Response() {
 
 std::string Response::makeAnswer(std::string& newUrl, int code) {
 
+
     // std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
     // std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
     std::cout << "\x1b[1;92m" << "> |||||||||||makeAnswer 33 Response CGI " << code << "\n" << "\x1b[0m";
     if (code == 100) {
-        std::fstream fs;
-        fs.open("site_example/cgi-bin/cookies.txt", std::ifstream::in | std::ifstream::app);
-        if (!fs.is_open()) {
-             std::cout << "\x1b[1;32m" << "> ERROR ANSWER " << "\n" << "\x1b[0m";
+        std::ifstream stream;
+        std::string line;
+        stream.open("site_example/cgi-bin/cookies.txt", std::ifstream::in);
+        if (!stream.is_open()) {
+            std::cout << "\x1b[1;32m" << "> ERROR ANSWER " << "\n" << "\x1b[0m";
         }
-        std::string msg;
-        while (!fs.eof()) {
-            msg = "";
-            fs >> msg;
-            answer.append(msg); 
-            std::cout << msg << std::endl;
-        }
-        std::cout << "\x1b[1;92m" << "> answer: " << answer  << "\n" << "\x1b[0m";
-        // std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
-        // std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
-       
-        // std::string line;
-        // std::ifstream file_cgi("site_example/cgi-bin/cookies.txt", std::ifstream::in | std::ifstream::app); // окрываем файл для чтения
-        // response << protocol;
-        // answer.append(response.str()); 
-        // if (file_cgi.is_open()) {
-        //     while (getline(file_cgi, line)) {
-        //         //response << line;
-        //         answer.append(line); 
-        //     }
-        // }
-        // //answer = response.str();
-        // std::cout << "\x1b[1;92m" << "> answer: " << answer  << "\n" << "\x1b[0m";
-        // // in.close();
-        // // FILE *cgi_bin;
-        // // cgi_bin = fopen("site_example/cgi-bin/cookies.txt", "r");
-        // // response << cgi_bin;
-        // response.write(contents.data(), contents.size());
+        response << protocol;
         // answer = response.str();
+        while (getline(stream, line)){
+            response << line << std::endl; 
+        }
+        answer = response.str();
+       
+        std::cout << "\x1b[1;92m" << "> answer: " << answer  << "\n" << "\x1b[0m";
+       
 
     }
     if (code == 200) {
         contentType = findContentType();
 
-         std::cout << "\x1b[1;95m" << "\b\b>>>>> RESPONSE <<<<<\n" << "\x1b[0m"; 
+        std::cout << "\x1b[1;95m" << "\b\b>>>>> RESPONSE <<<<<\n" << "\x1b[0m"; 
   
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
 
         response << protocol << " 200 OK\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
         answer = response.str();
-        // stream.seekg(streamPos);
+        response.write(contents.data(), contents.size());
+        answer = response.str();
+    } else if (code == 201){
+        std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
+        std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+        response << protocol << " 200 OK\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
+        answer = response.str();
         response.write(contents.data(), contents.size());
         answer = response.str();
 
@@ -172,7 +160,7 @@ void Response::initMimeType() {
     mimeType["com"]="application/octet-stream";
     mimeType["conf"]="text/plain; charset=utf-8";
     mimeType["cpt"]="application/mac-compactpro";
-    mimeType["css"]="application/x-pointplus";
+    mimeType["css"]="text/css";
     mimeType["dcr"]="application/x-director";
     mimeType["def"]="text/plain; charset=utf-8";
     mimeType["dif"]="video/x-dv";

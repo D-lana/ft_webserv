@@ -31,6 +31,9 @@ Request::Request(std::string& _buffer){
             exit(-1);
         }
         url = buffer.substr(1, pos - 1);
+        if (url == ""){
+            url = "index.html";
+        }
         std::cout << "url " << "|" << url << "|" << std::endl;
         buffer.erase(0, pos+1);
         std::cout << "url before Req p35 " << "|" << url << "|" << std::endl;
@@ -97,38 +100,21 @@ Request::Request(std::string& _buffer){
         buffer = "";
     }
 
-    // void Request::bodyParsingToFile(){
-
-
-    //     std::ofstream fout;
-    //     fout.open("/tmp/tmpfile", std::ofstream::app);
-    //       while (buffer != ""){
-    //         // std::cout << "buffer2 |" << buffer << "|" << std::endl;
-    //         fout << buffer;
-    //         buffer.erase(0, buffer.length());
-    //     }
-    //     fout.close();
-    //     // bodyParsing();
-
-    // }
-
     void Request::bodyParsing(){
 
         // std::cout << "filename |" << filename << "|" <<std::endl;
 
         std::size_t pos;
         while (fullBuffer.find(endBoundary) != std::string::npos){
-            // std::cout << "AAA" << std::endl;
             if ((pos = fullBuffer.find("filename=")) != std::string::npos) {
-                // std::cout << "BBB" << std::endl;
                 fullBuffer.erase(0, pos+10);
                 filename = fullBuffer.substr(0, fullBuffer.find("\""));
                 // std::cout << "filename |" << filename << "|" <<std::endl;
                 fullBuffer.erase(0, fullBuffer.find("\r\n\r\n") + 4);
             }
-            // std::cout << "CCC" << std::endl;
             std::ofstream fout;
-            fout.open("upload/" + filename, std::ofstream::out);
+            fout.open("site_example/cgi-bin/upload/" + filename, std::ofstream::out);
+            // fout.open("upload/" + filename, std::ofstream::out);
             std::size_t posEof = fullBuffer.find(boundary);
             std::size_t posN = fullBuffer.rfind("\n", posEof);
            
@@ -151,12 +137,12 @@ Request::Request(std::string& _buffer){
             makeHeaders();
             parsHeaders = true;
         }
-        std::cout << "----------Print map-----------" << std::endl;
-        std::map<std::string, std::string>::iterator it = headers.begin();
-        for (int i = 0; it != headers.end(); it++, i++) {
-            std::cout << "|" << it->first << "|" << it->second << "|"<< std::endl;
-        }
-        std::cout << "---------End printing--------" << std::endl;
+        // std::cout << "----------Print map-----------" << std::endl;
+        // std::map<std::string, std::string>::iterator it = headers.begin();
+        // for (int i = 0; it != headers.end(); it++, i++) {
+        //     std::cout << "|" << it->first << "|" << it->second << "|"<< std::endl;
+        // }
+        // std::cout << "---------End printing--------" << std::endl;
         
         std::cout << "ROOT" << root << std::endl;
         std::cout << "request url" << url << std::endl;
@@ -182,7 +168,8 @@ Request::Request(std::string& _buffer){
             
         } else if (!method.compare("DELETE")){
 
-            std::cout << "DELETE" << std::endl;
+            remove(root.append(url).c_str());
+            std::cout << "----------DELETE-----------" << std::endl;
 
         } else {
             std::cout << "UNDEFINED" << std::endl;

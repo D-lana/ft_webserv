@@ -6,8 +6,9 @@ Processor::Processor(std::string& _url, std::string& _root) {
      std::cout << "processor url" << _url << "\n";
 
     pFile = NULL;
-    path = ""; ////////////!!!!!!!!!!!!!!!!!!!!!!!!!!
-    url = _url;
+    path = ""; ////////////!!!!!!!!!!!!!!!!!!!!!!!!!! root
+    path = _root;
+    url = _url; //какой брать path
     newUrl = path.append(url);
     std::cout << "processor newurl" << newUrl << "\n";
     answer = "";
@@ -54,17 +55,19 @@ Processor::Processor(std::string& _url, std::string& _root) {
 
     void Processor::checkPostReq(bool cgi_request) {
 
+        Response *response = new Response(url);
         if (cgi_request == true) {
-            Response *response = new Response(url);
+            // Response *response = new Response(url);
             answer = response->makeAnswer(newUrl, 100);
 
-            delete response;
+            // delete response;
+        } else {
+            // Response *response = new Response(url);
+            answer = response->makeAnswer(newUrl, 200);
+
+            // delete response;
         }
-        // Response *response = new Response(url);
-        // answer = response->makeAnswer(newUrl, 200);
-
-        // delete response;
-
+        delete response;
     }
 
     void Processor::makeFile() {

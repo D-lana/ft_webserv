@@ -84,8 +84,11 @@ int Core::error (const char* err_type) {
 int Core::readFromClient(int fd) { //// Сюда приходят данные от браузера GET POST и тд
 	long	lenRequest;
 	char	buf[BUFSIZE];
+	// size_t bufSize;
+	// bufSize = BUFSIZE;
 
 	lenRequest = read(fd, buf, BUFSIZE);
+	std::cout << "LENREQUEST " << lenRequest << "\n\n";
 	std::string buffer;
 	if (lenRequest > 0) {
 		std::cout << "\x1b[1;31m" << "\n> HTTP from brauser___fd: " << fd << "\n\n" << "\x1b[0m";
@@ -137,7 +140,7 @@ int Core::createNewSocket() {
 }
 
 int Core::writeToClient(int fd) {
-
+	
 	size_t readsize = http->getPartAnswer(fd).length();
 	send(fd, http->getPartAnswer(fd).c_str(), (int)readsize, 0);
 	
@@ -147,7 +150,7 @@ int Core::writeToClient(int fd) {
 	//size_t readsize = http->getPartAnswer(fd).length();
 	//send(fd, http->getPartAnswer(fd).c_str(), (int)readsize, 0);
 	std::cout << "\x1b[1;92m" << "\n> Send Message To Client!___fd: " << fd << "\n\n" << "\x1b[0m";
-	std::cout << http->getPartAnswer(fd).c_str() << "\n\n";
+	// std::cout << "Answer CORE" << http->getPartAnswer(fd).c_str() << "\n\n";
 	// send(fd, answer->getAnswer().c_str(), (int)readsize, 0);
 
 

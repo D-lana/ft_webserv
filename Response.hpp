@@ -2,6 +2,7 @@
 # define REQSPONSE_HPP
 
 # include "Processor.hpp"
+// # include "Core.hpp"
 # include <string>
 # include <iostream>
 # include <sstream>
@@ -12,7 +13,7 @@
 // #include <fstream>
 // #include <string>
 
-#define READ_BUFSIZE 1000
+// #define READ_BUFSIZE 1024
 
 
 class Response {
