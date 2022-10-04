@@ -13,7 +13,7 @@ except OSError:
 
 time = time.asctime(time.localtime())
 
-txt.write("200 OK\r\n")
+txt.write(" 200 OK\r\n")
 txt.write("Content-type: text/html\r\n")
 txt.write("Set-cookie: lastvisit=' + time + \r; name=Somebody; path=/cgi-bin/; httponly\r\n")
 txt.write("Done cookies!\r\n\r\n")

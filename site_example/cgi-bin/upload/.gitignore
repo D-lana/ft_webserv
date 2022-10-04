@@ -1,6 +1,0 @@
-*.o
-.vscode
-.DS_Store
-Server
-errors/.DS_Store
-resources/.DS_Store
