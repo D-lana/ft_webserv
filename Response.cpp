@@ -9,8 +9,10 @@
     //  streamPos = 0;  //part answer
      answer = "";
      root = _root;
+     contentSize = 0;
      newUrl = root.append(url); // new
 
+    std::cout << "14 response root" << "|" << root << "|" << std::endl;
     //  std::cout << "url response " << url << std::endl;
 
  }
@@ -42,8 +44,7 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
         std::cout << "\x1b[1;92m" << "> answer: " << answer  << "\n" << "\x1b[0m";
        
 
-    }
-    if (code == 200) {
+    } else if (code == 200) {
         contentType = findContentType();
 
         std::cout << "\x1b[1;95m" << "\b\b>>>>> RESPONSE <<<<<\n" << "\x1b[0m"; 
@@ -51,9 +52,12 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
 
+        contentSize = contents.size(); // временно
+
         response << protocol << " 200 OK\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
         answer = response.str();
         response.write(contents.data(), contents.size());
+        std::cout << "---------Content size---------" << contents.size() << std::endl;
         answer = response.str();
 
         std::cout << "\x1b[1;95m" << "\b\b>>>>> RESPONSE END <<<<<\n" << "\x1b[0m"; 
@@ -170,6 +174,10 @@ void Response::checkFile(bool cgi_request) {
 
     std::string& Response::getAnswer(){
         return (answer);
+    }
+
+    size_t Response::getContentSize() {
+        return (contentSize);
     }
 
     // void Response::setAnswer(std::string _answer){

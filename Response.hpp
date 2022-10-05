@@ -27,6 +27,7 @@ class Response {
         std::stringstream response; // сюда будет записываться ответ клиенту
         std::stringstream response_body; // тело ответа
         FILE *pFile;
+        size_t contentSize; // временно
 
         // int streamPos;
         std::map<std::string, std::string> mimeType;
@@ -44,6 +45,7 @@ class Response {
         void initMimeType();
         void checkFile(bool cgi_request);
         void checkPostReq(bool cgi_request, std::string& filename);
+        size_t getContentSize();
 };
 
 #endif

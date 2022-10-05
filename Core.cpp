@@ -141,8 +141,13 @@ int Core::createNewSocket() {
 
 int Core::writeToClient(int fd) {
 	
-	size_t readsize = http->getPartAnswer(fd).length();
-	send(fd, http->getPartAnswer(fd).c_str(), (int)readsize, 0);
+	while (size_t readsize = http->getPartAnswer(fd).length() <= http->getContentSize()) {
+	// size_t readsize = http->getPartAnswer(fd).length();
+		send(fd, http->getPartAnswer(fd).c_str(), (int)readsize, 0);
+		if (readsize == http->getContentSize()) {
+			http->setEndAnswer(true);
+		}
+	}
 	
 	//char buffer[1000] = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello World!"; 
 	//send(fd, buffer, strlen(buffer), 0);

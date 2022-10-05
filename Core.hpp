@@ -62,6 +62,7 @@ class Core {
 
 		std::string				root;
 
+
 	public:
 
 		Core(std::vector<Server *> vectorServers_);

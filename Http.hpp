@@ -13,7 +13,9 @@ class Http {
         // Request *request;
         
         std::map<int, Request*> requests;
+        size_t contentSize; // временно????
         // Processor *answer;
+        bool endAnswer;
 
     public:
 
@@ -25,7 +27,9 @@ class Http {
         Request* getRequest(int fd);
         std::string getPartAnswer(int fd);
         bool initRequest(int _fd, std::string _buffer, std::string _root);
-         
+        size_t getContentSize();
+        void setEndAnswer(bool ehdAn); // временно
+        void deleteRequest(int fd);
 };
 
 

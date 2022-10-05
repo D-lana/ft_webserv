@@ -1,7 +1,7 @@
 #include "Http.hpp"
 
 Http::Http() {
-
+    endAnswer = false;
 }
 
 Http::~Http() {
@@ -16,7 +16,8 @@ Request *Http::getRequest(int fd) {
 std::string Http::getPartAnswer(int fd) {
     std::string partAnswer;
     // Processor *proc = getRequest(fd)->getProcessor();
-
+    contentSize = getRequest(fd)->getResponse()->getContentSize();
+    std::cout << "------http contentSize--------" << getRequest(fd)->getResponse()->getContentSize() << std::endl;
     partAnswer = getRequest(fd)->getResponse()->getAnswer();
 
     // getRequest(fd)->getResponse()->setAnswer("");
@@ -41,4 +42,22 @@ bool Http::initRequest(int _fd, std::string _buffer, std::string _root) {
         it->second->requestParsing();
         return(it->second->getEndBody());
     } 
+}
+
+size_t Http::getContentSize() {
+        return (contentSize);
+    }
+
+void Http::setEndAnswer(bool ehdAn){
+    endAnswer = ehdAn;
+}
+
+void Http::deleteRequest(int fd){
+    std::map<int, Request*>::iterator it = requests.find(fd);
+    if (it == requests.end()){
+        std::cout << "no request" << std::endl;
+    } else {
+        requests.erase(it);
+    }
+
 }
