@@ -7,10 +7,10 @@ except OSError:
 # the html code which will go in the file GFG.html
 html_template = """<html>
 <head>
-<title>Title</title>
+<title>Hello cgi</title>
 </head>
 <body>
-<h2>Welcome To TEST!</h2>
+<h2>Welcome to hello!</h2>
   
 <p>Default code has been loaded into the Editor.</p>
   

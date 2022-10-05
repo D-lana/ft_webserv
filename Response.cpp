@@ -172,7 +172,7 @@ void Response::initMimeType() {
     mimeType["com"]="application/octet-stream";
     mimeType["conf"]="text/plain; charset=utf-8";
     mimeType["cpt"]="application/mac-compactpro";
-    mimeType["css"]="application/x-pointplus";
+    mimeType["css"]="text/css";
     mimeType["dcr"]="application/x-director";
     mimeType["def"]="text/plain; charset=utf-8";
     mimeType["dif"]="video/x-dv";
