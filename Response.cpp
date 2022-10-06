@@ -176,6 +176,14 @@ void Response::checkFile(bool cgi_request) {
         return (answer);
     }
 
+    size_t Response::cutAnswer() {
+        if (answer.length() > BUFSIZE) {
+            answer = answer.substr(BUFSIZE);
+            return(answer.length());
+        } 
+        return (0);
+    }
+
     size_t Response::getContentSize() {
         return (contentSize);
     }

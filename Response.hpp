@@ -11,7 +11,7 @@
 # include <cstdio>
 # include <cstring>
 
-// #define READ_BUFSIZE 1024
+#define BUFSIZE 1024
 
 
 class Response {
@@ -46,6 +46,7 @@ class Response {
         void checkFile(bool cgi_request);
         void checkPostReq(bool cgi_request, std::string& filename);
         size_t getContentSize();
+        size_t cutAnswer();
 };
 
 #endif

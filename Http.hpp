@@ -5,6 +5,10 @@
 # include <string>
 # include <map>
 
+# define BUFSIZE 1024
+
+
+
 class Http {
 
     private:
@@ -15,7 +19,7 @@ class Http {
         std::map<int, Request*> requests;
         size_t contentSize; // временно????
         // Processor *answer;
-        // bool endAnswer;
+        bool endAnswer;
 
     public:
 
@@ -28,8 +32,11 @@ class Http {
         std::string getPartAnswer(int fd);
         bool initRequest(int _fd, std::string _buffer, std::string _root);
         size_t getContentSize();
-        // void setEndAnswer(bool ehdAn); // временно
+        bool getEndAnswer();
         void deleteRequest(int fd);
+        //size_t getLenAnswer(int fd);
+
+
 };
 
 

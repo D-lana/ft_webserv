@@ -147,12 +147,12 @@ void Request::parsFirstLine() {
             makeHeaders();
             parsHeaders = true;
         }
-        std::cout << "----------Print map-----------" << std::endl;
-        std::map<std::string, std::string>::iterator it = headers.begin();
-        for (int i = 0; it != headers.end(); it++, i++) {
-            std::cout << "|" << it->first << "|" << it->second << "|"<< std::endl;
-        }
-        std::cout << "---------End printing--------" << std::endl;
+        // std::cout << "----------Print map-----------" << std::endl;
+        // std::map<std::string, std::string>::iterator it = headers.begin();
+        // for (int i = 0; it != headers.end(); it++, i++) {
+        //     std::cout << "|" << it->first << "|" << it->second << "|"<< std::endl;
+        // }
+        // std::cout << "---------End printing--------" << std::endl;
         
         std::cout << "156 request ROOT" << root << "|" << std::endl;
         std::cout << "157 request url " << url << "|" << std::endl;
@@ -162,8 +162,8 @@ void Request::parsFirstLine() {
             // response = new Response(url, root);
             response->checkFile(cgiRequest); // CGI проверить нужен ли он тут вообще
             endBody = true;
-            parsLine = false; // убрать после обработки удаления запросов
-            parsHeaders = false; // убрать после обработки удаления запросов
+            // parsLine = false; // убрать после обработки удаления запросов
+            // parsHeaders = false; // убрать после обработки удаления запросов
         } else if (!method.compare("POST")) {
             // response = new Response(url, root);
             std::map<std::string, std::string>::iterator it = headers.find("Content-Type");
