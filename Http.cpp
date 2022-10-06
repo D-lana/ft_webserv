@@ -1,7 +1,7 @@
 #include "Http.hpp"
 
 Http::Http() {
-    endAnswer = false;
+    // endAnswer = false;
 }
 
 Http::~Http() {
@@ -48,9 +48,9 @@ size_t Http::getContentSize() {
         return (contentSize);
     }
 
-void Http::setEndAnswer(bool ehdAn){
-    endAnswer = ehdAn;
-}
+// void Http::setEndAnswer(bool ehdAn){
+//     endAnswer = ehdAn;
+// }
 
 void Http::deleteRequest(int fd){
     std::map<int, Request*>::iterator it = requests.find(fd);
@@ -58,6 +58,7 @@ void Http::deleteRequest(int fd){
         std::cout << "no request" << std::endl;
     } else {
         requests.erase(it);
+        std::cout << "Request " <<fd << " was deleted" << std::endl;
     }
 
 }
