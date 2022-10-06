@@ -1,10 +1,7 @@
 #ifndef CONFIG_HPP
 # define CONFIG_HPP
 
-#include <iostream>
-#include <string>
-#include <vector>
-#include <map>
+# include "library.hpp"
 
 struct ConfigTokens {
     public:

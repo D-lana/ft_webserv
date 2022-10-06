@@ -13,15 +13,17 @@
 #ifndef SERVERPAIRS_HPP
 #define SERVERPAIRS_HPP
 
-#include <vector>
-#include <string>
-#include <cstring>
-#include <fstream>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <iostream>
- #include "Location.hpp"
+#include "library.hpp"
+// #pragma once
+// #include <vector>
+// #include <string>
+// #include <cstring>
+// #include <fstream>
+// #include <sys/socket.h>
+// #include <netinet/in.h>
+// #include <arpa/inet.h>
+// #include <iostream>
+// #include "Location.hpp"
 
 class ServerPairs {
 

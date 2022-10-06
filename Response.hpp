@@ -1,18 +1,7 @@
 #ifndef REQSPONSE_HPP
 # define REQSPONSE_HPP
 
-
-# include <string>
-# include <iostream>
-# include <sstream>
-# include <fstream>
-# include <map>
-# include <vector>
-# include <cstdio>
-# include <cstring>
-
-#define BUFSIZE 1024
-
+# include "library.hpp"
 
 class Response {
     private:

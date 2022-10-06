@@ -1,13 +1,7 @@
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
-#include <sys/socket.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <iostream>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include "ServerPairs.hpp"
+# include "library.hpp"
 
 class Server {
 	
@@ -26,7 +20,7 @@ class Server {
 		~Server();
 		int getFdSocket();
 		const std::string& getRootFromConfig() const;
-		// const ServerPairs& getServerPairs() const;
+		const ServerPairs& getServerPairs() const;
 };
 
 #endif

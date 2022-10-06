@@ -13,18 +13,7 @@
 #ifndef PARSER_HPP
 #define PARSER_HPP
 
-#include <vector>
-#include <map>
-#include <string>
-#include <cstring>
-#include <fstream>
-#include "ServerPairs.hpp"
-#include "ConfigTokens.hpp"
-#include <cstdio>
-#include <algorithm>
-#include <iostream>
-
-#define PORT 8080
+# include "library.hpp"
 
 // enum serverTokens {
 // 	Host,

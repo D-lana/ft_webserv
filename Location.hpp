@@ -13,8 +13,7 @@
 #ifndef LOCATION_HPP
 #define LOCATION_HPP
 
-#include <vector>
-#include <iostream>
+# include "library.hpp"
 
         class Location {
         

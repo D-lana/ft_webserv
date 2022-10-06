@@ -1,12 +1,5 @@
-#include "CGI.hpp"
-
-#define REQUEST_METHOD "GET" //The method used to make the request. The most common methods are GET and POST.
-#define QUERY_STRING "" // The URL-encoded information that is sent with GET method request.
-#define CONTENT_TYPE "" // The data type of the content. Used when the client is sending attached content to the server. For example, file upload.
-#define CONTENT_LENGTH "" // The length of the query information. It is available only for POST requests.
-#define HTTP_COOKIE "" // Returns the set cookies in the form of key & value pair.
-#define COUNT_ENV 7
-#define COUNT_CMD 3
+// #include "CGI.hpp"
+# include "library.hpp"
 
 CGI::CGI() {
 

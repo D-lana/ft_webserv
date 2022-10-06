@@ -1,15 +1,7 @@
 #ifndef REQUESR_HPP
 # define REQUESR_HPP
 
-// # include "Processor.hpp"
-# include "Response.hpp"
-# include "CGI.hpp"
-# include <string>
-# include <map>
-# include <iostream>
-# include <fstream>
-# include <iterator>
-# include <cstdlib>
+# include "library.hpp"
 
 class Request {
 

@@ -11,9 +11,11 @@
 /* ************************************************************************** */
 
 #include "Core.hpp"
+# include "library.hpp"
 
 Core::Core(std::vector<Server *> vectorServers_) : vectorServers(vectorServers_) {
 	http = new Http();
+	null_ptr1 = NULL;
 	maxFd = 0;
 	count_servers = vectorServers.size();
 	root = "";
@@ -92,10 +94,14 @@ int Core::readFromClient(int fd) { //// Сюда приходят данные �
 		std::cout << "\x1b[1;31m" << "\n> HTTP from brauser___fd: " << fd << "\n\n" << "\x1b[0m";
 		printf("%s\n", buf);
 		std::cout << "\x1b[1;31m" << "> HTTP from brauser END___fd: " << fd << "\n" << "\x1b[0m";
-		buffer.append(buf, lenRequest); 
+		buffer.append(buf, lenRequest);
+		ServerPairs tmp_servPairs; 
+		tmp_servPairs = getServerPairs(fd);
 		//int f = getFDListenSocket(fd);
-		std::cout << "\x1b[1;31m" << "> CORE 96 fd: " << vectorServers[0]->getRootFromConfig() << "\n" << "\x1b[0m";
-		if (http->initRequest(fd, buffer, vectorServers[0]->getRootFromConfig()) == true) {
+		std::cout << "\x1b[1;31m" << "> CORE 96 fd: " << tmp_servPairs.getRoot() << "\n" << "\x1b[0m";
+		std::cout << "\x1b[1;31m" << "> CORE 96 fd: " << tmp_servPairs.getUpload() << "\n" << "\x1b[0m";
+		//if (http->initRequest(fd, buffer) == true) {
+		if (http->initRequest(fd, buffer, tmp_servPairs) == true) {
 			return (-1);
 		}
 		return (1);
@@ -169,13 +175,19 @@ const std::string& Core::getRootFromConfig(int fd) const {
 	return (root);
 }
 
-// const ServerPairs& Core::getServerPairs(int fd) const {
-// 	for (int num_serv = 0; num_serv < count_servers; ++num_serv) {
-// 		if (vectorServers[num_serv]->getFdSocket() == fd) {
-// 			return (vectorServers[num_serv]->getServerPairs());
-// 		}
-// 	}
-// 	return ;
-// }
+const ServerPairs& Core::getServerPairs(int fd) {
+	int listen_sock = -1;
+	for (it_clients = list_clients.begin(); it_clients != list_clients.end(); ++it_clients) {
+		if (it_clients->sock == fd) {
+			it_clients->listen_sock = listen_sock;
+		}
+	}
+	for (int num_serv = 0; num_serv < count_servers; ++num_serv) {
+		if (vectorServers[num_serv]->getFdSocket() == listen_sock) {
+			return (vectorServers[num_serv]->getServerPairs());
+		}
+	}
+	return *null_ptr1;
+}
 
 	
