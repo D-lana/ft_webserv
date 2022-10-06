@@ -64,12 +64,10 @@ void Core::run() {
 			}
 			if (FD_ISSET(it_clients->sock, &write_set) && it_clients->ready_to_send == 1) {
 				std::cout << "\x1b[1;96m" << "\n> Found Write socket fd: " << it_clients->sock << "\n\n" << "\x1b[0m";
-				writeToClient(it_clients->sock);
-				it_clients->send_end = 1; //////////////добавить из HTTP!!!!!!!
+				it_clients->send_end = writeToClient(it_clients->sock);
 				if (it_clients->send_end == 1) {
 					it_clients->ready_to_send = -1;
 					FD_CLR(it_clients->sock, &active_write);
-					////// Сдесь запустить функцию удаления из HTTP
 				}
 			}
 		}
@@ -139,42 +137,17 @@ int Core::createNewSocket() {
 	return (0);
 }
 
-int Core::writeToClient(int fd) {
-	
-	size_t readsize = http->getPartAnswer(fd).length();
-	send(fd, http->getPartAnswer(fd).c_str(), (int)readsize, 0);
-	
-	//char buffer[1000] = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello World!"; 
-	//send(fd, buffer, strlen(buffer), 0);
+int Core::writeToClient(int fd) {	
+	//size_t readsize = http->getLenAnswer(fd);
+	std::string tmp = http->getPartAnswer(fd);
 
-	//size_t readsize = http->getPartAnswer(fd).length();
-	//send(fd, http->getPartAnswer(fd).c_str(), (int)readsize, 0);
+	send(fd, tmp.c_str(), tmp.length(), 0);
+	if (http->getEndAnswer() == true) {
+		std::cout << "\x1b[1;92m" << "\n> Send and DELETE Msg To Client fd: " << fd << "\n\n" << "\x1b[0m";
+		http->deleteRequest(fd);
+		return(1);
+	}
 	std::cout << "\x1b[1;92m" << "\n> Send Message To Client!___fd: " << fd << "\n\n" << "\x1b[0m";
-	// std::cout << "Answer CORE" << http->getPartAnswer(fd).c_str() << "\n\n";
-	// send(fd, answer->getAnswer().c_str(), (int)readsize, 0);
-
-
-	//send(fd, answer->getAnswer().c_str(), (int)readsize, 0);
-	//char buffer[1000] = "HTTP/1.1 200 OK\nContent-Type: text/html\n\n";; // Content-Type - тип запрашиваемого файла
-	//size_t readsize = strlen(buffer);
-	//send(fd, buffer, (int)readsize, 0); // отправили заголовок
-	//char filename[21] = "resources/post.html"; 
-		//FILE *file = fopen(filename, "r"); // открываем файл для отправки
-		//if (file == NULL) {
-		//	exit(-2);
-		//}
-		//while ((readsize = fread(buffer, sizeof(char), 1000, file)) != 0) {
-		//	send(fd, buffer, (int)readsize, 0);
-		//} // читаем и отправляем файл по чуть-чуть
-	//	fclose(file);
-	//send(fd, buffer, strlen(buffer), 0);
-	//std::cout << "\x1b[1;92m" << "\n> Send Message To Browser!___fd: " << fd << "\n\n" << "\x1b[0m";
-
-	//char buffer[1000] = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello World!"; 
-	//send(fd, buffer, strlen(buffer), 0);
-	//size_t readsize = http->getPartAnswer().length();
-	//send(fd, http->getPartAnswer().c_str(), (int)readsize, 0);
-
 	return (0);
 }
 

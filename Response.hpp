@@ -11,7 +11,7 @@
 # include <cstdio>
 # include <cstring>
 
-// #define READ_BUFSIZE 1024
+#define BUFSIZE 1024
 
 
 class Response {
@@ -27,6 +27,7 @@ class Response {
         std::stringstream response; // сюда будет записываться ответ клиенту
         std::stringstream response_body; // тело ответа
         FILE *pFile;
+        size_t contentSize; // временно
 
         // int streamPos;
         std::map<std::string, std::string> mimeType;
@@ -44,6 +45,8 @@ class Response {
         void initMimeType();
         void checkFile(bool cgi_request);
         void checkPostReq(bool cgi_request, std::string& filename);
+        size_t getContentSize();
+        size_t cutAnswer();
 };
 
 #endif

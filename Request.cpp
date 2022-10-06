@@ -2,22 +2,24 @@
 
 Request::Request(std::string& _buffer){
 
-    method = "";
+    // method = "";
     // buffer = "";
     buffer = _buffer;
-    url = "";
+    // url = "";
     protocol = "HTTP/1.1";
     fullBuffer = "";
     parsLine = false;
     parsHeaders = false;
     endBody = false;
     cgiRequest = false;
+    std::cout << "15 request root" << "|" << root << "|" << std::endl;
 }
 
 void Request::parsFirstLine() {
 
     std::size_t pos = 0;
     // std::cout << "buffer " << "|" << buffer << "|" << std::endl;
+    method = "";
     if ((pos = buffer.find(' ')) == std::string::npos) {
         std::cout << "Request.cpp, p. 8 - symbol not found" << std::endl;  // переделать
         exit(-1);
@@ -26,6 +28,7 @@ void Request::parsFirstLine() {
     std::cout << "method" << "|" << method << "|" << std::endl;
     buffer.erase(0, pos+1);
 
+    url = "";
     if ((pos = buffer.find(' ')) == std::string::npos) {
         std::cout << "Request.cpp, p. 16 - symbol not found" << std::endl;  // переделать
         exit(-1);
@@ -112,16 +115,18 @@ void Request::parsFirstLine() {
             //     std::cout << "-------NO NAME--------" <<std::endl;
             //     exit(-1);
             }
+            std::size_t posEof = fullBuffer.find(boundary);
+            std::size_t posN = fullBuffer.rfind("\r\n", posEof);
 
             std::cout << "----------request file open---------" <<std::endl;
             std::ofstream fout;
             fout.open("site_example/cgi-bin/upload/" + filename, std::ofstream::out);
-            //fout.open("upload/" + filename, std::ofstream::out);
-            std::size_t posEof = fullBuffer.find(boundary);
-            std::size_t posN = fullBuffer.rfind("\n", posEof);
+            // fout.open("upload/" + filename, std::ofstream::out);
+            // std::size_t posEof = fullBuffer.find(boundary);
+            // std::size_t posN = fullBuffer.rfind("\n", posEof);
            
             // fout << fullBuffer.substr(0, posN-1);
-            fout << fullBuffer.append(0, posN-1);
+            fout << fullBuffer.substr(0, posN);
             
             fout.close();
             std::cout << "----------request file closed---------" <<std::endl;
@@ -149,16 +154,16 @@ void Request::parsFirstLine() {
         // }
         // std::cout << "---------End printing--------" << std::endl;
         
-        std::cout << "ROOT" << root << std::endl;
-        std::cout << "request url" << url << std::endl;
+        std::cout << "156 request ROOT" << root << "|" << std::endl;
+        std::cout << "157 request url " << url << "|" << std::endl;
 
         response = new Response(url, root);
         if (!method.compare("GET")) {
             // response = new Response(url, root);
             response->checkFile(cgiRequest); // CGI проверить нужен ли он тут вообще
             endBody = true;
-            parsLine = false;
-            parsHeaders = false;
+            // parsLine = false; // убрать после обработки удаления запросов
+            // parsHeaders = false; // убрать после обработки удаления запросов
         } else if (!method.compare("POST")) {
             // response = new Response(url, root);
             std::map<std::string, std::string>::iterator it = headers.find("Content-Type");
@@ -175,6 +180,8 @@ void Request::parsFirstLine() {
                 bodyParsing();
                 std::cout << "request filename |" << filename << "|" << std::endl; 
                 response->checkPostReq(cgiRequest, filename);
+                // parsLine = false;
+                // parsHeaders = false;
             }
             
         } else if (!method.compare("DELETE")){

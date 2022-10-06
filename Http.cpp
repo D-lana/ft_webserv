@@ -1,11 +1,11 @@
 #include "Http.hpp"
 
 Http::Http() {
-
+    endAnswer = false;
 }
 
 Http::~Http() {
-    // delete request;
+    
 }
 
 Request *Http::getRequest(int fd) {
@@ -15,13 +15,24 @@ Request *Http::getRequest(int fd) {
 
 std::string Http::getPartAnswer(int fd) {
     std::string partAnswer;
+    std::string fullAnswer;
+    endAnswer = false;
     // Processor *proc = getRequest(fd)->getProcessor();
-
-    partAnswer = getRequest(fd)->getResponse()->getAnswer();
-
-    // getRequest(fd)->getResponse()->setAnswer("");
-
-
+    contentSize = getRequest(fd)->getResponse()->getContentSize(); // убрать
+    fullAnswer = getRequest(fd)->getResponse()->getAnswer();
+    std::cout << "------http contentSize--------" << getRequest(fd)->getResponse()->getContentSize() << std::endl;
+    std::cout << "\x1b[1;90m" << "\n> Size answer: " << fullAnswer.length() << "\n\n" << "\x1b[0m";
+    if (fullAnswer.length() > BUFSIZE) {
+        partAnswer = fullAnswer.substr(0, BUFSIZE);
+    } else {
+        endAnswer = true;
+        std::cout << "\x1b[1;90m" << "\n> fullAnswer.length() < BUFSIZE 22 http" << "\n\n" << "\x1b[0m"; 
+        return (fullAnswer);
+    }
+    if (getRequest(fd)->getResponse()->cutAnswer() == 0) {
+        endAnswer = true;
+        std::cout << "\x1b[1;90m" << "\n> cutAnswer() true 34 http" << "\n\n" << "\x1b[0m";
+    }
     return (partAnswer);
 }
 
@@ -42,3 +53,26 @@ bool Http::initRequest(int _fd, std::string _buffer, std::string _root) {
         return(it->second->getEndBody());
     } 
 }
+
+size_t Http::getContentSize() {
+        return (contentSize);
+    }
+
+bool Http::getEndAnswer(){
+    return(endAnswer);
+}
+
+void Http::deleteRequest(int fd){
+    std::map<int, Request*>::iterator it = requests.find(fd);
+    if (it == requests.end()){
+        std::cout << "no request" << std::endl;
+    } else {
+        requests.erase(it);
+        std::cout << "Request " <<fd << " was deleted" << std::endl;
+    }
+
+}
+
+// size_t Http::getLenAnswer(int fd){
+//         return (getRequest(fd)->getResponse()->getAnswer().length());
+// }
