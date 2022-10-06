@@ -157,7 +157,7 @@ void Response::checkFile(bool cgi_request) {
     void Response::checkPostReq(bool cgi_request, std::string& _filename) {
         filename = _filename;
         std::cout << "-----Check Post Request-------" << std::endl;
-        std::ifstream ifs ("site_example/cgi-bin/upload/" + filename);
+        std::ifstream ifs ("site_example/upload/" + filename);
         std::cout << "-----filename-------|" << filename << "|" << std::endl;
         if (ifs.is_open()){
             std::cout << "-----Check Well Post Request-------" << std::endl;
