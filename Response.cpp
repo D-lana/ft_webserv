@@ -1,15 +1,15 @@
 #include "Response.hpp"
 
-
-
- Response::Response(std::string& _url){
+ Response::Response(std::string& _url, std::string& _root){
     //  fileFound = false;
      initMimeType();
 
      protocol = "HTTP/1.1";
      url = _url;
-     streamPos = 0;
+    //  streamPos = 0;  //part answer
      answer = "";
+     root = _root;
+     newUrl = root.append(url); // new
 
     //  std::cout << "url response " << url << std::endl;
 
@@ -18,69 +18,52 @@ Response::~Response() {
 
 }
 
-// bool Response::getFileFound() {
-//     return(fileFound);
-// }
-
-// void Response::setFileFound(bool _fileFound) {
-//     fileFound = _fileFound;
-// }
-
 std::string Response::makeAnswer(std::string& newUrl, int code) {
-
     // std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
     // std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
     std::cout << "\x1b[1;92m" << "> |||||||||||makeAnswer 33 Response CGI " << code << "\n" << "\x1b[0m";
     if (code == 100) {
-        std::fstream fs;
-        fs.open("site_example/cgi-bin/cookies.txt", std::ifstream::in | std::ifstream::app);
-        if (!fs.is_open()) {
-             std::cout << "\x1b[1;32m" << "> ERROR ANSWER " << "\n" << "\x1b[0m";
+        std::ifstream stream; //(newUrl, std::ios::in | std::ios::binary);
+        std::string line;
+        stream.open("site_example/cgi-bin/cookies.txt", std::ifstream::in);
+        if (!stream.is_open()) {
+            std::cout << "\x1b[1;32m" << "> ERROR ANSWER " << "\n" << "\x1b[0m";
         }
-        std::string msg;
-        while (!fs.eof()) {
-            msg = "";
-            fs >> msg;
-            answer.append(msg); 
-            std::cout << msg << std::endl;
+        response << protocol;
+        // answer = response.str();
+        while (getline(stream, line)){
+            response << line << std::endl; 
         }
-        std::cout << "\x1b[1;92m" << "> answer: " << answer  << "\n" << "\x1b[0m";
-        // std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
-        // std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
-       
-        // std::string line;
-        // std::ifstream file_cgi("site_example/cgi-bin/cookies.txt", std::ifstream::in | std::ifstream::app); // окрываем файл для чтения
-        // response << protocol;
-        // answer.append(response.str()); 
-        // if (file_cgi.is_open()) {
-        //     while (getline(file_cgi, line)) {
-        //         //response << line;
-        //         answer.append(line); 
-        //     }
-        // }
-        // //answer = response.str();
-        // std::cout << "\x1b[1;92m" << "> answer: " << answer  << "\n" << "\x1b[0m";
-        // // in.close();
-        // // FILE *cgi_bin;
-        // // cgi_bin = fopen("site_example/cgi-bin/cookies.txt", "r");
-        // // response << cgi_bin;
+        answer = response.str();
+        
         // response.write(contents.data(), contents.size());
         // answer = response.str();
+       
+        std::cout << "\x1b[1;92m" << "> answer: " << answer  << "\n" << "\x1b[0m";
+       
 
     }
     if (code == 200) {
         contentType = findContentType();
 
-         std::cout << "\x1b[1;95m" << "\b\b>>>>> RESPONSE <<<<<\n" << "\x1b[0m"; 
+        std::cout << "\x1b[1;95m" << "\b\b>>>>> RESPONSE <<<<<\n" << "\x1b[0m"; 
   
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
 
         response << protocol << " 200 OK\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
         answer = response.str();
-        // stream.seekg(streamPos);
         response.write(contents.data(), contents.size());
         answer = response.str();
+
+        std::cout << "\x1b[1;95m" << "\b\b>>>>> RESPONSE END <<<<<\n" << "\x1b[0m"; 
+    } else if (code == 201){
+        std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
+        std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+        response << protocol << " 200 OK\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
+        answer = response.str();
+        // response.write(contents.data(), contents.size());
+        // answer = response.str();
 
     } else if (code == 404){
         
@@ -102,9 +85,18 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
 
-        response << protocol << " Bad Request\r\n\r\n";
+        response << protocol << " 400 Bad Request\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
         response.write(contents.data(), contents.size());
 
+    } else if (code == 500) {
+        contentType = "text/html";
+        newUrl = "errors/500.html";
+
+        std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
+        std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+
+        response << protocol << " 500 Internal Server Error\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
+        response.write(contents.data(), contents.size());
     }
 
     return(answer);
@@ -114,7 +106,7 @@ std::string Response::findContentType(){
     size_t posDot = 0;
     
     std::string key;
-    std::cout << "url response p 77 |" << url << "|" << std::endl;
+    std::cout << "url response p 97 |" << url << "|" << std::endl;
     posDot = url.rfind('.');
     if (posDot == std::string::npos) {
         std::cout << "Response.cpp, p. 79 - Dot not found" << std::endl;  // переделать
@@ -133,6 +125,56 @@ std::string Response::findContentType(){
     return(it->second);
 }
 
+void Response::checkFile(bool cgi_request) {
+        char arr[newUrl.length() + 1];
+        memset (arr, 0, (newUrl.length() + 1));
+        strcpy(arr, newUrl.c_str());
+        //  std::cout << "NEWURLLLL processor " << newUrl << "\n";
+        //  std::cout << "ARR processor " << arr << "\n"; 
+        pFile = fopen(arr, "r");
+        std::cout << "cgi_request|||||||||||| " << cgi_request << arr << "\n"; 
+        // if (cgi_request == true) {
+        //     answer = makeAnswer(newUrl, 100);
+        //     //fclose (pFile);
+        // }  
+        if (pFile!=NULL)
+        {
+            if (cgi_request) {
+                answer = makeAnswer(newUrl, 100);
+            } else {
+                answer = makeAnswer(newUrl, 200);
+            }
+            fclose (pFile);
+        } else {
+            answer = makeAnswer(newUrl, 404);
+        }
+    }
+
+    void Response::checkPostReq(bool cgi_request, std::string& _filename) {
+        filename = _filename;
+        std::cout << "-----Check Post Request-------" << std::endl;
+        std::ifstream ifs ("site_example/cgi-bin/upload/" + filename);
+        std::cout << "-----filename-------|" << filename << "|" << std::endl;
+        if (ifs.is_open()){
+            std::cout << "-----Check Well Post Request-------" << std::endl;
+            if (cgi_request) {
+                answer = makeAnswer(newUrl, 100);
+            } else {
+                answer = makeAnswer(newUrl, 200);
+            }
+        } else {
+            std::cout << "-----Check Wrong Post Request-------" << std::endl;
+            answer = makeAnswer(newUrl, 500);
+        }
+    }
+
+    std::string& Response::getAnswer(){
+        return (answer);
+    }
+
+    // void Response::setAnswer(std::string _answer){
+    //     answer = _answer;
+    // }
 
 void Response::initMimeType() {
     mimeType["txt"]="text/plain; charset=utf-8";

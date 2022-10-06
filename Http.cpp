@@ -15,9 +15,11 @@ Request *Http::getRequest(int fd) {
 
 std::string Http::getPartAnswer(int fd) {
     std::string partAnswer;
-    Processor *proc = getRequest(fd)->getProcessor();
+    // Processor *proc = getRequest(fd)->getProcessor();
 
-    partAnswer = proc->getAnswer();
+    partAnswer = getRequest(fd)->getResponse()->getAnswer();
+
+    // getRequest(fd)->getResponse()->setAnswer("");
 
 
     return (partAnswer);
@@ -28,21 +30,15 @@ bool Http::initRequest(int _fd, std::string _buffer, std::string _root) {
     std::map<int, Request*>::iterator it = requests.find(_fd);
     if (it == requests.end()) {
         Request *request = new Request(_buffer);
-        requests.insert (std::pair<int, Request*>(_fd, request));
-        std::cout << "_root p31 |" << _root << "|" << std::endl;
+        requests.insert(std::pair<int, Request*>(_fd, request));
+        // std::cout << "_root p31 |" << _root << "|" << std::endl;
         request->setRoot(_root);
-         std::cout << "root http p32 |" << request->getRoot() << "|" << std::endl;
+        //  std::cout << "root http p32 |" << request->getRoot() << "|" << std::endl;
         request->requestParsing();
-        //request->getEndBody();
         return(request->getEndBody());
     } else {
         it->second->setBuffer(_buffer);
         it->second->requestParsing();
-       //it->second->getEndBody();
         return(it->second->getEndBody());
     } 
 }
-
-// bool Request::getEndBody(){
-//     return (endBody);
-// }
