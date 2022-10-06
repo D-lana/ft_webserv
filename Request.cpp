@@ -2,10 +2,10 @@
 
 Request::Request(std::string& _buffer){
 
-    // method = "";
-    // buffer = "";
+    method = "";
+    buffer = "";
     buffer = _buffer;
-    // url = "";
+    url = "";
     protocol = "HTTP/1.1";
     fullBuffer = "";
     parsLine = false;
@@ -18,8 +18,6 @@ Request::Request(std::string& _buffer){
 void Request::parsFirstLine() {
 
     std::size_t pos = 0;
-    // std::cout << "buffer " << "|" << buffer << "|" << std::endl;
-    method = "";
     if ((pos = buffer.find(' ')) == std::string::npos) {
         std::cout << "Request.cpp, p. 8 - symbol not found" << std::endl;  // переделать
         exit(-1);
@@ -28,33 +26,40 @@ void Request::parsFirstLine() {
     std::cout << "method" << "|" << method << "|" << std::endl;
     buffer.erase(0, pos+1);
 
-    url = "";
     if ((pos = buffer.find(' ')) == std::string::npos) {
         std::cout << "Request.cpp, p. 16 - symbol not found" << std::endl;  // переделать
         exit(-1);
     }
     url = buffer.substr(1, pos - 1);
+    
+    std::cout << "url " << "|" << url << "|" << std::endl;
+    buffer.erase(0, pos+1);
+    if ((pos = url.find("kotiki")) != std::string::npos){
+        std::string tmp;
+        tmp = url;
+        url = url.substr(0, pos);
+        url = url.append(tmp.substr(pos + 6));
+
+         std::cout << "url kotiki " << "|" << url << "|" << std::endl;
+
+    }
     if (url == ""){
         url = "index.html";
     }
-    std::cout << "url " << "|" << url << "|" << std::endl;
-    buffer.erase(0, pos+1);
-
-    // if (url.find("cgi-bin") != std::string::npos) {
-    //     cgi->createDynamicHtml(url);
-    //     if ((pos = url.find('.')) != std::string::npos) {
-    //         url = url.substr(0, pos+1) + "html";
-    //         std::cout << "url BIN " << "|" << url << "|" << std::endl;
-    //             cgiRequest = true;
-    //     }
-    // }
+    if (url.find("cgi-bin") != std::string::npos) {
+        cgi->createDynamicHtml(url);
+        if ((pos = url.find('.')) != std::string::npos) {
+            url = url.substr(0, pos+1) + "html";
+            std::cout << "url BIN " << "|" << url << "|" << std::endl;
+                cgiRequest = true;
+        }
+    }
 
     if ((pos = buffer.find("\r\n")) == std::string::npos) {
         std::cout << "Request.cpp, p. 22 - symbol not found" << std::endl;  // переделать
         exit(-1);
     }
     buffer.erase(0, pos + 2);
-    // std::cout << "buffer " <<"|" << buffer << "|" << std::endl;
 }
 
     void Request::makeHeaders() {
@@ -120,7 +125,7 @@ void Request::parsFirstLine() {
 
             std::cout << "----------request file open---------" <<std::endl;
             std::ofstream fout;
-            fout.open("site_example/cgi-bin/upload/" + filename, std::ofstream::out);
+            fout.open("site_example/upload/" + filename, std::ofstream::out);
             // fout.open("upload/" + filename, std::ofstream::out);
             // std::size_t posEof = fullBuffer.find(boundary);
             // std::size_t posN = fullBuffer.rfind("\n", posEof);
@@ -165,7 +170,6 @@ void Request::parsFirstLine() {
             // parsLine = false; // убрать после обработки удаления запросов
             // parsHeaders = false; // убрать после обработки удаления запросов
         } else if (!method.compare("POST")) {
-            // response = new Response(url, root);
             std::map<std::string, std::string>::iterator it = headers.find("Content-Type");
             if (it == headers.end()) {
                 std::cout << "ContentType not found" << std::endl; // убрать
@@ -180,27 +184,21 @@ void Request::parsFirstLine() {
                 bodyParsing();
                 std::cout << "request filename |" << filename << "|" << std::endl; 
                 response->checkPostReq(cgiRequest, filename);
-                // parsLine = false;
-                // parsHeaders = false;
             }
             
         } else if (!method.compare("DELETE")){
-            // response = new Response(url, root);
             remove(root.append(url).c_str());
             std::cout << "----------DELETE-----------" << std::endl;
 
         } else {
-            // response = new Response(url, root);
             std::cout << "UNDEFINED 405 — Method Not Allowed" << std::endl;
         }
-        // delete response;
-        // method = "";
-        // url = "";
+
     
 }
 
 Request::~Request(){
-    // delete proc1;
+     delete response;
 }
 
 Response* Request::getResponse() {
