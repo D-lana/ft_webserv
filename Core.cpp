@@ -5,8 +5,10 @@ Core::Core(std::vector<Server *> vectorServers_) : vectorServers(vectorServers_)
 	null_ptr1 = NULL;
 	maxFd = 0;
 	count_servers = vectorServers.size();
-	root = "";
-
+	env = new char*[COUNT_ENV];
+	for(int i = 0; i < COUNT_ENV; i++) {
+		env[i] = NULL;
+	}
 	FD_ZERO(&active_read);
 	FD_ZERO(&active_write);
 	std::cout << count_servers  << "\n";
@@ -14,42 +16,39 @@ Core::Core(std::vector<Server *> vectorServers_) : vectorServers(vectorServers_)
 	for (int i = 0; i < count_servers; ++i) {
 		FD_SET(vectorServers[i]->getFdSocket(), &active_read);
 		std::cout << "\x1b[1;92m" << "> Listen Socked: " << vectorServers[i]->getFdSocket() << "\n" << "\x1b[0m";
-		std::cout << "\x1b[1;92m" << vectorServers[i]->getRootFromConfig() << "\n" << "\x1b[0m";
 		if (vectorServers[i]->getFdSocket()  >= maxFd) {
 			maxFd = vectorServers[i]->getFdSocket() + 1;
 		}
 	}
 }
 
-void Core::run() {
+Core::~Core() {
+	delete env;
+	delete http;
+}
 
+void Core::run() {
 		this->read_set = this->active_read;
 		this->write_set = this->active_write;
-		//std::cout << "\x1b[1;31m" << "> Select block " << "\n" << "\x1b[0m";
 		if (select(maxFd, &this->read_set, &this->write_set, 0, 0) < 0) {
-			// continue;
 			return ;
-			//error("Error: Select socket failed");
 		}
 		createNewSocket();
 		for (it_clients = list_clients.begin(); it_clients != list_clients.end(); ++it_clients) {
-			//std::cout << "\x1b[1;33m" << "\n> Next sock: " << it_clients->sock << "\n\n" << "\x1b[0m";
 			if (FD_ISSET(it_clients->sock, &this->read_set) && it_clients->ready_to_send == -1) {
-					std::cout << "\x1b[1;96m" << "\n> Found Read socket fd: " << it_clients->sock << "\n\n" << "\x1b[0m";
-					close_connection = readFromClient(it_clients->sock);
-					if (close_connection == 0) {
-						std::cout << "\x1b[1;33m" << "\n> Close socked: " << it_clients->sock << "\n\n" << "\x1b[0m";
-						close (it_clients->sock);
-						FD_CLR(it_clients->sock, &active_read);
-					}
-					else if (close_connection < 0) {
-						std::cout << "End of file, read_sock: " << it_clients->sock << "\n";
-						//close (it_clients->sock);
-						FD_CLR(it_clients->sock, &this->read_set);
-						//FD_CLR(it_clients->sock, &active_write);
-						it_clients->ready_to_send = 1;
-						FD_SET(it_clients->sock, &active_write);
-					}
+				std::cout << "\x1b[1;96m" << "\n> Found Read socket fd: " << it_clients->sock << "\n\n" << "\x1b[0m";
+				close_connection = readFromClient(it_clients->sock);
+				if (close_connection == 0) {
+					std::cout << "\x1b[1;33m" << "\n> Close socked: " << it_clients->sock << "\n\n" << "\x1b[0m";
+					close (it_clients->sock);
+					FD_CLR(it_clients->sock, &active_read);
+				}
+				else if (close_connection < 0) {
+					std::cout << "End of file, read_sock: " << it_clients->sock << "\n";
+					FD_CLR(it_clients->sock, &this->read_set);
+					it_clients->ready_to_send = 1;
+					FD_SET(it_clients->sock, &active_write);
+				}
 			}
 			if (FD_ISSET(it_clients->sock, &write_set) && it_clients->ready_to_send == 1) {
 				std::cout << "\x1b[1;96m" << "\n> Found Write socket fd: " << it_clients->sock << "\n\n" << "\x1b[0m";
@@ -62,21 +61,13 @@ void Core::run() {
 		}
 }
 
-		
-int Core::error (const char* err_type) {
-	std::cerr << err_type << std::endl;
-	exit(EXIT_FAILURE);
-}
-
-int Core::readFromClient(int fd) { //// Сюда приходят данные от браузера GET POST и тд
-	long	lenRequest;
-	char	buf[BUFSIZE];
-	// size_t bufSize;
-	// bufSize = BUFSIZE;
+int Core::readFromClient(int fd) {
+	long		lenRequest;
+	char		buf[BUFSIZE];
+	std::string	buffer;
 
 	lenRequest = read(fd, buf, BUFSIZE);
 	std::cout << "LENREQUEST " << lenRequest << "\n\n";
-	std::string buffer;
 	if (lenRequest > 0) {
 		std::cout << "\x1b[1;31m" << "\n> HTTP from brauser___fd: " << fd << "\n\n" << "\x1b[0m";
 		printf("%s\n", buf);
@@ -84,10 +75,6 @@ int Core::readFromClient(int fd) { //// Сюда приходят данные �
 		buffer.append(buf, lenRequest);
 		ServerPairs tmp_servPairs; 
 		tmp_servPairs = getServerPairs(fd);
-		//int f = getFDListenSocket(fd);
-		std::cout << "\x1b[1;31m" << "> CORE 96 fd: " << tmp_servPairs.getRoot() << "\n" << "\x1b[0m";
-		std::cout << "\x1b[1;31m" << "> CORE 96 fd: " << tmp_servPairs.getUpload() << "\n" << "\x1b[0m";
-		//if (http->initRequest(fd, buffer) == true) {
 		if (http->initRequest(fd, buffer, tmp_servPairs) == true) {
 			return (-1);
 		}
@@ -97,9 +84,21 @@ int Core::readFromClient(int fd) { //// Сюда приходят данные �
 		return (0);
 }
 
+int Core::writeToClient(int fd) {	
+	std::string part_answer = http->getPartAnswer(fd);
+
+	send(fd, part_answer.c_str(), part_answer.length(), 0);
+	if (http->getEndAnswer() == true) {
+		std::cout << "\x1b[1;92m" << "\n> Send and DELETE Msg To Client fd: " << fd << "\n\n" << "\x1b[0m";
+		http->deleteRequest(fd);
+		return(1);
+	}
+	std::cout << "\x1b[1;92m" << "\n> Send Part 1024 Msg To Client fd: " << fd << "\n\n" << "\x1b[0m";
+	return (0);
+}
+
 int Core::createNewSocket() {
 	for (int i = 0; i < maxFd; i++) {
-		//std::cout << "Found active socket......." << i << "\n";
 		if (FD_ISSET(i, &read_set)) {
 			std::cout << "\x1b[1;96m" << "\n> Found Active Listen socket fd: " << i << "\n" << "\x1b[0m";
 			std::cout << getFDListenSocket(i) << "\n";
@@ -130,20 +129,6 @@ int Core::createNewSocket() {
 	return (0);
 }
 
-int Core::writeToClient(int fd) {	
-	//size_t readsize = http->getLenAnswer(fd);
-	std::string tmp = http->getPartAnswer(fd);
-
-	send(fd, tmp.c_str(), tmp.length(), 0);
-	if (http->getEndAnswer() == true) {
-		std::cout << "\x1b[1;92m" << "\n> Send and DELETE Msg To Client fd: " << fd << "\n\n" << "\x1b[0m";
-		http->deleteRequest(fd);
-		return(1);
-	}
-	std::cout << "\x1b[1;92m" << "\n> Send Message To Client!___fd: " << fd << "\n\n" << "\x1b[0m";
-	return (0);
-}
-
 int Core::getFDListenSocket(int fd) {
 	for (int num_serv = 0; num_serv < count_servers; ++num_serv) {
 		if (vectorServers[num_serv]->getFdSocket() == fd) {
@@ -156,18 +141,20 @@ int Core::getFDListenSocket(int fd) {
 const ServerPairs& Core::getServerPairs(int fd) {
 	int listen_sock = -1;
 	for (std::list<t_Client>::iterator it = list_clients.begin(); it != list_clients.end(); ++it) {
-		std::cout << "\x1b[1;92m" << "> it->sock= " << it->sock << "\n" << "\x1b[0m";
 		if (it->sock == fd) {
 			listen_sock = it->listen_sock;
 		}
 	}
 	for (int num_serv = 0; num_serv < count_servers; ++num_serv) {
 		if (vectorServers[num_serv]->getFdSocket() == listen_sock) {
-			std::cout << "\x1b[1;92m" << "> getServerPairs() FOUND " << listen_sock << "\n" << "\x1b[0m";
 			return (vectorServers[num_serv]->getServerPairs());
 		}
 	}
-	std::cout << "\x1b[1;92m" << "> NOT FOUND " << fd << "\n" << "\x1b[0m";
 	return *null_ptr1;
+}
+
+int Core::error (const char* err_type) {
+	std::cerr << err_type << std::endl;
+	exit(EXIT_FAILURE);
 }
 	
