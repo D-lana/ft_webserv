@@ -22,7 +22,6 @@
 #include "Request.hpp"
 #include "Response.hpp"
 #include "Http.hpp"
-#include "Socket.hpp"
 //#include "CGI.hpp"
 
 #define BUFSIZE 1024

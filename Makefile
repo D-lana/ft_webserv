@@ -25,6 +25,9 @@ all:			$(NAME)
 test:			$(NAME)
 				@./$(NAME) configs/test.conf
 
+default:		$(NAME)
+				@./$(NAME)
+
 $(NAME):		$(OBJS) $(HEADERS)
 				$(CC) -o $(NAME) $(OBJS)
 
