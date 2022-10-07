@@ -1,5 +1,5 @@
 #ifndef LIBRARY_HPP
-#define LIBRARY_HPP
+# define LIBRARY_HPP
 
 # include <sys/socket.h>
 # include <unistd.h>
