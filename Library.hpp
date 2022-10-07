@@ -2,6 +2,7 @@
 # define LIBRARY_HPP
 
 # include <sys/socket.h>
+# include <sys/wait.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <netinet/in.h>
@@ -22,6 +23,7 @@
 # include <cstring>
 # include <arpa/inet.h>
 # include <algorithm>
+# include <csignal>
 
 # include "Location.hpp"
 # include "ServerPairs.hpp"
@@ -37,6 +39,7 @@
 # define BUFSIZE 1024
 # define PORT 8080
 # define ADDRESS INADDR_ANY
+# define DEFAULT_CONFIG "configs/default.conf"
 
 # define PATH_PY "/usr/local/bin/python3"
 # define PATH_SH "/bin/bash"

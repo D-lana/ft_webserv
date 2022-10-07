@@ -1,7 +1,31 @@
 #ifndef CORE_HPP
 # define CORE_HPP
 
-# include "Library.hpp"
+// #include <sys/socket.h>
+// #include <unistd.h>
+// #include <stdlib.h>
+// #include <netinet/in.h>
+// #include <iostream>
+// #include <stdio.h>
+// #include <string.h>
+// #include <sys/types.h>
+// #include <netdb.h>
+// #include <fcntl.h>
+// #include <poll.h>
+// #include <vector>
+// //#include <map>
+// #include <list>
+
+// #include <algorithm>
+
+// #include "Server.hpp"
+// #include "Request.hpp"
+// #include "Response.hpp"
+// #include "Http.hpp"
+// //#include "CGI.hpp"
+#include "Library.hpp"
+
+#define BUFSIZE 1024
 
 typedef struct s_Client 
 {

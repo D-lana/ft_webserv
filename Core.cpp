@@ -1,4 +1,5 @@
-# include "Library.hpp"
+// #include "Core.hpp"
+#include "Library.hpp"
 
 Core::Core(std::vector<Server *> vectorServers_) : vectorServers(vectorServers_) {
 	http = new Http();

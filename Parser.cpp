@@ -1,3 +1,4 @@
+// #include "Parser.hpp"
 #include "Library.hpp"
 # define EXTENSION ".conf"
 
@@ -310,8 +311,9 @@ void FtParser::chooseTokenInLocation(std::string token, std::string str, Locatio
 	void FtParser::findLocationBinPathPy(std::string str, std::string token, Location& location) {
 
 	std::vector<std::string> vector = FtParser::splitLineOfConfig(token, str);
-	if (vector.size() != 1 || location.getCgiInLocation() == 0 || !location.getLocationBinPathPy().empty())
+	if (vector.size() != 1 || location.getLocationBinPathPy().empty() != 1 ) {
 		throw std::runtime_error("Invalid syntax of binpath.py (location)");
+	}
 	location.setLocationBinPathPy(vector[0]);
 	}
 
@@ -319,7 +321,7 @@ void FtParser::chooseTokenInLocation(std::string token, std::string str, Locatio
 	void FtParser::findLocationBinPathSh(std::string str, std::string token, Location& location) {
 
 	std::vector<std::string> vector = FtParser::splitLineOfConfig(token, str);
-	if (vector.size() != 1 || location.getCgiInLocation() == 0 || !location.getLocationBinPathSh().empty())
+	if (vector.size() != 1 || location.getLocationBinPathSh().empty() != 1)
 		throw std::runtime_error("Invalid syntax of binpath.sh (location)");
 	location.setLocationBinPathSh(vector[0]);
 	}
@@ -622,6 +624,7 @@ void FtParser::checkTokens(std::vector<std::string> res) {
 		str = (*it).substr(0, i);
 		if (!str.empty() && _configTokens.serverTokens.find(str)->first != str) {
 			// std::cout << "str = " << str << std::endl;
+			std::cerr << "problem in: " << str << std::endl;;
 			throw std::runtime_error("Unproper token in config");
 		}
 		++it;
