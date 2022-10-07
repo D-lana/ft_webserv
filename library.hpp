@@ -35,7 +35,8 @@
 # include "Core.hpp"
 
 # define BUFSIZE 1024
-//# define PORT 8080
+# define PORT 8080
+# define ADDRESS INADDR_ANY
 
 # define PATH_PY "/usr/local/bin/python3"
 # define PATH_SH "/bin/bash"

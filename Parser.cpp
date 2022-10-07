@@ -1,17 +1,5 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Parser.cpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/30 17:55:20 by marvin            #+#    #+#             */
-/*   Updated: 2022/08/30 17:55:20 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "Parser.hpp"
-#define EXTENSION ".conf"
+#include "Library.hpp"
+# define EXTENSION ".conf"
 
 FtParser::FtParser(const char *argv) : _configTokens(), _config(argv) {
 }

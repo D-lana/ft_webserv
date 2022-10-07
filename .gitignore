@@ -5,3 +5,4 @@ Server
 errors/.DS_Store
 resources/.DS_Store
 Socket.hpp
+webserv

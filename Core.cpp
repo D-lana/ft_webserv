@@ -1,5 +1,4 @@
-#include "Core.hpp"
-# include "library.hpp"
+# include "Library.hpp"
 
 Core::Core(std::vector<Server *> vectorServers_) : vectorServers(vectorServers_) {
 	http = new Http();
@@ -154,31 +153,6 @@ int Core::getFDListenSocket(int fd) {
 	return(-1);
 }
 
-const std::string& Core::getRootFromConfig(int fd) const {
-	for (int num_serv = 0; num_serv < count_servers; ++num_serv) {
-		if (vectorServers[num_serv]->getFdSocket() == fd) {
-			return (vectorServers[num_serv]->getRootFromConfig());
-		}
-	}
-	return (root);
-}
-
-const ServerPairs& Core::getServerPairs(int fd) {
-	int listen_sock = -1;
-	for (it_clients = list_clients.begin(); it_clients != list_clients.end(); ++it_clients) {
-		if (it_clients->sock == fd) {
-			it_clients->listen_sock = listen_sock;
-		}
-	}
-	for (int num_serv = 0; num_serv < count_servers; ++num_serv) {
-		if (vectorServers[num_serv]->getFdSocket() == listen_sock) {
-			return (vectorServers[num_serv]->getServerPairs());
-		}
-	}
-	return *null_ptr1;
-}
-
-
 const ServerPairs& Core::getServerPairs(int fd) {
 	int listen_sock = -1;
 	for (std::list<t_Client>::iterator it = list_clients.begin(); it != list_clients.end(); ++it) {
@@ -196,5 +170,4 @@ const ServerPairs& Core::getServerPairs(int fd) {
 	std::cout << "\x1b[1;92m" << "> NOT FOUND " << fd << "\n" << "\x1b[0m";
 	return *null_ptr1;
 }
-
 	

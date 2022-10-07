@@ -24,7 +24,6 @@ class Core {
 		fd_set					active_write, write_set;
 		int						maxFd;
 
-		//std::map<int, t_Client>		listClients;
 		std::list<t_Client>				list_clients;
 		std::list<t_Client>::iterator	it_clients;
 		

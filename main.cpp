@@ -1,15 +1,4 @@
-// #include <iostream>
-// #include <vector>
-// #include <list>
-// #include <iterator>
-// // #include "Server.hpp"
-// #include "Core.hpp"
-// //#include "ConfigTokens.hpp"
-// #include <csignal>
-# include "library.hpp"
-# include "Core.hpp"
-
-#define ADDRESS INADDR_ANY
+#include "Library.hpp"
 
 bool gFlagExit = 0;
 

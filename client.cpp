@@ -1,5 +1,3 @@
-
-
 #include <stdio.h>
 #include <sys/socket.h>
 #include <stdlib.h>
@@ -9,7 +7,7 @@
 #include <arpa/inet.h>
 
 #define PORT 8080
-#define IP_ADDRESS "127.0.0.1"
+#define ADDRESS "127.0.0.1"
 
 int main()
 {
@@ -31,10 +29,10 @@ int main()
 			
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_port = htons(PORT);
-	serv_addr.sin_addr.s_addr = inet_addr(IP_ADDRESS);
+	serv_addr.sin_addr.s_addr = inet_addr(ADDRESS);
 
 	//Convert IPv4 and IPv6 addresses from text to binary
-	if (inet_pton(AF_INET, IP_ADDRESS, &serv_addr.sin_addr) <= 0)
+	if (inet_pton(AF_INET, ADDRESS, &serv_addr.sin_addr) <= 0)
 	{
 		printf("\n Error: Invalid Address/Address not supported\n");
 		return -1;
