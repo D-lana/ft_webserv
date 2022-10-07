@@ -4,12 +4,13 @@ FLAGS		= -Wall -Wextra -Werror -g
 #-fsanitize=address -fvisibility=hidden -fvisibility-inlines-hidden
 # -std=c++98
 
-SRCS		= main.cpp Core.cpp Server.cpp Response.cpp Request.cpp Location.cpp \
-			Http.cpp Parser.cpp ServerPairs.cpp ConfigTokens.cpp CGI.cpp
+SRCS		= main.cpp Location.cpp ServerPairs.cpp Core.cpp Server.cpp Response.cpp Request.cpp  \
+			Http.cpp Parser.cpp ConfigTokens.cpp CGI.cpp
 
-HEADERS		= Core.hpp Server.hpp \
-			Response.hpp Request.hpp Location.hpp \
-			Http.hpp Parser.hpp ServerPairs.hpp ConfigTokens.hpp CGI.hpp
+HEADERS		= library.hpp
+#  Core.hpp Location.hpp  Server.hpp \
+# 			Response.hpp Request.hpp ServerPairs.hpp\
+# 			Http.hpp Parser.hpp ConfigTokens.hpp CGI.hpp 
 
 OBJS		=	$(SRCS:.cpp=.o)
 

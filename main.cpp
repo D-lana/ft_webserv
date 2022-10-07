@@ -1,14 +1,13 @@
-#include <iostream>
-#include <vector>
-#include <list>
-#include <iterator>
-//#include "Server.hpp"
-#include "Core.hpp"
-#include "Parser.hpp"
-#include "ConfigTokens.hpp"
-#include <csignal>
-
-#define DEFAULT_PATH "configs/default.conf"
+// #include <iostream>
+// #include <vector>
+// #include <list>
+// #include <iterator>
+// //#include "Server.hpp"
+// // #include "Core.hpp"
+// // #include "Parser.hpp"
+// // #include "ConfigTokens.hpp"
+// #include <csignal>
+#include "Library.hpp"
 
 bool gFlagExit = 0;
 
@@ -28,7 +27,7 @@ int main(int argc, const char* argv[])
     }
 	const char* config;
 	if (argc == 1) {
-		config = DEFAULT_PATH;
+		config = DEFAULT_CONFIG;
     }
 	else {
 		config = argv[1];

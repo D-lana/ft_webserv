@@ -1,13 +1,7 @@
 #ifndef HTTP_HPP
 # define HTTP_HPP
 
-# include "Request.hpp"
-# include <string>
-# include <map>
-
-# define BUFSIZE 1024
-
-
+# include "Library.hpp"
 
 class Http {
 
@@ -30,7 +24,7 @@ class Http {
 
         Request* getRequest(int fd);
         std::string getPartAnswer(int fd);
-        bool initRequest(int _fd, std::string _buffer, std::string _root);
+        bool initRequest(int _fd, std::string _buffer, ServerPairs &servPairs);
         size_t getContentSize();
         bool getEndAnswer();
         void deleteRequest(int fd);
@@ -38,7 +32,5 @@ class Http {
 
 
 };
-
-
 
 #endif

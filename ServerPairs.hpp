@@ -1,15 +1,8 @@
 #ifndef SERVERPAIRS_HPP
 #define SERVERPAIRS_HPP
 
-#include <vector>
-#include <string>
-#include <cstring>
-#include <fstream>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <iostream>
- #include "Location.hpp"
+# include "Library.hpp"
+// # include "Location.hpp"
 
 class ServerPairs {
 
@@ -57,7 +50,7 @@ class ServerPairs {
 
         std::vector<Location>& getLocations();
         const u_short& getPort() const;
-        const std::string& getRoot() const; //dlana
+        const std::string& getRoot() const; 
         const std::string& getIndex();
         const std::string& getServName();
         const in_addr_t& getHost() const;

@@ -1,4 +1,4 @@
-#include "Request.hpp"
+#include "Library.hpp"
 
 Request::Request(std::string& _buffer){
 
@@ -214,7 +214,7 @@ bool Request::getEndBody(){
     return (endBody);
 }
 
-void Request::setRoot(std::string& _root){
+void Request::setRoot(const std::string& _root){
     root = _root;
 }
 

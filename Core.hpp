@@ -1,28 +1,29 @@
 #ifndef CORE_HPP
-#define CORE_HPP
+# define CORE_HPP
 
-#include <sys/socket.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <netinet/in.h>
-#include <iostream>
-#include <stdio.h>
-#include <string.h>
-#include <sys/types.h>
-#include <netdb.h>
-#include <fcntl.h>
-#include <poll.h>
-#include <vector>
-//#include <map>
-#include <list>
+// #include <sys/socket.h>
+// #include <unistd.h>
+// #include <stdlib.h>
+// #include <netinet/in.h>
+// #include <iostream>
+// #include <stdio.h>
+// #include <string.h>
+// #include <sys/types.h>
+// #include <netdb.h>
+// #include <fcntl.h>
+// #include <poll.h>
+// #include <vector>
+// //#include <map>
+// #include <list>
 
-#include <algorithm>
+// #include <algorithm>
 
-#include "Server.hpp"
-#include "Request.hpp"
-#include "Response.hpp"
-#include "Http.hpp"
-//#include "CGI.hpp"
+// #include "Server.hpp"
+// #include "Request.hpp"
+// #include "Response.hpp"
+// #include "Http.hpp"
+// //#include "CGI.hpp"
+#include "Library.hpp"
 
 #define BUFSIZE 1024
 
@@ -40,13 +41,13 @@ typedef struct s_Client
 class Core {
 	private:
 		Http					*http;
+		ServerPairs              *null_ptr1;
 		// добавить переменную на keep_alive/keep_stop - обрубить соединение клиента или нет
 
 		fd_set					active_read, read_set;
 		fd_set					active_write, write_set;
 		int						maxFd;
 
-		//std::map<int, t_Client>		listClients;
 		std::list<t_Client>				list_clients;
 		std::list<t_Client>::iterator	it_clients;
 		
@@ -65,15 +66,18 @@ class Core {
 	public:
 
 		Core(std::vector<Server *> vectorServers_);
-		void run();
 		~Core() {};
-		int error (const char* err_type);
-		int readFromClient(int fd);
+		void run();
 		int createNewSocket();
+
+		int error (const char* err_type);
+
 		int writeToClient(int fd);
+		int readFromClient(int fd);
+		
 		int getFDListenSocket(int fd);
 		const std::string& getRootFromConfig(int fd) const;
-		// const ServerPairs& getServerPairs(int fd) const;
+		const ServerPairs& getServerPairs(int fd);
 };
 
 #endif

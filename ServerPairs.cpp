@@ -1,4 +1,5 @@
-#include "ServerPairs.hpp"
+// #include "ServerPairs.hpp"
+#include "Library.hpp"
 
 ServerPairs::ServerPairs() {
 	_port = 0;
@@ -76,7 +77,7 @@ const in_addr_t& ServerPairs::getHost() const {
 	return _host;
 };
 
-const std::string& ServerPairs::getRoot() const { //dlana
+const std::string& ServerPairs::getRoot() const {
 	return _root;
 };
 
@@ -90,3 +91,21 @@ const std::string& ServerPairs::getUpload() {
 const int& ServerPairs::getBodySize() {
 	return _maxBodySize;
 };
+
+ServerPairs &ServerPairs::operator=(const ServerPairs &other) {
+	if (this == &other)
+		return(*this);
+	this->_autoIndex = other._autoIndex;
+	this->_errorCode = other._errorCode;
+	this->_errorDescription = other._errorDescription;
+	this->_host = other._host;
+	this->_index = other._index;
+	this->_locations = other._locations;
+	this->_maxBodySize = other._maxBodySize;
+	this->_method = other._method;
+	this->_port = other._port;
+	this->_root = other._root;
+	this->_servName = other._servName;
+	this->_uploadPath = other._uploadPath;
+	return(*this);
+}

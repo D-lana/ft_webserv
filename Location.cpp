@@ -1,4 +1,5 @@
-#include "Location.hpp"
+// #include "Location.hpp"
+# include "Library.hpp"
 
 Location::Location() {
 	_locationName.clear();

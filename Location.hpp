@@ -1,8 +1,7 @@
 #ifndef LOCATION_HPP
-#define LOCATION_HPP
+# define LOCATION_HPP
 
-#include <vector>
-#include <iostream>
+# include "Library.hpp"
 
         class Location {
         
@@ -50,6 +49,5 @@
             const std::string& getLocationBinPathPy(void);
             const std::string& getLocationBinPathSh(void);
 };
-
 
 #endif

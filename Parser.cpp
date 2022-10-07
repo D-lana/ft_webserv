@@ -1,5 +1,6 @@
-#include "Parser.hpp"
-#define EXTENSION ".conf"
+// #include "Parser.hpp"
+#include "Library.hpp"
+# define EXTENSION ".conf"
 
 FtParser::FtParser(const char *argv) : _configTokens(), _config(argv) {
 }
