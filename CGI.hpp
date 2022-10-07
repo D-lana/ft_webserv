@@ -1,7 +1,7 @@
 #ifndef CGI_HPP
-#define CGI_HPP
+# define CGI_HPP
 
-# include "library.hpp"
+# include "Library.hpp"
 
 class CGI {
 	private:

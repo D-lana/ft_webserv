@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Core.cpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/30 17:39:44 by marvin            #+#    #+#             */
-/*   Updated: 2022/09/30 17:39:44 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "Core.hpp"
 # include "library.hpp"
 
@@ -187,6 +175,25 @@ const ServerPairs& Core::getServerPairs(int fd) {
 			return (vectorServers[num_serv]->getServerPairs());
 		}
 	}
+	return *null_ptr1;
+}
+
+
+const ServerPairs& Core::getServerPairs(int fd) {
+	int listen_sock = -1;
+	for (std::list<t_Client>::iterator it = list_clients.begin(); it != list_clients.end(); ++it) {
+		std::cout << "\x1b[1;92m" << "> it->sock= " << it->sock << "\n" << "\x1b[0m";
+		if (it->sock == fd) {
+			listen_sock = it->listen_sock;
+		}
+	}
+	for (int num_serv = 0; num_serv < count_servers; ++num_serv) {
+		if (vectorServers[num_serv]->getFdSocket() == listen_sock) {
+			std::cout << "\x1b[1;92m" << "> getServerPairs() FOUND " << listen_sock << "\n" << "\x1b[0m";
+			return (vectorServers[num_serv]->getServerPairs());
+		}
+	}
+	std::cout << "\x1b[1;92m" << "> NOT FOUND " << fd << "\n" << "\x1b[0m";
 	return *null_ptr1;
 }
 

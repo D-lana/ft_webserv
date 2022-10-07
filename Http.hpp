@@ -1,7 +1,7 @@
 #ifndef HTTP_HPP
 # define HTTP_HPP
 
-# include "library.hpp"
+# include "Library.hpp"
 
 class Http {
 
@@ -24,7 +24,7 @@ class Http {
 
         Request* getRequest(int fd);
         std::string getPartAnswer(int fd);
-        bool initRequest(int _fd, std::string _buffer, ServerPairs &servPairs); //, ServerPairs &servPairs
+        bool initRequest(int _fd, std::string _buffer, ServerPairs &servPairs);
         size_t getContentSize();
         bool getEndAnswer();
         void deleteRequest(int fd);
@@ -32,7 +32,5 @@ class Http {
 
 
 };
-
-
 
 #endif

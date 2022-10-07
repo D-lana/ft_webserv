@@ -36,14 +36,14 @@ std::string Http::getPartAnswer(int fd) {
     return (partAnswer);
 }
 
-bool Http::initRequest(int _fd, std::string _buffer, ServerPairs &servPairs) { ///////////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  ServerPairs &servPairs
+bool Http::initRequest(int _fd, std::string _buffer, ServerPairs &servPairs) {
+
     std::map<int, Request*>::iterator it = requests.find(_fd);
     if (it == requests.end()) {
         Request *request = new Request(_buffer);
         requests.insert(std::pair<int, Request*>(_fd, request));
         // std::cout << "_root p31 |" << _root << "|" << std::endl;
-        std::string root = servPairs.getRoot(); ///////////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        request->setRoot(root);
+        request->setRoot(servPairs.getRoot());
         //  std::cout << "root http p32 |" << request->getRoot() << "|" << std::endl;
         request->requestParsing();
         return(request->getEndBody());

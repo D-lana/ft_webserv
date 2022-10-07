@@ -1,19 +1,7 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   WebServer.hpp                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/29 22:51:18 by marvin            #+#    #+#             */
-/*   Updated: 2022/08/29 22:51:18 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef PARSER_HPP
-#define PARSER_HPP
+# define PARSER_HPP
 
-# include "library.hpp"
+# include "Library.hpp"
 
 // enum serverTokens {
 // 	Host,

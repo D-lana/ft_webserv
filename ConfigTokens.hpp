@@ -1,7 +1,7 @@
 #ifndef CONFIG_HPP
 # define CONFIG_HPP
 
-# include "library.hpp"
+# include "Library.hpp"
 
 struct ConfigTokens {
     public:

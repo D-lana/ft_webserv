@@ -1,7 +1,7 @@
 #ifndef REQUESR_HPP
 # define REQUESR_HPP
 
-# include "library.hpp"
+# include "Library.hpp"
 
 class Request {
 
@@ -37,7 +37,7 @@ public:
     bool getEndBody();
     Response* getResponse();
     void setBuffer(std::string& _buffer);
-    void setRoot(std::string& _root);
+    void setRoot(const std::string& _root);
     // void setFilename(std::string _filename);
     const std::string getRoot() const;
 

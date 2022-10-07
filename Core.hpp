@@ -1,9 +1,10 @@
 #ifndef CORE_HPP
-#define CORE_HPP
+# define CORE_HPP
 
-# include "library.hpp"
+# include "Library.hpp"
 
-typedef struct s_Client {
+typedef struct s_Client 
+{
 	int						listen_sock;
 	int						sock;
 	struct sockaddr_in		client_addr;
