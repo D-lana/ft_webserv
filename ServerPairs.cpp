@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ServerPairs.hpp"
+#include "library.hpp"
 
 ServerPairs::ServerPairs() {
 	_port = 0;

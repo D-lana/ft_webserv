@@ -1,4 +1,4 @@
-#include "Server.hpp"
+# include "library.hpp"
 
 Server::Server(const ServerPairs& serv_in) : serv_pairs(serv_in) {
 	opt = 1;
@@ -34,9 +34,9 @@ const std::string& Server::getRootFromConfig() const {
 	return(serv_pairs.getRoot());
 }
 
-// const ServerPairs& Server::getServerPairs() const {
-// 	return(serv_pairs);
-// }
+const ServerPairs& Server::getServerPairs() const {
+	return(serv_pairs);
+}
 
 int Server::error(const char* err_type) {
 	std::cerr << err_type << std::endl;

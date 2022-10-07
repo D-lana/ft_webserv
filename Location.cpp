@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Location.hpp"
+// #include "Location.hpp"
+# include "library.hpp"
 
 Location::Location() {
 	_locationName.clear();

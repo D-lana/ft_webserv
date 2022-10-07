@@ -1,20 +1,7 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Location.hpp                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/30 11:32:30 by marvin            #+#    #+#             */
-/*   Updated: 2022/08/30 11:32:30 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef LOCATION_HPP
-#define LOCATION_HPP
+# define LOCATION_HPP
 
-#include <vector>
-#include <iostream>
+# include "Library.hpp"
 
         class Location {
         
@@ -62,6 +49,5 @@
             const std::string& getLocationBinPathPy(void);
             const std::string& getLocationBinPathSh(void);
 };
-
 
 #endif
