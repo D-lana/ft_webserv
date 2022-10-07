@@ -14,6 +14,10 @@ int CGI::createDynamicHtml(std::string url) {
 	for(int i = 0; i < COUNT_CMD; i++) {
 		cmd[i] = NULL;
 	}
+	env = new char*[COUNT_ENV]; /////////////////
+	for(int i = 0; i < COUNT_ENV; i++) {
+		env[i] = NULL;
+	}
 	cmd[0] = strdup(PATH_PY);
 	cmd[1] = strdup(url.c_str());
 	enviroment(url);
@@ -59,10 +63,6 @@ int CGI::enviroment(std::string url) {
 	http_cookie.append(HTTP_COOKIE);
 
 
-	env = new char*[COUNT_ENV];
-	for(int i = 0; i < COUNT_ENV; i++) {
-		env[i] = NULL;
-	}
 	env[0] = strdup(path_info.c_str());
 	env[1] = strdup(request_method.c_str());
 	env[2] = strdup(query_string.c_str());

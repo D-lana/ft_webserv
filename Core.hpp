@@ -66,7 +66,7 @@ class Core {
 	public:
 
 		Core(std::vector<Server *> vectorServers_);
-		~Core() {};
+		~Core();
 		void run();
 		int createNewSocket();
 
