@@ -1,27 +1,7 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ServerPairs.hpp                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/30 11:19:29 by marvin            #+#    #+#             */
-/*   Updated: 2022/08/30 11:19:29 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef SERVERPAIRS_HPP
 #define SERVERPAIRS_HPP
 
-#include <vector>
-#include <string>
-#include <cstring>
-#include <fstream>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <iostream>
- #include "Location.hpp"
+# include "Library.hpp"
 
 class ServerPairs {
 
