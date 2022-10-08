@@ -27,7 +27,7 @@ html_template = """<html>
         <h2>You've done cookies!</h2>
 
         <div>
-        <a href=""><img src="cook.jpg" width="300" height="250" alt="Место для котика"/></a>
+        <a href=""><img src="../site_example/cook.jpg" width="300" height="250" alt="Место для котика"/></a>
 	    </div>
         
         <p>To check in google chrome - chrome://settings/siteData </p>

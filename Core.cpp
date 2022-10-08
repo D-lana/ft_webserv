@@ -6,10 +6,10 @@ Core::Core(std::vector<Server *> vectorServers_) : vectorServers(vectorServers_)
 	null_ptr1 = NULL;
 	maxFd = 0;
 	count_servers = vectorServers.size();
-	env = new char*[COUNT_ENV];
-	for(int i = 0; i < COUNT_ENV; i++) {
-		env[i] = NULL;
-	}
+	// env = new char*[COUNT_ENV];
+	// for(int i = 0; i < COUNT_ENV; i++) {
+	// 	env[i] = NULL;
+	// }
 	FD_ZERO(&active_read);
 	FD_ZERO(&active_write);
 	std::cout << count_servers  << "\n";
@@ -23,9 +23,9 @@ Core::Core(std::vector<Server *> vectorServers_) : vectorServers(vectorServers_)
 	}
 }
 
-Core::~Core() {
-	delete env;
-	delete http;
+Core::~Core() { //////на загрузке видео проблемы с очисткой памяти
+	//delete env;
+	//delete http;
 }
 
 void Core::run() {

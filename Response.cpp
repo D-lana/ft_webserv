@@ -10,9 +10,10 @@
      answer = "";
      root = _root;
      contentSize = 0;
-     newUrl = root.append(url); // new
+     newUrl = root + url; // new
 
     std::cout << "14 response root" << "|" << root << "|" << std::endl;
+    std::cout << "14 response newUrl" << "|" << newUrl << "|" << std::endl;
     //  std::cout << "url response " << url << std::endl;
 
  }
@@ -23,20 +24,37 @@ Response::~Response() {
 std::string Response::makeAnswer(std::string& newUrl, int code) {
     // std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
     // std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
-    std::cout << "\x1b[1;92m" << "> |||||||||||makeAnswer 33 Response CGI " << code << "\n" << "\x1b[0m";
+    std::cout << "\x1b[1;92m" << "> |||||||||||makeAnswer 26 Response CGI " << code << "\n" << "\x1b[0m";
     if (code == 100) {
-        std::ifstream stream; //(newUrl, std::ios::in | std::ios::binary);
         std::string line;
-        stream.open("site_example/cgi-bin/cookies.txt", std::ifstream::in);
-        if (!stream.is_open()) {
-            std::cout << "\x1b[1;32m" << "> ERROR ANSWER " << "\n" << "\x1b[0m";
-        }
-        response << protocol;
-        // answer = response.str();
-        while (getline(stream, line)){
-            response << line << std::endl; 
-        }
+        std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
+        std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+        
+        line = newUrl.substr(0, newUrl.length() - 4) + "txt";
+        std::cout << "\x1b[1;92m" << "> line: " << line  << "\n" << "\x1b[0m";
+  
+        std::ifstream stream_head(line, std::ios::in | std::ios::binary);
+        std::vector<char> head((std::istreambuf_iterator<char>(stream_head)), std::istreambuf_iterator<char>());
+
+        response << protocol; //<< //" 200 OK\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
         answer = response.str();
+        response.write(head.data(), head.size());
+        response.write(contents.data(), contents.size());
+        std::cout << "---------Content size---------" << contents.size() << std::endl;
+        answer = response.str();
+        // std::ifstream stream; //(newUrl, std::ios::in | std::ios::binary);
+
+        // std::string line;
+        // stream.open(newUrl, std::ifstream::in);
+        // if (!stream.is_open()) {
+        //     std::cout << "\x1b[1;32m" << "> ERROR ANSWER " << "\n" << "\x1b[0m";
+        // }
+        // response << protocol;
+        // // answer = response.str();
+        // while (getline(stream, line)){
+        //     response << line << std::endl; 
+        // }
+        // answer = response.str();
         
         // response.write(contents.data(), contents.size());
         // answer = response.str();

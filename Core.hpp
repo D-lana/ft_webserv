@@ -62,6 +62,7 @@ class Core {
 
 		std::string				root;
 
+		char **env;
 
 	public:
 

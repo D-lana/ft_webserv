@@ -8,19 +8,27 @@ CGI::~CGI() {
 
 }
 
-int CGI::createDynamicHtml(std::string url) {
+int CGI::createDynamicHtml(char **env, std::string url) {
 	pid_t	pid;
+	std::cout << "\x1b[1;70m" << "> reateDynamicHtml 1 " << "\n" << "\x1b[0m";
+	char **cmd;
 	cmd = new char*[COUNT_CMD];
+	std::cout << "\x1b[1;70m" << "> reateDynamicHtml 33 " << "\n" << "\x1b[0m";
 	for(int i = 0; i < COUNT_CMD; i++) {
 		cmd[i] = NULL;
 	}
-	env = new char*[COUNT_ENV]; /////////////////
-	for(int i = 0; i < COUNT_ENV; i++) {
-		env[i] = NULL;
-	}
+	std::cout << "\x1b[1;70m" << "> reateDynamicHtml 5 " << "\n" << "\x1b[0m";
+	// char **env;
+	// env = new char*[COUNT_ENV]; /////////////////
+	// for(int i = 0; i < COUNT_ENV; i++) {
+	// 	env[i] = NULL;
+	// }
+	std::cout << "\x1b[1;70m" << "> reateDynamicHtml 6 " << "\n" << "\x1b[0m";
 	cmd[0] = strdup(PATH_PY);
 	cmd[1] = strdup(url.c_str());
-	enviroment(url);
+	std::cout << "\x1b[1;70m" << "> reateDynamicHtml 2 " << "\n" << "\x1b[0m";
+	environment(url, env);
+	std::cout << "\x1b[1;70m" << "> reateDynamicHtml 3 " << "\n" << "\x1b[0m";
 	if (cmd[0] == NULL || cmd[1] == NULL) {
 		std::cout << "\x1b[1;70m" << "> Strdup ERROR " << "\n" << "\x1b[0m";
 		/// Передать инфо об ошибке
@@ -48,7 +56,7 @@ int CGI::createDynamicHtml(std::string url) {
 	return (0);
 }
 
-int CGI::enviroment(std::string url) {
+int CGI::environment(std::string url, char **env) {
 	std::string path_info = "PATH_INFO=" + url;
 	std::string request_method = "REQUEST_METHOD=";
 	request_method.append(REQUEST_METHOD);
@@ -72,3 +80,4 @@ int CGI::enviroment(std::string url) {
 
 	return (0);
 }
+

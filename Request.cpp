@@ -13,6 +13,10 @@ Request::Request(std::string& _buffer){
     endBody = false;
     cgiRequest = false;
     std::cout << "15 request root" << "|" << root << "|" << std::endl;
+    env = new char*[COUNT_ENV];
+	for(int i = 0; i < COUNT_ENV; i++) {
+		env[i] = NULL;
+	}     
 }
 
 void Request::parsFirstLine() {
@@ -31,29 +35,36 @@ void Request::parsFirstLine() {
         exit(-1);
     }
     url = buffer.substr(1, pos - 1);
+    newUrl = root + url;
     
     std::cout << "url " << "|" << url << "|" << std::endl;
     buffer.erase(0, pos+1);
-    if ((pos = url.find("kotiki")) != std::string::npos){
+    std::cout << "siteName req 38 " << "|" << siteName << "|" << std::endl;
+    if ((pos = url.find(siteName)) != std::string::npos){
         std::string tmp;
         tmp = url;
         url = url.substr(0, pos);
-        url = url.append(tmp.substr(pos + 6));
+        url = url.append(tmp.substr(pos + siteName.length()));
 
          std::cout << "url kotiki " << "|" << url << "|" << std::endl;
+
+    }
+    if ((pos = url.find(root)) != std::string::npos){
+        root = "";
 
     }
     if (url == ""){
         url = "index.html";
     }
-    if (url.find("cgi-bin") != std::string::npos) {
-        cgi->createDynamicHtml(url);
-        if ((pos = url.find('.')) != std::string::npos) {
-            url = url.substr(0, pos+1) + "html";
-            std::cout << "url BIN " << "|" << url << "|" << std::endl;
-                cgiRequest = true;
-        }
-    }
+    // if (url.find("cgi-bin") != std::string::npos) {
+    //     //////////////
+    //     cgi->createDynamicHtml(newUrl);
+    //     if ((pos = url.find('.')) != std::string::npos) {
+    //         url = url.substr(0, pos+1) + "html";
+    //         std::cout << "url BIN " << "|" << url << "|" << std::endl;
+    //             cgiRequest = true;
+    //     }
+    // }
 
     if ((pos = buffer.find("\r\n")) == std::string::npos) {
         std::cout << "Request.cpp, p. 22 - symbol not found" << std::endl;  // переделать
@@ -87,6 +98,37 @@ void Request::parsFirstLine() {
             buffer.erase(0, pos+2);
            
             // std::cout << "buffer0 |" << buffer << "|" << std::endl;
+        }
+
+        if (url.find("cgi-bin") != std::string::npos) {
+        //////////////
+        std::string path_info = "PATH_INFO=" + newUrl;
+        std::string request_method = "REQUEST_METHOD=";
+        request_method.append(method);
+        std::string query_string = "QUERY_STRING=";
+        query_string.append(url);
+
+        std::string content_type = "CONTENT_TYPE="; // Content-Type -key
+        std::map<std::string, std::string>::iterator it = headers.find("Content-Type");
+        content_type.append(it->second);
+        std::string content_length = "CONTENT_LENGTH=";
+         std::map<std::string, std::string>::iterator it = headers.find("Content-Length");
+        content_length.append(it->second); //Content-Length -key
+        // std::string http_cookie = "HTTP_COOKIE=";
+        // http_cookie.append(HTTP_COOKIE);
+
+        env[0] = strdup(path_info.c_str());
+        env[1] = strdup(request_method.c_str());
+        env[2] = strdup(query_string.c_str());
+        env[3] = strdup(content_type.c_str());
+        env[4] = strdup(content_length.c_str());
+        // env[5] = strdup(http_cookie.c_str());
+        cgi->createDynamicHtml(env, url);
+            if ((pos = url.find('.')) != std::string::npos) {
+                url = url.substr(0, pos+1) + "html";
+                std::cout << "url BIN " << "|" << url << "|" << std::endl;
+                    cgiRequest = true;
+            }
         }
     }
 
@@ -125,7 +167,7 @@ void Request::parsFirstLine() {
 
             std::cout << "----------request file open---------" <<std::endl;
             std::ofstream fout;
-            fout.open("site_example/upload/" + filename, std::ofstream::out);
+            fout.open(root + upload + filename, std::ofstream::out);
             // fout.open("upload/" + filename, std::ofstream::out);
             // std::size_t posEof = fullBuffer.find(boundary);
             // std::size_t posN = fullBuffer.rfind("\n", posEof);
@@ -152,12 +194,12 @@ void Request::parsFirstLine() {
             makeHeaders();
             parsHeaders = true;
         }
-        // std::cout << "----------Print map-----------" << std::endl;
-        // std::map<std::string, std::string>::iterator it = headers.begin();
-        // for (int i = 0; it != headers.end(); it++, i++) {
-        //     std::cout << "|" << it->first << "|" << it->second << "|"<< std::endl;
-        // }
-        // std::cout << "---------End printing--------" << std::endl;
+        std::cout << "----------Print map-----------" << std::endl;
+        std::map<std::string, std::string>::iterator it = headers.begin();
+        for (int i = 0; it != headers.end(); it++, i++) {
+            std::cout << "|" << it->first << "|" << it->second << "|"<< std::endl;
+        }
+        std::cout << "---------End printing--------" << std::endl;
         
         std::cout << "156 request ROOT" << root << "|" << std::endl;
         std::cout << "157 request url " << url << "|" << std::endl;
@@ -222,6 +264,9 @@ const std::string Request::getRoot() const {
     return(root);
 }
 
-// void setFilename(std::string _filename){
-
-// }
+void Request::setSiteName(const std::string& _siteName) {
+   siteName = _siteName; 
+}
+void Request::setUpload(const std::string& _upload){
+    upload = _upload;
+}

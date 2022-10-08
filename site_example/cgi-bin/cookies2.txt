@@ -1,0 +1,5 @@
+200 OK
+Content-type: text/html
+Set-cookie: lastvisit=Sat Oct  8 17:56:40 2022; name=Somebody; path=/cgi-bin/; httponly
+Done cookies!
+
