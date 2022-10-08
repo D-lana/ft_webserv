@@ -44,6 +44,9 @@ bool Http::initRequest(int _fd, std::string _buffer, ServerPairs &servPairs) {
         requests.insert(std::pair<int, Request*>(_fd, request));
         // std::cout << "_root p31 |" << _root << "|" << std::endl;
         request->setRoot(servPairs.getRoot());
+        std::cout << "servPairs.getServName()" << servPairs.getServName() << "|" << std::endl;
+        request->setSiteName(servPairs.getServName());
+        request->setUpload(servPairs.getUpload());
         //  std::cout << "root http p32 |" << request->getRoot() << "|" << std::endl;
         request->requestParsing();
         return(request->getEndBody());
