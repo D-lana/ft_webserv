@@ -11,7 +11,17 @@ rel='stylesheet' type='text/css'>
 	.mod {
 	line-height: 0.9em;;
 	}
-	
+	.btn {
+		background-color: #d0a5a5;
+		border: none;
+		color: #FFFFFF;
+		padding: 15px 32px;
+		text-align: center;
+		margin: 16px 0 !important;
+		text-decoration: none;
+		font-size: 16px;
+		cursor: pointer;
+	}
 	</style>
 </head>
 <body>
@@ -19,7 +29,7 @@ rel='stylesheet' type='text/css'>
   <div class="wrap">
  <div class="header">
  <div class="logo">
-  <a href=""><img src="logo.png" alt=""/></a>
+  <!-- <a href=""><img src="logo.png" alt=""/></a> -->
  </div>
           <div class="nav">
   <ul>
@@ -48,26 +58,30 @@ rel='stylesheet' type='text/css'>
 				<!-- <p>Можно отправить на сервер фото, видео или другой файл</p> -->
 				<p><input type="file" name="f">
 			<input type="submit" value="Отправить"></p>
-		   </form> 
+		</form> 
 
-		   <a href=""><img src="resources/graphics/index.jpg" width="400" height="400" alt="Место для лапы котика"/></a>
+		<a href=""><img src="resources/graphics/index.jpg" width="400" height="400" alt="Место для лапы котика"/></a>
 
-		   <script type="text/javascript">
-			function delCat() {
-			confirm('Досвидули?');
-			fetch('../resources/graphics/index.jpg', {
-				method: "DELETE",
-				headers: {
-					'Content-type': 'application/json'
+		<script type="text/javascript">
+			async function delCat() {
+				if (confirm('Досвидули?'))
+				{
+					await fetch('../resources/graphics/index.jpg', {
+						method: "DELETE",
+						headers: {
+							'Content-type': 'application/json',
+						},
+					}).then(res => {
+						console.log(res)
+						location.reload()
+					})
 				}
-			})
-			
 			}
 		  </script>
 
-		<form>
-			<input type = "submit" value = "Удалить лапу" onclick=delCat()>
-					</form>
+		<!-- <form> -->
+			<button class="btn"onclick=delCat()>Удалить лапу</button>
+		<!-- </form> -->
  
 		</div>
 

@@ -42,28 +42,15 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
         response.write(contents.data(), contents.size());
         std::cout << "---------Content size---------" << contents.size() << std::endl;
         answer = response.str();
-        // std::ifstream stream; //(newUrl, std::ios::in | std::ios::binary);
-
-        // std::string line;
-        // stream.open(newUrl, std::ifstream::in);
-        // if (!stream.is_open()) {
-        //     std::cout << "\x1b[1;32m" << "> ERROR ANSWER " << "\n" << "\x1b[0m";
-        // }
-        // response << protocol;
-        // // answer = response.str();
-        // while (getline(stream, line)){
-        //     response << line << std::endl; 
-        // }
-        // answer = response.str();
-        
-        // response.write(contents.data(), contents.size());
-        // answer = response.str();
        
         std::cout << "\x1b[1;92m" << "> answer: " << answer  << "\n" << "\x1b[0m";
        
 
     } else if (code == 200) {
         contentType = findContentType();
+
+        std::cout << "newUrl resp 52 |" << newUrl << "|" << std::endl;
+        
 
         std::cout << "\x1b[1;95m" << "\b\b>>>>> RESPONSE <<<<<\n" << "\x1b[0m"; 
   
@@ -80,12 +67,26 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
 
         std::cout << "\x1b[1;95m" << "\b\b>>>>> RESPONSE END <<<<<\n" << "\x1b[0m"; 
     } else if (code == 201){
+        
+        contentType = "text/html";
+        // newUrl = "site_example/deleted.html";
+
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
         response << protocol << " 200 OK\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
+        // response << protocol << " 302 \r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\nLocation: http://localhost:8080/site_example/deleted.html" << "\r\n\r\n";
+
         answer = response.str();
-        // response.write(contents.data(), contents.size());
-        // answer = response.str();
+        // std::cout << "contents.data()" << contents.data() << std::endl;
+        response.write(contents.data(), contents.size());
+        answer = response.str();
+        std::cout << "\x1b[1;92m" << "> |||||||||||makeAnswer 73 200 if " << code << "\n" << "\x1b[0m";
+
+        // exit(-1);
+        
+
+
+    // response << protocol << " 200 OK\r\nDate: " << 
 
     } else if (code == 404){
         
@@ -209,6 +210,24 @@ void Response::checkFile(bool cgi_request) {
     // void Response::setAnswer(std::string _answer){
     //     answer = _answer;
     // }
+    void Response::checkFileDeleting(std::string& _newUrl){
+        // std::string tmp = "site_example/deleted.html";
+        std::ifstream ifs(_newUrl);
+        std::cout << _newUrl << std::endl;
+        // ifs.open(_newUrl);
+        if (ifs.is_open()){
+            remove((_newUrl).c_str());
+            // ifs.close();
+            // std::cout << "AAAAAAA" << std::endl;
+            // _newUrl = "site_example/deleted.html";
+            answer = makeAnswer(_newUrl, 201);
+            //  std::cout << "_newUrl resp 204 |" << _newUrl << "|" << std::endl;
+        //    exit(0);
+        } else {
+            // ifs.close();
+            std::cout << "File wasn't deleted" << std::endl;
+        }
+    }
 
 void Response::initMimeType() {
     mimeType["txt"]="text/plain; charset=utf-8";
