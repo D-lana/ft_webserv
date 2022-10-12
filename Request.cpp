@@ -236,7 +236,8 @@ void Request::parsFirstLine() {
             std::cout << "----------DELETE-----------" << std::endl;
 
         } else {
-            std::cout << "UNDEFINED 405 — Method Not Allowed" << std::endl;
+            response->makeAnswer(newUrl, 501);
+            // std::cout << "UNDEFINED 405 — Method Not Allowed" << std::endl;
         }
 
     

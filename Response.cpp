@@ -120,6 +120,16 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
 
         response << protocol << " 500 Internal Server Error\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
         response.write(contents.data(), contents.size());
+    } else if (code == 501) {
+        contentType = "text/html";
+        newUrl = "errors/501.html";
+
+        std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
+        std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+
+        response << protocol << " 501 Not Implemented\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
+        response.write(contents.data(), contents.size());
+
     }
 
     return(answer);
