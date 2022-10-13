@@ -56,15 +56,7 @@ void Request::parsFirstLine() {
     if (url == ""){
         url = "index.html";
     }
-    // if (url.find("cgi-bin") != std::string::npos) {
-    //     //////////////
-    //     cgi->createDynamicHtml(newUrl);
-    //     if ((pos = url.find('.')) != std::string::npos) {
-    //         url = url.substr(0, pos+1) + "html";
-    //         std::cout << "url BIN " << "|" << url << "|" << std::endl;
-    //             cgiRequest = true;
-    //     }
-    // }
+ 
 
     if ((pos = buffer.find("\r\n")) == std::string::npos) {
         std::cout << "Request.cpp, p. 22 - symbol not found" << std::endl;  // переделать
@@ -210,7 +202,7 @@ void Request::parsFirstLine() {
             response->checkFile(cgiRequest); // CGI проверить нужен ли он тут вообще
             endBody = true;
             // parsLine = false; // убрать после обработки удаления запросов
-            // parsHeaders = false; // убрать после обработки удаления запросов
+            // parsHeaders = f alse; // убрать после обработки удаления запросов
         } else if (!method.compare("POST")) {
             std::map<std::string, std::string>::iterator it = headers.find("Content-Type");
             if (it == headers.end()) {
@@ -233,6 +225,7 @@ void Request::parsFirstLine() {
             // remove((newUrl).c_str());
             // exit(0);       
             response->checkFileDeleting(newUrl);
+            endBody = true;
             std::cout << "----------DELETE-----------" << std::endl;
 
         } else {
