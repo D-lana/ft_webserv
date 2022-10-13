@@ -22,6 +22,8 @@ private:
     std::string siteName;
     std::string upload;
 
+    size_t _maxBodySize;
+
     bool parsLine;
     bool parsHeaders;
     bool cgiRequest;
@@ -47,6 +49,7 @@ public:
     void setUpload(const std::string& _upload);
     // void setFilename(std::string _filename);
     const std::string getRoot() const;
+    void setMaxBodySize(const size_t &maxBodySize);
 
 };
 
