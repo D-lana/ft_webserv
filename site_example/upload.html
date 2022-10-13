@@ -23,6 +23,13 @@ rel='stylesheet' type='text/css'>
 		cursor: pointer;
 	}
 	</style>
+
+<script type="text/javascript">
+			
+	('submitButton').disabled = false;
+
+  </script>
+
 </head>
 <body>
 <header>
@@ -52,10 +59,6 @@ rel='stylesheet' type='text/css'>
 		<h2>ЗАГРУЗИ КОТИКА</h2>
 
 		<form enctype="multipart/form-data" method="post">
-		<!-- <form enctype="multipart/form-data" method="post" action="cgi-bin/upload"> -->
-			<!-- <form enctype="multipart/form-data" method="post"> -->
-			<!-- <p><input type="file" name="f" accept=".pdf,.gif,.mp3,.mp4,.txt,.jpg,.jpeg,.png"> -->
-				<!-- <p>Можно отправить на сервер фото, видео или другой файл</p> -->
 				<p><input type="file" name="f">
 			<input type="submit" value="Отправить"></p>
 		</form> 
@@ -63,6 +66,7 @@ rel='stylesheet' type='text/css'>
 		<a href=""><img src="resources/graphics/index.jpg" width="400" height="400" alt="Место для лапы котика"/></a>
 
 		<script type="text/javascript">
+			
 			async function delCat() {
 				if (confirm('Досвидули?'))
 				{
@@ -73,18 +77,15 @@ rel='stylesheet' type='text/css'>
 						},
 					}).then(res => {
 						console.log(res)
-						location.replace('site_example/deleted.html')//location.reload()
+						location.replace('site_example/deleted.html')//location.reload() - если код 200 и ок
 					})
 				}
-				// location.replace('site_example/errors/403.html')
+				// location.replace('site_example/errors/204.html') - если код 204
 			}
 			
 		  </script>
-
-		<!-- <form> -->
-			<button class="btn"onclick=delCat()>Удалить лапу</button>
-		<!-- </form> -->
- 
+		  
+			<p><button class="btn"onclick=delCat()>Удалить лапу</button></p>			
 		</div>
 
 </div>
