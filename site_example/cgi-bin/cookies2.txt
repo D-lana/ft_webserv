@@ -1,5 +1,5 @@
 200 OK
 Content-type: text/html
-Set-cookie: lastvisit=Sat Oct  8 17:56:40 2022; name=Somebody; path=/cgi-bin/; httponly
+Set-cookie: lastvisit=Thu Oct 13 17:58:48 2022; name=Somebody; path=../cookie_tmp/; Secure; HttpOnly
 Done cookies!
 

@@ -37,7 +37,7 @@ void Request::parsFirstLine() {
         exit(-1);
     }
     url = buffer.substr(1, pos - 1);
-    newUrl = root + url;
+    // newUrl = root + url;
     
     std::cout << "url " << "|" << url << "|" << std::endl;
     buffer.erase(0, pos+1);
@@ -46,6 +46,8 @@ void Request::parsFirstLine() {
         std::string tmp;
         tmp = url;
         url = url.substr(0, pos);
+        std::cout << "pos " << "|" << pos << std::endl;
+
         url = url.append(tmp.substr(pos + siteName.length()));
 
          std::cout << "url kotiki " << "|" << url << "|" << std::endl;
@@ -53,13 +55,11 @@ void Request::parsFirstLine() {
     }
     if ((pos = url.find(root)) != std::string::npos){
         root = "";
-
     }
+    newUrl = root + url;
     if (url == ""){
         url = "index.html";
     }
- 
-
     if ((pos = buffer.find("\r\n")) == std::string::npos) {
         std::cout << "Request.cpp, p. 22 - symbol not found" << std::endl;  // переделать
         exit(-1);
@@ -96,28 +96,39 @@ void Request::parsFirstLine() {
 
         if (url.find("cgi-bin") != std::string::npos) {
         //////////////
+        std::cout << "cgi-bin 97 req" << std::endl;  // переделать
         std::string path_info = "PATH_INFO=" + newUrl;
         std::string request_method = "REQUEST_METHOD=";
         request_method.append(method);
         std::string query_string = "QUERY_STRING=";
         query_string.append(url);
-
-        std::string content_type = "CONTENT_TYPE="; // Content-Type -key
-        std::map<std::string, std::string>::iterator it1 = headers.find("Content-Type");
-        content_type.append(it1->second);
-        std::string content_length = "CONTENT_LENGTH=";
-        std::map<std::string, std::string>::iterator it2 = headers.find("Content-Length");
-        content_length.append(it2->second); //Content-Length -key
+        if (method == "POST") {
+            std::string content_type = "CONTENT_TYPE="; // Content-Type -key
+            std::cout << "cgi-bin 105 req" << std::endl;
+            std::map<std::string, std::string>::iterator it1 = headers.find("Content-Type");
+            if (it1 == headers.end()) {
+                std::cout << "AAAAAAAAAA!" << std::endl;
+            }
+            std::cout << "cgi-bin 107 req" << std::endl;
+            content_type.append(it1->second);
+            std::string content_length = "CONTENT_LENGTH=";
+            std::map<std::string, std::string>::iterator it2 = headers.find("Content-Length");
+            if (it2 == headers.end()) {
+                std::cout << "AAAAAAAAAA!" << std::endl;
+            }
+            std::cout << "cgi-bin 111 req" << std::endl;
+            content_length.append(it2->second); //Content-Length -key
+            env[3] = strdup(content_type.c_str());
+            env[4] = strdup(content_length.c_str());
+        }
         // std::string http_cookie = "HTTP_COOKIE=";
         // http_cookie.append(HTTP_COOKIE);
-
+        std::cout << "cgi-bin 112 req" << std::endl; 
         env[0] = strdup(path_info.c_str());
         env[1] = strdup(request_method.c_str());
         env[2] = strdup(query_string.c_str());
-        env[3] = strdup(content_type.c_str());
-        env[4] = strdup(content_length.c_str());
         // env[5] = strdup(http_cookie.c_str());
-        cgi->createDynamicHtml(env, url);
+        cgi->createDynamicHtml(env, newUrl);
             if ((pos = url.find('.')) != std::string::npos) {
                 url = url.substr(0, pos+1) + "html";
                 std::cout << "url BIN " << "|" << url << "|" << std::endl;
