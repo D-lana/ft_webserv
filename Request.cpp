@@ -24,7 +24,7 @@ void Request::parsFirstLine() {
     std::size_t pos = 0;
     if ((pos = buffer.find(' ')) == std::string::npos) {
          response = new Response();
-         response->makeAnswer("", 400)
+        //  response->makeAnswer("", 400)
         std::cout << "Request.cpp, p. 8 - symbol not found" << std::endl;  // переделать
         exit(-1);
     }

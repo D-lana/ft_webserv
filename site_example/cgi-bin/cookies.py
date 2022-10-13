@@ -5,7 +5,7 @@ import time
 # import os
 
 try:
-    txt = open("site_example/cgi-bin/cookies2.txt", "w")
+    txt = open("site_example/cgi-bin/cookies.txt", "w")
     time = time.asctime(time.localtime())
 
     txt.write("200 OK\r\n")
@@ -18,13 +18,13 @@ try:
 except OSError:
     print("NOT OPEN FILE TXT!")
 
-html_template = """<html>
+html_template = """
+        <html>
         <head>
-        <title>Cookies done</title>
+        <title> Cookies done </title>
         </head>
         <body>
-        <h2>You've done cookies!</h2>
-
+        <h2> You've done cookies! </h2>
         <div>
         <a href=""><img src="../cook.jpg" width="300" height="250" alt="Место для котика"/></a>
 	    </div>
