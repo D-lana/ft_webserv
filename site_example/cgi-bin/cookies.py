@@ -12,12 +12,11 @@ try:
     txt.write("Content-type: text/html\r\n")
     txt.write("Set-cookie: lastvisit=")
     txt.write(time)
-    txt.write("; name=Somebody; path=/cgi-bin/; httponly\r\n")
+    txt.write("; name=Somebody; path=../cookie_tmp/; Secure; HttpOnly\r\n")
     txt.write("Done cookies!\r\n\r\n")
     txt.close()
 except OSError:
     print("NOT OPEN FILE TXT!")
-
 
 html_template = """<html>
         <head>
@@ -27,7 +26,7 @@ html_template = """<html>
         <h2>You've done cookies!</h2>
 
         <div>
-        <a href=""><img src="../site_example/cook.jpg" width="300" height="250" alt="Место для котика"/></a>
+        <a href=""><img src="../cook.jpg" width="300" height="250" alt="Место для котика"/></a>
 	    </div>
         
         <p>To check in google chrome - chrome://settings/siteData </p>
@@ -37,7 +36,7 @@ html_template = """<html>
         """
 try:
     #!!! НЕЛЬЗЯ СОЗДАТЬ ФАЙЛ cookies.html
-    with open('site_example/cgi-bin/cookies2.html', 'wt') as file:
+    with open('site_example/cgi-bin/cookies.html', 'wt') as file:
         print(html_template, file=file)
 
     file.close()
