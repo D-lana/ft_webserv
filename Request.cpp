@@ -24,17 +24,19 @@ void Request::parsFirstLine() {
     std::size_t pos = 0;
     if ((pos = buffer.find(' ')) == std::string::npos) {
          response = new Response();
-        //  response->makeAnswer("", 400)
-        std::cout << "Request.cpp, p. 8 - symbol not found" << std::endl;  // переделать
-        exit(-1);
+         response->makeAnswer(newUrl, 400);
+        // std::cout << "Request.cpp, p. 8 - symbol not found" << std::endl;  // переделать
+        // exit(-1);
     }
     method = buffer.substr(0, pos);
     std::cout << "method" << "|" << method << "|" << std::endl;
     buffer.erase(0, pos+1);
 
     if ((pos = buffer.find(' ')) == std::string::npos) {
-        std::cout << "Request.cpp, p. 16 - symbol not found" << std::endl;  // переделать
-        exit(-1);
+        response = new Response();
+        response->makeAnswer(newUrl, 400);
+        // std::cout << "Request.cpp, p. 16 - symbol not found" << std::endl;  // переделать
+        // exit(-1);
     }
     url = buffer.substr(1, pos - 1);
     // newUrl = root + url;
@@ -61,8 +63,10 @@ void Request::parsFirstLine() {
         url = "index.html";
     }
     if ((pos = buffer.find("\r\n")) == std::string::npos) {
-        std::cout << "Request.cpp, p. 22 - symbol not found" << std::endl;  // переделать
-        exit(-1);
+        response = new Response();
+        response->makeAnswer(newUrl, 400);
+        // std::cout << "Request.cpp, p. 22 - symbol not found" << std::endl;  // переделать
+        // exit(-1);
     }
     buffer.erase(0, pos + 2);
 }
@@ -77,14 +81,18 @@ void Request::parsFirstLine() {
 
         while (buffer.compare("\r\n")) {
             if ((pos = buffer.find("\r\n")) == std::string::npos) {
+                response = new Response();
+                response->makeAnswer(newUrl, 400);
                 std::cout << "Request.cpp, p. 67 - symbol not found" << std::endl;  // переделать
                 exit(-1);
             }
             // std::cout << "pos " << pos << std::endl;
             tmpStr = buffer.substr(0, pos);
             if ((delimiter = tmpStr.find(": ")) == std::string::npos) {
+                response = new Response();
+                response->makeAnswer(newUrl, 400);
                 // std::cout << "Request.cpp, p. 68 - symbol not found" << std::endl;  // переделать
-                break;
+                // break;
             }
             keyHead = tmpStr.substr(0, delimiter);
             valueHead = tmpStr.substr(delimiter + 2, tmpStr.length() - keyHead.length()-2);
@@ -107,14 +115,18 @@ void Request::parsFirstLine() {
             std::cout << "cgi-bin 105 req" << std::endl;
             std::map<std::string, std::string>::iterator it1 = headers.find("Content-Type");
             if (it1 == headers.end()) {
-                std::cout << "AAAAAAAAAA!" << std::endl;
+                response = new Response();
+                response->makeAnswer(newUrl, 400);
+                // std::cout << "AAAAAAAAAA!" << std::endl;
             }
             std::cout << "cgi-bin 107 req" << std::endl;
             content_type.append(it1->second);
             std::string content_length = "CONTENT_LENGTH=";
             std::map<std::string, std::string>::iterator it2 = headers.find("Content-Length");
             if (it2 == headers.end()) {
-                std::cout << "AAAAAAAAAA!" << std::endl;
+                response = new Response();
+                response->makeAnswer(newUrl, 400);
+                // std::cout << "Bla!" << std::endl;
             }
             std::cout << "cgi-bin 111 req" << std::endl;
             content_length.append(it2->second); //Content-Length -key
@@ -141,11 +153,20 @@ void Request::parsFirstLine() {
 
         std::map<std::string, std::string>::iterator it = headers.find("Content-Length");
         if (it == headers.end()) {
-            std::cout << "Content Length not found" << std::endl; // убрать
+            response->makeAnswer(newUrl, 400); //?????
+            // std::cout << "Content Length not found" << std::endl; // убрать
         }
         if (buffer != ""){
             fullBuffer.append(buffer);
             if (fullBuffer.find(endBoundary)!= std::string::npos) {
+                std::cout << "Make full buffer AAAAA" << std::endl;
+                std::cout << "Max body size " << _maxBodySize << std::endl;
+                std::cout << "Full buffer lengtn " << fullBuffer.length() << std::endl;
+                if (fullBuffer.length() > _maxBodySize){
+                    std::cout << "OoOOOOOOOOOOOOOOOOOO" << fullBuffer.length() << std::endl;
+                    response->makeAnswer(newUrl, 413);
+                }
+                
                 endBody = true;
             }
         }
@@ -280,3 +301,7 @@ void Request::setSiteName(const std::string& _siteName) {
 void Request::setUpload(const std::string& _upload){
     upload = _upload;
 }
+
+void Request::setMaxBodySize(const size_t &maxBodySize) {
+	_maxBodySize = maxBodySize;
+};

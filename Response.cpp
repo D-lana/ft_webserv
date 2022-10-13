@@ -28,6 +28,7 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
     // std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
     std::cout << "\x1b[1;92m" << "> |||||||||||makeAnswer 26 Response CGI " << code << "\n" << "\x1b[0m";
     if (code == 100) {
+        std::cout << "BBBBBB" << std::endl;
         std::string line;
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
@@ -49,6 +50,7 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
        
 
     } else if (code == 200) {
+        std::cout << "AAAAAAAAAAA" << std::endl;
         contentType = findContentType();
 
         // std::cout << "newUrl resp 52 |" << newUrl << "|" << std::endl;
@@ -57,7 +59,7 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
 
-        contentSize = contents.size(); // временно
+        // contentSize = contents.size(); // временно
 
         response << protocol << " 200 OK\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
         answer = response.str();
@@ -142,6 +144,16 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
 
         response << protocol << " 204 No Content\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
+        response.write(contents.data(), contents.size());
+        answer = response.str();
+    } else if (code == 413) {
+        contentType = "text/html";
+        newUrl = "errors/413.html";
+
+        std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
+        std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+
+        response << protocol << " 413 Payload Too Large\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
         response.write(contents.data(), contents.size());
         answer = response.str();
     }
