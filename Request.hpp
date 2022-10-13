@@ -32,7 +32,6 @@ private:
     std::map<std::string, std::string> headers;
 
 public:
-    Request();
     Request(std::string& _buffer);
     ~Request();
     void makeHeaders();

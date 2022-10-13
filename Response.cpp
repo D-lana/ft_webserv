@@ -1,6 +1,8 @@
 #include "Library.hpp"
 
- Response::Response(std::string& _url, std::string& _root){
+Response::Response(){}
+
+Response::Response(std::string& _url, std::string& _root){
     //  fileFound = false;
      initMimeType();
 
@@ -73,7 +75,6 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
         response << protocol << " 200 OK\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
         // response << protocol << " 302 \r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\nLocation: http://localhost:8080/site_example/deleted.html" << "\r\n\r\n";
-
         answer = response.str();
         // std::cout << "contents.data()" << contents.data() << std::endl;
         response.write(contents.data(), contents.size());
@@ -97,8 +98,8 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
 
         response << protocol << " 404 file not found\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
         response.write(contents.data(), contents.size());
-
         answer = response.str();
+        
     } else if (code == 400) {
         contentType = "text/html";
         newUrl = "errors/400.html";
@@ -109,6 +110,8 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
         response << protocol << " 400 Bad Request\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
         response.write(contents.data(), contents.size());
 
+        answer = response.str();
+
     } else if (code == 500) {
         contentType = "text/html";
         newUrl = "errors/500.html";
@@ -118,6 +121,8 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
 
         response << protocol << " 500 Internal Server Error\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
         response.write(contents.data(), contents.size());
+        answer = response.str();
+
     } else if (code == 501) {
         contentType = "text/html";
         newUrl = "errors/501.html";
@@ -127,7 +132,18 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
 
         response << protocol << " 501 Not Implemented\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
         response.write(contents.data(), contents.size());
+        answer = response.str();
 
+    } else if (code == 204) {
+        contentType = "text/html";
+        newUrl = "errors/204.html";
+
+        std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
+        std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+
+        response << protocol << " 204 No Content\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
+        response.write(contents.data(), contents.size());
+        answer = response.str();
     }
 
     return(answer);
@@ -232,8 +248,9 @@ void Response::checkFile(bool cgi_request) {
             //  std::cout << "_newUrl resp 204 |" << _newUrl << "|" << std::endl;
         //    exit(0);
         } else {
+            answer = makeAnswer(_newUrl, 204);
             // ifs.close();
-            std::cout << "File wasn't deleted" << std::endl;
+           // std::cout << "File wasn't deleted" << std::endl;
         }
     }
 

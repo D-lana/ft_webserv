@@ -90,6 +90,7 @@ int Core::writeToClient(int fd) {
 
 	send(fd, part_answer.c_str(), part_answer.length(), 0);
 	if (http->getEndAnswer() == true) {
+		std::cout << part_answer.c_str() << std::endl; 
 		std::cout << "\x1b[1;92m" << "\n> Send and DELETE Msg To Client fd: " << fd << "\n\n" << "\x1b[0m";
 		http->deleteRequest(fd);
 		return(1);

@@ -24,6 +24,7 @@ class Response {
         std::map<std::string, std::string> codeStatus;
 
     public:
+        Response();
         Response(std::string& url, std::string& _root);
         ~Response();
 
