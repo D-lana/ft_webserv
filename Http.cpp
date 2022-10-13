@@ -49,10 +49,12 @@ bool Http::initRequest(int _fd, std::string _buffer, ServerPairs &servPairs) {
         request->setUpload(servPairs.getUpload());
         //  std::cout << "root http p32 |" << request->getRoot() << "|" << std::endl;
         request->requestParsing();
+        std::cout << "it->second->getEndBody() http 52|" << request->getEndBody() << "|" << std::endl;
         return(request->getEndBody());
     } else {
         it->second->setBuffer(_buffer);
         it->second->requestParsing();
+        std::cout << "it->second->getEndBody() http 57|" << it->second->getEndBody() << "|" << std::endl;
         return(it->second->getEndBody());
     } 
 }

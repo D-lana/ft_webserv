@@ -56,15 +56,7 @@ void Request::parsFirstLine() {
     if (url == ""){
         url = "index.html";
     }
-    // if (url.find("cgi-bin") != std::string::npos) {
-    //     //////////////
-    //     cgi->createDynamicHtml(newUrl);
-    //     if ((pos = url.find('.')) != std::string::npos) {
-    //         url = url.substr(0, pos+1) + "html";
-    //         std::cout << "url BIN " << "|" << url << "|" << std::endl;
-    //             cgiRequest = true;
-    //     }
-    // }
+ 
 
     if ((pos = buffer.find("\r\n")) == std::string::npos) {
         std::cout << "Request.cpp, p. 22 - symbol not found" << std::endl;  // переделать
@@ -109,11 +101,11 @@ void Request::parsFirstLine() {
         query_string.append(url);
 
         std::string content_type = "CONTENT_TYPE="; // Content-Type -key
-        std::map<std::string, std::string>::iterator it = headers.find("Content-Type");
-        content_type.append(it->second);
+        std::map<std::string, std::string>::iterator it1 = headers.find("Content-Type");
+        content_type.append(it1->second);
         std::string content_length = "CONTENT_LENGTH=";
-         std::map<std::string, std::string>::iterator it = headers.find("Content-Length");
-        content_length.append(it->second); //Content-Length -key
+        std::map<std::string, std::string>::iterator it2 = headers.find("Content-Length");
+        content_length.append(it2->second); //Content-Length -key
         // std::string http_cookie = "HTTP_COOKIE=";
         // http_cookie.append(HTTP_COOKIE);
 
@@ -210,7 +202,7 @@ void Request::parsFirstLine() {
             response->checkFile(cgiRequest); // CGI проверить нужен ли он тут вообще
             endBody = true;
             // parsLine = false; // убрать после обработки удаления запросов
-            // parsHeaders = false; // убрать после обработки удаления запросов
+            // parsHeaders = f alse; // убрать после обработки удаления запросов
         } else if (!method.compare("POST")) {
             std::map<std::string, std::string>::iterator it = headers.find("Content-Type");
             if (it == headers.end()) {
@@ -229,11 +221,16 @@ void Request::parsFirstLine() {
             }
             
         } else if (!method.compare("DELETE")){
-            remove(root.append(url).c_str());
+
+            // remove((newUrl).c_str());
+            // exit(0);       
+            response->checkFileDeleting(newUrl);
+            endBody = true;
             std::cout << "----------DELETE-----------" << std::endl;
 
         } else {
-            std::cout << "UNDEFINED 405 — Method Not Allowed" << std::endl;
+            response->makeAnswer(newUrl, 501);
+            // std::cout << "UNDEFINED 405 — Method Not Allowed" << std::endl;
         }
 
     
