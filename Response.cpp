@@ -49,10 +49,8 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
     } else if (code == 200) {
         contentType = findContentType();
 
-        std::cout << "newUrl resp 52 |" << newUrl << "|" << std::endl;
-        
-
-        std::cout << "\x1b[1;95m" << "\b\b>>>>> RESPONSE <<<<<\n" << "\x1b[0m"; 
+        // std::cout << "newUrl resp 52 |" << newUrl << "|" << std::endl;
+        // std::cout << "\x1b[1;95m" << "\b\b>>>>> RESPONSE <<<<<\n" << "\x1b[0m"; 
   
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
