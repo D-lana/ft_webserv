@@ -36,7 +36,7 @@ std::string Http::getPartAnswer(int fd) {
     return (partAnswer);
 }
 
-bool Http::initRequest(int _fd, std::string _buffer, ServerPairs &servPairs) {
+int Http::initRequest(int _fd, std::string _buffer, ServerPairs &servPairs) {
 
     std::map<int, Request*>::iterator it = requests.find(_fd);
     if (it == requests.end()) {
@@ -48,15 +48,24 @@ bool Http::initRequest(int _fd, std::string _buffer, ServerPairs &servPairs) {
         request->setSiteName(servPairs.getServName());
         request->setUpload(servPairs.getUpload());
         request->setLocation(servPairs.getLocations());
+        std::cout << "QQQQQQQQ"  << "|" << std::endl;
         request->requestParsing();
+        std::cout << "WWWWWWW"  << "|" << std::endl;
+        // if (request->requestParsing() == -1 && it->second->getEndBody() == true){
+        //     return(404);
+        // }
         std::cout << "it->second->getEndBody() http 52|" << request->getEndBody() << "|" << std::endl;
         return(request->getEndBody());
     } else {
         it->second->setBuffer(_buffer);
         it->second->requestParsing();
+        // if(it->second->requestParsing() == -1 && it->second->getEndBody() == true){
+        //     return(404);
+        // }
         std::cout << "it->second->getEndBody() http 57|" << it->second->getEndBody() << "|" << std::endl;
         return(it->second->getEndBody());
-    } 
+    }
+    return(0);
 }
 
 size_t Http::getContentSize() {
