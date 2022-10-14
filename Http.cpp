@@ -44,15 +44,18 @@ bool Http::initRequest(int _fd, std::string _buffer, ServerPairs &servPairs) {
         requests.insert(std::pair<int, Request*>(_fd, request));
         // std::cout << "_root p31 |" << _root << "|" << std::endl;
         request->setRoot(servPairs.getRoot());
+        request->setMaxBodySize(servPairs.getBodySize());
         std::cout << "servPairs.getServName()" << servPairs.getServName() << "|" << std::endl;
         request->setSiteName(servPairs.getServName());
         request->setUpload(servPairs.getUpload());
         //  std::cout << "root http p32 |" << request->getRoot() << "|" << std::endl;
         request->requestParsing();
+        std::cout << "it->second->getEndBody() http 52|" << request->getEndBody() << "|" << std::endl;
         return(request->getEndBody());
     } else {
         it->second->setBuffer(_buffer);
         it->second->requestParsing();
+        std::cout << "it->second->getEndBody() http 57|" << it->second->getEndBody() << "|" << std::endl;
         return(it->second->getEndBody());
     } 
 }

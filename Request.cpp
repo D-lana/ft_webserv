@@ -23,19 +23,23 @@ void Request::parsFirstLine() {
 
     std::size_t pos = 0;
     if ((pos = buffer.find(' ')) == std::string::npos) {
-        std::cout << "Request.cpp, p. 8 - symbol not found" << std::endl;  // переделать
-        exit(-1);
+         response = new Response();
+         response->makeAnswer(newUrl, 400);
+        // std::cout << "Request.cpp, p. 8 - symbol not found" << std::endl;  // переделать
+        // exit(-1);
     }
     method = buffer.substr(0, pos);
     std::cout << "method" << "|" << method << "|" << std::endl;
     buffer.erase(0, pos+1);
 
     if ((pos = buffer.find(' ')) == std::string::npos) {
-        std::cout << "Request.cpp, p. 16 - symbol not found" << std::endl;  // переделать
-        exit(-1);
+        response = new Response();
+        response->makeAnswer(newUrl, 400);
+        // std::cout << "Request.cpp, p. 16 - symbol not found" << std::endl;  // переделать
+        // exit(-1);
     }
     url = buffer.substr(1, pos - 1);
-    newUrl = root + url;
+    // newUrl = root + url;
     
     std::cout << "url " << "|" << url << "|" << std::endl;
     buffer.erase(0, pos+1);
@@ -44,6 +48,8 @@ void Request::parsFirstLine() {
         std::string tmp;
         tmp = url;
         url = url.substr(0, pos);
+        std::cout << "pos " << "|" << pos << std::endl;
+
         url = url.append(tmp.substr(pos + siteName.length()));
 
          std::cout << "url kotiki " << "|" << url << "|" << std::endl;
@@ -51,24 +57,16 @@ void Request::parsFirstLine() {
     }
     if ((pos = url.find(root)) != std::string::npos){
         root = "";
-
     }
+    newUrl = root + url;
     if (url == ""){
         url = "index.html";
     }
-    // if (url.find("cgi-bin") != std::string::npos) {
-    //     //////////////
-    //     cgi->createDynamicHtml(newUrl);
-    //     if ((pos = url.find('.')) != std::string::npos) {
-    //         url = url.substr(0, pos+1) + "html";
-    //         std::cout << "url BIN " << "|" << url << "|" << std::endl;
-    //             cgiRequest = true;
-    //     }
-    // }
-
     if ((pos = buffer.find("\r\n")) == std::string::npos) {
-        std::cout << "Request.cpp, p. 22 - symbol not found" << std::endl;  // переделать
-        exit(-1);
+        response = new Response();
+        response->makeAnswer(newUrl, 400);
+        // std::cout << "Request.cpp, p. 22 - symbol not found" << std::endl;  // переделать
+        // exit(-1);
     }
     buffer.erase(0, pos + 2);
 }
@@ -83,14 +81,18 @@ void Request::parsFirstLine() {
 
         while (buffer.compare("\r\n")) {
             if ((pos = buffer.find("\r\n")) == std::string::npos) {
+                response = new Response();
+                response->makeAnswer(newUrl, 400);
                 std::cout << "Request.cpp, p. 67 - symbol not found" << std::endl;  // переделать
                 exit(-1);
             }
             // std::cout << "pos " << pos << std::endl;
             tmpStr = buffer.substr(0, pos);
             if ((delimiter = tmpStr.find(": ")) == std::string::npos) {
+                response = new Response();
+                response->makeAnswer(newUrl, 400);
                 // std::cout << "Request.cpp, p. 68 - symbol not found" << std::endl;  // переделать
-                break;
+                // break;
             }
             keyHead = tmpStr.substr(0, delimiter);
             valueHead = tmpStr.substr(delimiter + 2, tmpStr.length() - keyHead.length()-2);
@@ -102,28 +104,43 @@ void Request::parsFirstLine() {
 
         if (url.find("cgi-bin") != std::string::npos) {
         //////////////
+        std::cout << "cgi-bin 97 req" << std::endl;  // переделать
         std::string path_info = "PATH_INFO=" + newUrl;
         std::string request_method = "REQUEST_METHOD=";
         request_method.append(method);
         std::string query_string = "QUERY_STRING=";
         query_string.append(url);
-
-        std::string content_type = "CONTENT_TYPE="; // Content-Type -key
-        std::map<std::string, std::string>::iterator it1 = headers.find("Content-Type");
-        content_type.append(it1->second);
-        std::string content_length = "CONTENT_LENGTH=";
-         std::map<std::string, std::string>::iterator it2 = headers.find("Content-Length");
-        content_length.append(it2->second); //Content-Length -key
+        if (method == "POST") {
+            std::string content_type = "CONTENT_TYPE="; // Content-Type -key
+            std::cout << "cgi-bin 105 req" << std::endl;
+            std::map<std::string, std::string>::iterator it1 = headers.find("Content-Type");
+            if (it1 == headers.end()) {
+                response = new Response();
+                response->makeAnswer(newUrl, 400);
+                // std::cout << "AAAAAAAAAA!" << std::endl;
+            }
+            std::cout << "cgi-bin 107 req" << std::endl;
+            content_type.append(it1->second);
+            std::string content_length = "CONTENT_LENGTH=";
+            std::map<std::string, std::string>::iterator it2 = headers.find("Content-Length");
+            if (it2 == headers.end()) {
+                response = new Response();
+                response->makeAnswer(newUrl, 400);
+                // std::cout << "Bla!" << std::endl;
+            }
+            std::cout << "cgi-bin 111 req" << std::endl;
+            content_length.append(it2->second); //Content-Length -key
+            env[3] = strdup(content_type.c_str());
+            env[4] = strdup(content_length.c_str());
+        }
         // std::string http_cookie = "HTTP_COOKIE=";
         // http_cookie.append(HTTP_COOKIE);
-
+        std::cout << "cgi-bin 112 req" << std::endl; 
         env[0] = strdup(path_info.c_str());
         env[1] = strdup(request_method.c_str());
         env[2] = strdup(query_string.c_str());
-        env[3] = strdup(content_type.c_str());
-        env[4] = strdup(content_length.c_str());
         // env[5] = strdup(http_cookie.c_str());
-        cgi->createDynamicHtml(env, url);
+        cgi->createDynamicHtml(env, newUrl);
             if ((pos = url.find('.')) != std::string::npos) {
                 url = url.substr(0, pos+1) + "html";
                 std::cout << "url BIN " << "|" << url << "|" << std::endl;
@@ -136,11 +153,20 @@ void Request::parsFirstLine() {
 
         std::map<std::string, std::string>::iterator it = headers.find("Content-Length");
         if (it == headers.end()) {
-            std::cout << "Content Length not found" << std::endl; // убрать
+            response->makeAnswer(newUrl, 400); //?????
+            // std::cout << "Content Length not found" << std::endl; // убрать
         }
         if (buffer != ""){
             fullBuffer.append(buffer);
             if (fullBuffer.find(endBoundary)!= std::string::npos) {
+                std::cout << "Make full buffer AAAAA" << std::endl;
+                std::cout << "Max body size " << _maxBodySize << std::endl;
+                std::cout << "Full buffer lengtn " << fullBuffer.length() << std::endl;
+                if (fullBuffer.length() > _maxBodySize){
+                    std::cout << "OoOOOOOOOOOOOOOOOOOO" << fullBuffer.length() << std::endl;
+                    response->makeAnswer(newUrl, 413);
+                }
+                
                 endBody = true;
             }
         }
@@ -210,7 +236,7 @@ void Request::parsFirstLine() {
             response->checkFile(cgiRequest); // CGI проверить нужен ли он тут вообще
             endBody = true;
             // parsLine = false; // убрать после обработки удаления запросов
-            // parsHeaders = false; // убрать после обработки удаления запросов
+            // parsHeaders = f alse; // убрать после обработки удаления запросов
         } else if (!method.compare("POST")) {
             std::map<std::string, std::string>::iterator it = headers.find("Content-Type");
             if (it == headers.end()) {
@@ -229,11 +255,16 @@ void Request::parsFirstLine() {
             }
             
         } else if (!method.compare("DELETE")){
-            remove(root.append(url).c_str());
+
+            // remove((newUrl).c_str());
+            // exit(0);       
+            response->checkFileDeleting(newUrl);
+            endBody = true;
             std::cout << "----------DELETE-----------" << std::endl;
 
         } else {
-            std::cout << "UNDEFINED 405 — Method Not Allowed" << std::endl;
+            response->makeAnswer(newUrl, 501);
+            // std::cout << "UNDEFINED 405 — Method Not Allowed" << std::endl;
         }
 
     
@@ -270,3 +301,7 @@ void Request::setSiteName(const std::string& _siteName) {
 void Request::setUpload(const std::string& _upload){
     upload = _upload;
 }
+
+void Request::setMaxBodySize(const size_t &maxBodySize) {
+	_maxBodySize = maxBodySize;
+};

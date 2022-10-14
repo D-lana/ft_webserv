@@ -1,0 +1,5 @@
+200 OK
+Content-type: text/html
+Set-cookie: lastvisit=Thu Oct 13 18:31:06 2022; name=Somebody; path=../cookie_tmp/; Secure; HttpOnly
+Done cookies!
+

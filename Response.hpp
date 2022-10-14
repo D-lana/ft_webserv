@@ -5,6 +5,8 @@
 
 class Response {
     private:
+        FILE *pFile;
+
         std::string answer;
         std::string protocol;
         std::string contentType;
@@ -15,14 +17,14 @@ class Response {
         std::string filename;
         std::stringstream response; // сюда будет записываться ответ клиенту
         std::stringstream response_body; // тело ответа
-        FILE *pFile;
+   
         size_t contentSize; // временно
 
-        // int streamPos;
         std::map<std::string, std::string> mimeType;
         std::map<std::string, std::string> codeStatus;
 
     public:
+        Response();
         Response(std::string& url, std::string& _root);
         ~Response();
 
@@ -34,6 +36,7 @@ class Response {
         void initMimeType();
         void checkFile(bool cgi_request);
         void checkPostReq(bool cgi_request, std::string& filename);
+        void checkFileDeleting(std::string& _url);
         size_t getContentSize();
         size_t cutAnswer();
 };
