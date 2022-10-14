@@ -15,6 +15,7 @@ class CGI {
 
 		int createDynamicHtml(char **env, std::string url);
 		int environment(std::string url, char **env);
+		char *selectionTypeScript(std::string url);
 };
 
 #endif

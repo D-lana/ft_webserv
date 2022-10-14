@@ -21,6 +21,10 @@ private:
     std::string newUrl;
     std::string siteName;
     std::string upload;
+    std::string redirect_code; 
+	std::string redirect_name; 
+	std::string redirect_site;
+    std::string slash;
 
     size_t _maxBodySize;
 
@@ -32,6 +36,7 @@ private:
     char** env;
 
     std::map<std::string, std::string> headers;
+    std::vector<Location> vecLocation;
 
 public:
     Request(std::string& _buffer);
@@ -50,7 +55,9 @@ public:
     // void setFilename(std::string _filename);
     const std::string getRoot() const;
     void setMaxBodySize(const size_t &maxBodySize);
-
+    void createCGI();
+    void setLocation(std::vector<Location> &_vecLocation);
+    int findRedirection();
 };
 
 #endif

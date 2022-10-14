@@ -281,7 +281,7 @@ void FtParser::chooseTokenInLocation(std::string token, std::string str, Locatio
 	}
 
 //   *** если есть локейшн redirection ***
-	void FtParser::findLocationRedirection(std::string str, std::string token, Location& location) {
+void FtParser::findLocationRedirection(std::string str, std::string token, Location& location) {
 
 	std::vector<std::string> vector = FtParser::splitLineOfConfig(token, str);
 	if (vector.size() != 2 || location.getCgiInLocation() == 1 || location.getLocationRedirection() == 1)
@@ -292,7 +292,12 @@ void FtParser::chooseTokenInLocation(std::string token, std::string str, Locatio
 	if ( redirectionCode!= 302)
 		throw std::runtime_error("Wrong redirection code (302 only)"); //нужны ли другие коды???
 	location.setLocationRedirection(redirectionCode);
-	}
+	location.setRedirectionSite(vector[0]);
+	// std::cout << "-------------findLocationRedirection-------------" << std::endl;
+	// for (std::vector<std::string>::iterator it = vector.begin(); it != vector.end(); ++it) {
+	// 	std::cout << *it << std::endl;
+	// }
+}
 
 //   *** если есть локейшн error ***
 	void FtParser::findLocationError(std::string str, std::string token, Location& location) {

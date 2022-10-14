@@ -42,13 +42,12 @@ bool Http::initRequest(int _fd, std::string _buffer, ServerPairs &servPairs) {
     if (it == requests.end()) {
         Request *request = new Request(_buffer);
         requests.insert(std::pair<int, Request*>(_fd, request));
-        // std::cout << "_root p31 |" << _root << "|" << std::endl;
         request->setRoot(servPairs.getRoot());
         request->setMaxBodySize(servPairs.getBodySize());
         std::cout << "servPairs.getServName()" << servPairs.getServName() << "|" << std::endl;
         request->setSiteName(servPairs.getServName());
         request->setUpload(servPairs.getUpload());
-        //  std::cout << "root http p32 |" << request->getRoot() << "|" << std::endl;
+        request->setLocation(servPairs.getLocations());
         request->requestParsing();
         std::cout << "it->second->getEndBody() http 52|" << request->getEndBody() << "|" << std::endl;
         return(request->getEndBody());

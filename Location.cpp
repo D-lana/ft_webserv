@@ -8,6 +8,7 @@ Location::Location() {
     _locationIndex.clear();
     _locationUploadPath.clear();
     _locationRedirection = 0;
+	_redirectionSite.clear();
     _locationBinPathPy.clear();
 	_locationBinPathSh.clear();
     _locationPathCgi.clear();
@@ -42,6 +43,10 @@ void Location::setLocationUploadPath(const std::string& str) {
 
 void Location::setLocationRedirection(const bool& redirection) {
 	_locationRedirection = redirection;
+}
+
+void Location::setRedirectionSite(const std::string& str) {
+	_redirectionSite = str;
 }
 
 void Location::setLocationBinPathPy(const std::string& str) {
@@ -103,4 +108,8 @@ const std::string& Location::getLocationBinPathPy(void) {
 
 const std::string& Location::getLocationBinPathSh(void) {
 	return _locationBinPathSh;
+};
+
+const std::string& Location::getRedirectionSite(void) {
+	return _redirectionSite;
 };
