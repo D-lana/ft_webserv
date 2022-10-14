@@ -41,9 +41,9 @@ private:
 public:
     Request(std::string& _buffer);
     ~Request();
-    void makeHeaders();
-    void parsFirstLine();
-    void requestParsing();
+    int makeHeaders();
+    int parsFirstLine();
+    int requestParsing();
     void bodyParsing();
     void makeFullBuffer();
     bool getEndBody();
@@ -55,7 +55,7 @@ public:
     // void setFilename(std::string _filename);
     const std::string getRoot() const;
     void setMaxBodySize(const size_t &maxBodySize);
-    void createCGI();
+    int createCGI();
     void setLocation(std::vector<Location> &_vecLocation);
     int findRedirection();
 };

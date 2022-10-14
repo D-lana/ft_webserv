@@ -24,6 +24,9 @@ Response::~Response() {
 }
 
 std::string Response::makeAnswer(std::string& newUrl, int code) {
+     if ((contentType = findContentType()) == ""){
+         code = 404;
+     }
     // std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
     // std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
     std::cout << "\x1b[1;92m" << "> MakeAnswer 26 Response " << code << "\n" << "\x1b[0m";
@@ -51,7 +54,7 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
 
     } else if (code == 200) {
         std::cout << "AAAAAAAAAAA" << std::endl;
-        contentType = findContentType();
+        // contentType = findContentType();
 
         // std::cout << "newUrl resp 52 |" << newUrl << "|" << std::endl;
         // std::cout << "\x1b[1;95m" << "\b\b>>>>> RESPONSE <<<<<\n" << "\x1b[0m"; 
@@ -172,14 +175,16 @@ std::string Response::findContentType(){
     posDot = url.rfind('.');
     //-------------------ЧТО-ТО НЕ ТАК ПРОИСХОДИТ (/kotiki/)-----------------------------
     if (posDot == std::string::npos) {
+        
         std::cout << "Response.cpp, p. 79 - Dot not found" << std::endl;  // переделать
-        exit(-1);
+        return("");
+        // exit(-1);
     }
     key = url.substr(++posDot, url.length());
     std::map<std::string, std::string>::iterator it = mimeType.find(key);
     if (it == mimeType.end()) {
         std::cout << "ContentType not found" << std::endl; // убрать
-        return(NULL);
+        return("");
     }
 
     // std::cout << "key = " << key << std::endl;
