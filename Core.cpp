@@ -47,9 +47,17 @@ void Core::run() {
 				else if (close_connection < 0) {
 					std::cout << "End of file, read_sock: " << it_clients->sock << "\n";
 					FD_CLR(it_clients->sock, &this->read_set);
+					//FD_CLR(it_clients->sock, &this->active_read);
 					it_clients->ready_to_send = 1;
 					FD_SET(it_clients->sock, &active_write);
 				}
+				// else if (close_connection == 404) {
+				// 	std::cout << "End of file, read_sock: " << it_clients->sock << "\n";
+				// 	FD_CLR(it_clients->sock, &this->read_set);
+				// 	FD_CLR(it_clients->sock, &this->active_read);
+				// 	it_clients->ready_to_send = 1;
+				// 	FD_SET(it_clients->sock, &active_write);
+				// }
 			}
 			if (FD_ISSET(it_clients->sock, &write_set) && it_clients->ready_to_send == 1) {
 				std::cout << "\x1b[1;96m" << "\n> Found Write socket fd: " << it_clients->sock << "\n\n" << "\x1b[0m";
@@ -90,7 +98,7 @@ int Core::writeToClient(int fd) {
 
 	send(fd, part_answer.c_str(), part_answer.length(), 0);
 	if (http->getEndAnswer() == true) {
-		std::cout << part_answer.c_str() << std::endl; 
+		//std::cout << part_answer.c_str() << std::endl; 
 		std::cout << "\x1b[1;92m" << "\n> Send and DELETE Msg To Client fd: " << fd << "\n\n" << "\x1b[0m";
 		http->deleteRequest(fd);
 		return(1);
