@@ -12,10 +12,10 @@ Response::Response(std::string& _url, std::string& _root){
      answer = "";
      root = _root;
      contentSize = 0;
-     newUrl = root + url; // new
+     _newUrl = root + url; // new
 
     std::cout << "14 response root" << "|" << root << "|" << std::endl;
-    std::cout << "14 response newUrl" << "|" << newUrl << "|" << std::endl;
+    std::cout << "14 response newUrl" << "|" << _newUrl << "|" << std::endl;
     //  std::cout << "url response " << url << std::endl;
 
  }
@@ -26,7 +26,7 @@ Response::~Response() {
 std::string Response::makeAnswer(std::string& newUrl, int code) {
     // std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
     // std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
-    std::cout << "\x1b[1;92m" << "> |||||||||||makeAnswer 26 Response CGI " << code << "\n" << "\x1b[0m";
+    std::cout << "\x1b[1;92m" << "> MakeAnswer 26 Response " << code << "\n" << "\x1b[0m";
     if (code == 100) {
         std::cout << "BBBBBB" << std::endl;
         std::string line;
@@ -81,20 +81,14 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
         // std::cout << "contents.data()" << contents.data() << std::endl;
         response.write(contents.data(), contents.size());
         answer = response.str();
-        std::cout << "\x1b[1;92m" << "> |||||||||||makeAnswer 73 200 if " << code << "\n" << "\x1b[0m";
+        std::cout << "\x1b[1;92m" << ">  MakeAnswer 84 code=201 if " << code << "\n" << "\x1b[0m";
 
         // exit(-1);
-        
-
-
-    // response << protocol << " 200 OK\r\nDate: " << 
 
     } else if (code == 404){
-        
+        std::cout << "\x1b[1;92m" << "> makeAnswer 93 err 404 " << code << "\n" << "\x1b[0m";
         contentType = "text/html";
         newUrl = "errors/404.html";
-        
-
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
 
@@ -103,16 +97,20 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
         answer = response.str();
         
     } else if (code == 400) {
+        std::cout << "\x1b[1;92m" << "> response 111 makeAnswer err 400 " << code << "\n" << "\x1b[0m";
         contentType = "text/html";
         newUrl = "errors/400.html";
 
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+        std::cout << "\x1b[1;93m" << "> response 117\n" << "\x1b[0m";
 
         response << protocol << " 400 Bad Request\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
         response.write(contents.data(), contents.size());
+        std::cout << "\x1b[1;93m" << "> response 121\n" << "\x1b[0m";
 
         answer = response.str();
+        std::cout << "\x1b[1;93m" << "> response 124\n" << "\x1b[0m";
 
     } else if (code == 500) {
         contentType = "text/html";
@@ -156,8 +154,13 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
         response << protocol << " 413 Payload Too Large\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
         response.write(contents.data(), contents.size());
         answer = response.str();
+    } else if (code == 302) {
+        //HTTP/1.1 302 Found
+        //Location: http://www.example.org/index.asp
+        response << "HTTP/1.1 302 Found\r\nLocation: " << newUrl << "\r\n\r\n";
+        answer = response.str();
     }
-
+    std::cout << "\x1b[1;93m" << "> return(answer); response 174\n" << "\x1b[0m";
     return(answer);
 }
 
@@ -167,6 +170,7 @@ std::string Response::findContentType(){
     std::string key;
     std::cout << "url response p 97 |" << url << "|" << std::endl;
     posDot = url.rfind('.');
+    //-------------------ЧТО-ТО НЕ ТАК ПРОИСХОДИТ (/kotiki/)-----------------------------
     if (posDot == std::string::npos) {
         std::cout << "Response.cpp, p. 79 - Dot not found" << std::endl;  // переделать
         exit(-1);
@@ -185,13 +189,13 @@ std::string Response::findContentType(){
 }
 
 void Response::checkFile(bool cgi_request) {
-        char arr[newUrl.length() + 1];
-        memset (arr, 0, (newUrl.length() + 1));
-        strcpy(arr, newUrl.c_str());
+        char arr[_newUrl.length() + 1];
+        memset (arr, 0, (_newUrl.length() + 1));
+        strcpy(arr, _newUrl.c_str());
         //  std::cout << "NEWURLLLL processor " << newUrl << "\n";
         //  std::cout << "ARR processor " << arr << "\n"; 
         pFile = fopen(arr, "r");
-        std::cout << "cgi_request|||||||||||| " << cgi_request << arr << "\n"; 
+        std::cout << "----cgi_request----> " << cgi_request << arr << "\n"; 
         // if (cgi_request == true) {
         //     answer = makeAnswer(newUrl, 100);
         //     //fclose (pFile);
@@ -199,31 +203,32 @@ void Response::checkFile(bool cgi_request) {
         if (pFile!=NULL)
         {
             if (cgi_request) {
-                answer = makeAnswer(newUrl, 100);
+                answer = makeAnswer(_newUrl, 100);
             } else {
-                answer = makeAnswer(newUrl, 200);
+                answer = makeAnswer(_newUrl, 200);
             }
             fclose (pFile);
         } else {
-            answer = makeAnswer(newUrl, 404);
+            answer = makeAnswer(_newUrl, 404);
         }
     }
 
     void Response::checkPostReq(bool cgi_request, std::string& _filename) {
         filename = _filename;
         std::cout << "-----Check Post Request-------" << std::endl;
-        std::ifstream ifs ("site_example/upload/" + filename);
+        std::ifstream ifs ("site_example/upload/" + filename); 
         std::cout << "-----filename-------|" << filename << "|" << std::endl;
         if (ifs.is_open()){
             std::cout << "-----Check Well Post Request-------" << std::endl;
             if (cgi_request) {
-                answer = makeAnswer(newUrl, 100);
+                answer = makeAnswer(_newUrl, 100);
             } else {
-                answer = makeAnswer(newUrl, 200);
+                // std::cout  << "\x1b[1;92m" << "\n-----SMOTRI RESPONSE 236 LINE!!!!!!-------\n" << "\x1b[0m";
+                answer = makeAnswer(_newUrl, 200); // -----------------------------
             }
         } else {
             std::cout << "-----Check Wrong Post Request-------" << std::endl;
-            answer = makeAnswer(newUrl, 500);
+            answer = makeAnswer(_newUrl, 500);
         }
     }
 

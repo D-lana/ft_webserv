@@ -13,7 +13,7 @@ class Response {
         std::string contentLength;
         std::string url;
         std::string root;
-        std::string newUrl;
+        std::string _newUrl;
         std::string filename;
         std::stringstream response; // сюда будет записываться ответ клиенту
         std::stringstream response_body; // тело ответа

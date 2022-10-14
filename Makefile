@@ -14,6 +14,9 @@ HEADERS		= library.hpp
 
 OBJS		=	$(SRCS:.cpp=.o)
 
+FILES		= site_example/cgi-bin/date.html site_example/cgi-bin/cookies.html \
+				site_example/cgi-bin/date.txt site_example/cgi-bin/cookies.txt \
+
 CC			=	g++
 
 RM				= rm -Rf
@@ -35,8 +38,11 @@ $(NAME):		$(OBJS) $(HEADERS)
 %.o: %.cpp		Makefile $(HEADERS)
 				$(CC) $(FLAGS) -c $< -o $@
 
-clean:
-				$(RM) $(OBJS)
+delete_file:    
+				-rm -Rf $(FILES)
+
+clean:			delete_file
+				$(RM) $(OBJS) 
 
 fclean:			clean
 				$(RM) $(NAME)
