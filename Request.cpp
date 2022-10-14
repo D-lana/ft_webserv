@@ -15,7 +15,7 @@ Request::Request(std::string& _buffer){
 	std::cout << "15 request root" << "|" << root << "|" << std::endl;
 	env = new char*[COUNT_ENV];
 	for(int i = 0; i < COUNT_ENV; i++) {
-		env[i] = {0};
+		env[i] = NULL;
 	}
 	slash = "/";
 }
@@ -211,7 +211,8 @@ void Request::makeHeaders() {
 
 			std::cout << "----------request file open---------" <<std::endl;
 			std::ofstream fout;
-			fout.open(root + upload + filename, std::ofstream::out);
+			const char *ff = (root + upload + filename).c_str();
+			fout.open(ff, std::ofstream::out);
 			// fout.open("upload/" + filename, std::ofstream::out);
 			// std::size_t posEof = fullBuffer.find(boundary);
 			// std::size_t posN = fullBuffer.rfind("\n", posEof);

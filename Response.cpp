@@ -23,17 +23,20 @@ Response::~Response() {
 
 }
 
-std::string Response::makeAnswer(std::string& newUrl, int code) {
+// std::string Response::makeAnswer(std::string& newUrl, int code) {
+    std::string Response::makeAnswer(std::string& nn_newUrl, int code) {
     // std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
     // std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
     std::cout << "\x1b[1;92m" << "> MakeAnswer 26 Response " << code << "\n" << "\x1b[0m";
+    const char *newUrl = nn_newUrl.c_str();
     if (code == 100) {
         std::cout << "BBBBBB" << std::endl;
-        std::string line;
+        // std::string line;
+        const char *line;
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
         
-        line = newUrl.substr(0, newUrl.length() - 4) + "txt";
+        line = (nn_newUrl.substr(0, nn_newUrl.length() - 4) + "txt").c_str();
         std::cout << "\x1b[1;92m" << "> line: " << line  << "\n" << "\x1b[0m";
   
         std::ifstream stream_head(line, std::ios::in | std::ios::binary);
@@ -88,7 +91,7 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
     } else if (code == 404){
         std::cout << "\x1b[1;92m" << "> makeAnswer 93 err 404 " << code << "\n" << "\x1b[0m";
         contentType = "text/html";
-        newUrl = "errors/404.html";
+        nn_newUrl = "errors/404.html";
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
 
@@ -99,7 +102,7 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
     } else if (code == 400) {
         std::cout << "\x1b[1;92m" << "> response 111 makeAnswer err 400 " << code << "\n" << "\x1b[0m";
         contentType = "text/html";
-        newUrl = "errors/400.html";
+        nn_newUrl = "errors/400.html";
 
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
@@ -114,7 +117,7 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
 
     } else if (code == 500) {
         contentType = "text/html";
-        newUrl = "errors/500.html";
+        nn_newUrl = "errors/500.html";
 
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
@@ -125,7 +128,7 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
 
     } else if (code == 501) {
         contentType = "text/html";
-        newUrl = "errors/501.html";
+        nn_newUrl = "errors/501.html";
 
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
@@ -136,7 +139,7 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
 
     } else if (code == 204) {
         contentType = "text/html";
-        newUrl = "errors/204.html";
+        nn_newUrl = "errors/204.html";
 
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
@@ -146,7 +149,7 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
         answer = response.str();
     } else if (code == 413) {
         contentType = "text/html";
-        newUrl = "errors/413.html";
+        nn_newUrl = "errors/413.html";
 
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
@@ -157,7 +160,7 @@ std::string Response::makeAnswer(std::string& newUrl, int code) {
     } else if (code == 302) {
         //HTTP/1.1 302 Found
         //Location: http://www.example.org/index.asp
-        response << "HTTP/1.1 302 Found\r\nLocation: " << newUrl << "\r\n\r\n";
+        response << "HTTP/1.1 302 Found\r\nLocation: " << nn_newUrl << "\r\n\r\n";
         answer = response.str();
     }
     std::cout << "\x1b[1;93m" << "> return(answer); response 174\n" << "\x1b[0m";
@@ -215,8 +218,9 @@ void Response::checkFile(bool cgi_request) {
 
     void Response::checkPostReq(bool cgi_request, std::string& _filename) {
         filename = _filename;
+        const char *fname = ("site_example/upload/" + filename).c_str();
         std::cout << "-----Check Post Request-------" << std::endl;
-        std::ifstream ifs ("site_example/upload/" + filename); 
+        std::ifstream ifs (fname); 
         std::cout << "-----filename-------|" << filename << "|" << std::endl;
         if (ifs.is_open()){
             std::cout << "-----Check Well Post Request-------" << std::endl;
@@ -253,7 +257,8 @@ void Response::checkFile(bool cgi_request) {
     // }
     void Response::checkFileDeleting(std::string& _newUrl){
         // std::string tmp = "site_example/deleted.html";
-        std::ifstream ifs(_newUrl);
+        const char *url = _newUrl.c_str();
+        std::ifstream ifs(url);
         std::cout << _newUrl << std::endl;
         // ifs.open(_newUrl);
         if (ifs.is_open()){

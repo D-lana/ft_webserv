@@ -77,7 +77,8 @@ char *CGI::selectionTypeScript(std::string url) {
 	std::cout << "------selectionTypeScript--------: " << url << std::endl;
     std::string s; // сюда будем класть считанные строки
 	std::string s_2;
-    std::ifstream file_read(url); // файл из которого читаем (для линукс путь будет выглядеть по другому)
+	const char *ss = url.c_str();
+    std::ifstream file_read(ss); // файл из которого читаем (для линукс путь будет выглядеть по другому)
 	std::getline(file_read, s);
 	std::cout << "-------s: " << s << std::endl;
 	// что нибудь делаем со строкой //#!/usr/local/bin/python3

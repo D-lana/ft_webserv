@@ -36,7 +36,6 @@ rel='stylesheet' type='text/css'>
   <div class="wrap">
  <div class="header">
  <div class="logo">
-  <!-- <a href=""><img src="logo.png" alt=""/></a> -->
  </div>
           <div class="nav">
   <ul>
@@ -63,24 +62,23 @@ rel='stylesheet' type='text/css'>
 			<input type="submit" value="Отправить"></p>
 		</form> 
 
-		<a href=""><img src="resources/graphics/index.jpg" width="400" height="400" alt="Место для лапы котика"/></a>
+		<a href=""><img src="lapa.jpg" width="400" height="400" alt="Место для лапы котика"/></a>
 
 		<script type="text/javascript">
 			
 			async function delCat() {
 				if (confirm('Досвидули?'))
 				{
-					await fetch('../resources/graphics/index.jpg', {
+					await fetch('lapa.jpg', {
 						method: "DELETE",
 						headers: {
 							'Content-type': 'application/json',
 						},
 					}).then(res => {
 						console.log(res)
-						location.replace('site_example/deleted.html')//location.reload() - если код 200 и ок
+						location.replace('site_example/deleted.html')
 					})
 				}
-				// location.replace('site_example/errors/204.html') - если код 204
 			}
 			
 		  </script>

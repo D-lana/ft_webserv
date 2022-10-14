@@ -15,7 +15,6 @@ struct ConfigTokens {
 
 
         ConfigTokens();
-        // ConfigTokens(int);
         ~ConfigTokens();
 
 

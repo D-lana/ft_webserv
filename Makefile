@@ -1,6 +1,6 @@
 NAME		= webserv
 
-FLAGS		= -Wall -Wextra -Werror -g 
+# FLAGS		= -Wall -Wextra -Werror -g 
 #-fsanitize=address -fvisibility=hidden -fvisibility-inlines-hidden
 # -std=c++98
 
@@ -8,9 +8,6 @@ SRCS		= main.cpp Location.cpp ServerPairs.cpp Core.cpp Server.cpp Response.cpp R
 			Http.cpp Parser.cpp ConfigTokens.cpp CGI.cpp
 
 HEADERS		= library.hpp
-#  Core.hpp Location.hpp  Server.hpp \
-# 			Response.hpp Request.hpp ServerPairs.hpp\
-# 			Http.hpp Parser.hpp ConfigTokens.hpp CGI.hpp 
 
 OBJS		=	$(SRCS:.cpp=.o)
 
@@ -20,9 +17,8 @@ FILES		= site_example/cgi-bin/date.html site_example/cgi-bin/cookies.html \
 CC			=	g++
 
 RM				= rm -Rf
-FLAGS			= -Wall -Wextra -Werror -g 
-#-fsanitize=address
-# -std=c++98
+FLAGS			= -Wall -Wextra -Werror -g -std=c++98
+#-fsanitize=address 
 
 all:			$(NAME)
 
