@@ -111,6 +111,9 @@ void FtParser::checkInfo(void) {
 			// 	_serverPairs[i].getLocations()[j].setIsFolder(true);
 			// }
 		}
+		if (_serverPairs[i].getBodySize() == -1) {
+			_serverPairs[i].setMaxBodySize(1024 * 1024);
+		}
 }
 }
 
@@ -148,9 +151,9 @@ void FtParser::serverPairsInit(size_t index,
 			else if (!(*start).find("location")) {
 				start = locationInit(index,  start, end);
 			}
-		}
 	}
 }
+	}
 
 //   *** инициализация локейшнов ***
 std::vector<std::string>::iterator FtParser::locationInit(size_t index,  
@@ -492,9 +495,9 @@ void FtParser::findServerName(std::string str, std::string token, size_t index) 
 		vector[0] = vector[0].substr(0, vector[0].size() - 1);
 		_serverPairs[index].setMaxBodySize(static_cast<int>(strtod(vector[0].c_str(),
 				 0)) * 1024 * 1024);
-	} else if (isdigit(vector[0][vector[0].size() - 1])) { // только последний?
+	} else if (isdigit(vector[0][vector[0].size() - 1])) {
 		_serverPairs[index].setMaxBodySize(static_cast<int>(strtod(vector[0].c_str(),
-				 0)) * 1024);
+				 0)) * 1024 * 1024);
 	} else {
 		throw std::invalid_argument("Invalid syntax of max body size");
 		}

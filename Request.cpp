@@ -109,11 +109,11 @@ void Request::parsFirstLine() {
         query_string.append(url);
 
         std::string content_type = "CONTENT_TYPE="; // Content-Type -key
-        std::map<std::string, std::string>::iterator it = headers.find("Content-Type");
-        content_type.append(it->second);
+        std::map<std::string, std::string>::iterator it1 = headers.find("Content-Type");
+        content_type.append(it1->second);
         std::string content_length = "CONTENT_LENGTH=";
-         std::map<std::string, std::string>::iterator it = headers.find("Content-Length");
-        content_length.append(it->second); //Content-Length -key
+         std::map<std::string, std::string>::iterator it2 = headers.find("Content-Length");
+        content_length.append(it2->second); //Content-Length -key
         // std::string http_cookie = "HTTP_COOKIE=";
         // http_cookie.append(HTTP_COOKIE);
 
