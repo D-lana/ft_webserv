@@ -3,68 +3,6 @@
 
 # include "Library.hpp"
 
-// enum serverTokens {
-// 	Host,
-// 	Port,
-// 	Server_name,
-// 	Autoindex,
-// 	Index,
-// 	Root,
-// 	Upload_path,
-// 	Client_max_body_size,
-// 	Error_page,
-// 	Methods,
-// 	Redirection // ???
-// 	};
-
-// enum locationTokens {
-// 	Location_name,
-// 	Root,
-// 	Autoindex, 
-// 	Index, 
-// 	Upload_path,
-// 	Redirection,
-// 	Error_page,
-// 	Bin_path_py,
-// 	Path_cgi, 
-// 	Methods 
-// 	};
-
-// enum configTokens {
-// 	"server",  
-// 	"listen", 
-// 	 "server_name",  
-// 	 "autoindex",
-// 	 "index", 
-// 	 "root", 
-// 	 "upload_path", 
-// 	 "client_max_body_size", 
-// 	 "error_page", 
-// 	"methods", 
-// 	"location", 
-// 	"redirection", 
-// 	"path_cgi",
-// 	"bin_path_py", 
-// 	";", 
-// 	"{", 
-// 	"}" 
-// 	};
-
-
-// struct ConfigTokens {
-// 		std::vector<std::string>			serverData;
-// 		std::vector<std::string>			locationData;
-// 		std::map<std::string, int>			serverTokens;
-// 		std::map<std::string, std::string>	errorMap;
-// 		std::vector<std::string>			errorPage;
-// 		std::vector<std::string>			autoindexPage;
-
-// 	ConfigTokens();
-// 	ConfigTokens(int key);
-// 	~ConfigTokens();
-		
-// 	};
-
 class FtParser {
 	public:
 
@@ -73,7 +11,6 @@ class FtParser {
 		void parse(std::string argv);
 		std::vector<ServerPairs>& getServers();
 		std::vector<u_short>& getPorts();
-		// u_short* getPorts();
     
     private:
 
@@ -118,37 +55,13 @@ class FtParser {
 		void findLocationError(std::string str, std::string token, Location& location);
 		void findLocationBinPathPy(std::string str, std::string token, Location& location);
 		void findLocationBinPathSh(std::string str, std::string token, Location& location);
-		// void findLocationPathCgi(std::string str, std::string token, Location& location);
 		void findLocationMethod(std::string str, std::string token, Location& location);
-
 		void checkInfo(void);
-		
 
-
-
-        // std::vector<std::string>			_serverTools;
-		// std::vector<std::string>			_locationTools;
-        // std::vector<std::string>            _configTokens;
-		// std::map<std::string, int>			_configTokens;
-		ConfigTokens			_configTokens;//  ft::ValidConfigKeys _validConfigParams;
-
-
-// 		FtParser::FtParser(const char *argv) : _config(argv) {
-
-//     _serverTools = {"listen", "server_name", "autoindex", "index", "root", "upload_path", 
-// 		"client_max_body_size", "error_page", "methods"};
-// 	_locationTools = {"location", "root", "autoindex", "index", "upload_path",
-// 		"redirection", "error_page", "bin_path_py", "path_cgi",  "methods" };
-// 	_configTokens = {"server",  "listen",  "server_name",  "autoindex", 
-// 		"index", "root", "upload_path", "client_max_body_size", "error_page", 
-// 		"methods", "location", "redirection", "path_cgi", "bin_path_py", 
-// 		";", "{", "}" };
-// }
-
+		ConfigTokens			_configTokens;
 		std::vector<ServerPairs> _serverPairs;
 		std::vector<u_short> _allPorts;
 		const char* _config;
-
 	};
 
 #endif

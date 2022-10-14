@@ -33,7 +33,6 @@
             void setLocationUploadPath(const std::string& str);
             void setLocationRedirection(const bool& redirection);
             void setRedirectionSite(const std::string& str);
-            // void setLocationRedirectionCode(const bool& code);
             void setLocationBinPathPy(const std::string& str);
             void setLocationBinPathSh(const std::string& str);
             void setIsCgi(const bool& cgi);

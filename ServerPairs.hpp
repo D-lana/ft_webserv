@@ -2,7 +2,6 @@
 #define SERVERPAIRS_HPP
 
 # include "Library.hpp"
-// # include "Location.hpp"
 
 class ServerPairs {
 
@@ -33,9 +32,7 @@ class ServerPairs {
         void setHost(const std::string &host);
 
         void setServName(const std::string &serverName);
-
        void setAutoIndex(const bool &autoIndex);
-//        const bool &getAutoIndex() const;
 
        void setRoot(const std::string &root);
 

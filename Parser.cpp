@@ -1,6 +1,5 @@
-// #include "Parser.hpp"
 #include "Library.hpp"
-# define EXTENSION ".conf"
+
 
 FtParser::FtParser(const char *argv) : _configTokens(), _config(argv) {
 }
@@ -46,25 +45,6 @@ void FtParser::parse(std::string argv) {
 	}
 	config.clear();
 	checkInfo();
-
-/* УДАЛИТЬ! Проверка
-	for (std::vector<ServerPairs>::iterator it = _serverPairs.begin() ; it!=_serverPairs.end() ; ++it) {
-        std::cout<< "test server name:  " << (*it).getServName() <<  std::endl;
-		std::cout<< "test server host:  " << (*it).getHost() <<  std::endl;
-		std::cout<< "test server port:  " << (*it).getPort() <<  std::endl;
-		std::cout<< "test server root:  " << (*it).getRoot() <<  std::endl;
-
-
-		std::vector<Location> a = (*it).getLocations();
-		for (std::vector<Location>::iterator at = a.begin() ; at!=a.end() ; ++at) {
-		std::cout<< "test location name:  " << (*at).getLocationName() <<  std::endl;
-		std::cout<< "test location pathcgi:  " << (*at).getLocationPathCgi() <<  std::endl;
-		std::cout<< "test location is cgi:  " << (*at).getCgiInLocation() <<  std::endl;
-		std::cout<< "test location index:  " << (*at).getLocationIndex() <<  std::endl;
-		std::cout<< "test location redir:  " << (*at).getLocationRedirection() <<  std::endl;
-		}
-		}
-*/
 }
 
 
@@ -107,9 +87,6 @@ void FtParser::checkInfo(void) {
 						_serverPairs[i].getLocations()[j].getLocationRedirection() == 1) {
 				throw std::runtime_error("Invalid parameters: location & redirection");
 			}
-			// if (_serverPairs[i].getLocations()[j].getCgiInLocation() == 0 && _serverPairs[i].getLocations()[j].getIsRedirect() == 0) {
-			// 	_serverPairs[i].getLocations()[j].setIsFolder(true);
-			// }
 		}
 		if (_serverPairs[i].getBodySize() == -1) {
 			_serverPairs[i].setMaxBodySize(1024 * 1024);
@@ -160,7 +137,6 @@ std::vector<std::string>::iterator FtParser::locationInit(size_t index,
 	std::vector<std::string>::iterator start, std::vector<std::string>::iterator end) {
 
 	ConfigTokens data;
-	// std::vector<std::string> vector;
 	std::vector<std::string>::iterator beginLocation = start;
 
 	_serverPairs[index].getLocations().push_back(Location());
@@ -296,10 +272,6 @@ void FtParser::findLocationRedirection(std::string str, std::string token, Locat
 		throw std::runtime_error("Wrong redirection code (302 only)"); //нужны ли другие коды???
 	location.setLocationRedirection(redirectionCode);
 	location.setRedirectionSite(vector[0]);
-	// std::cout << "-------------findLocationRedirection-------------" << std::endl;
-	// for (std::vector<std::string>::iterator it = vector.begin(); it != vector.end(); ++it) {
-	// 	std::cout << *it << std::endl;
-	// }
 }
 
 //   *** если есть локейшн error ***
@@ -427,7 +399,7 @@ void FtParser::findListen(std::string str, std::string token, size_t index) {
 	vector = splitListen(vector[0]);
 	if (vector.size() > 1) {
 		_serverPairs[index].setHost(vector[0]);
-		_serverPairs[index].setPort(static_cast<int>(strtod(vector[1].c_str(), 0))); // нужна ли проверка порта на валидность?
+		_serverPairs[index].setPort(static_cast<int>(strtod(vector[1].c_str(), 0)));
 	}
 	else {
 		if (vector[0].find(".") != std::string::npos)
@@ -579,7 +551,7 @@ void FtParser::deleteSpaces(std::string *str) {
 			--i;
 	}
 
-	if (i <= (*str).size()) // строго меньше??
+	if (i <= (*str).size())
 		*str = (*str).substr(0, i + 1);
 }
 
@@ -631,7 +603,6 @@ void FtParser::checkTokens(std::vector<std::string> res) {
 			++i;
 		str = (*it).substr(0, i);
 		if (!str.empty() && _configTokens.serverTokens.find(str)->first != str) {
-			// std::cout << "str = " << str << std::endl;
 			std::cerr << "problem in: " << str << std::endl;;
 			throw std::runtime_error("Unproper token in config");
 		}
@@ -656,7 +627,8 @@ void FtParser::bracesCounter(std::vector<std::string> res) {
 
 //   *** проверка открытия файла, построчное считывание и запись в вектор ***
 std::vector<std::string> FtParser::splitLines(std::string argv) {	
-	std::ifstream file(argv);
+	const char *hh = argv.c_str();
+	std::ifstream file(hh);
 	if (!(file.is_open()))
 		throw std::runtime_error("Cannot open config file");
 
