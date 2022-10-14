@@ -87,13 +87,13 @@ int Request::parsFirstLine() {
 
         while (buffer.compare("\r\n")) {
             if ((pos = buffer.find("\r\n")) == std::string::npos) {
-            response = new Response();¶
-          std::cout << "\x1b[1;92m" << "\n-----SMOTRI REQUEST 89 LINE!!!!!!-------\n" << "\x1b[0m";¶
-          response->makeAnswer(newUrl, 400);¶
+            response = new Response();
+          std::cout << "\x1b[1;92m" << "\n-----SMOTRI REQUEST 89 LINE!!!!!!-------\n" << "\x1b[0m";
+          response->makeAnswer(newUrl, 400);
           return (-1);
             }
             if (pos == 0){
-              break;¶
+              break;
               }
 
             // std::cout << "pos " << pos << std::endl;
@@ -103,9 +103,7 @@ int Request::parsFirstLine() {
 std::cout << "tmpStr " << tmpStr << std::endl;
             
             if ((delimiter = tmpStr.find(": ")) == std::string::npos) {
-                // std::cout << "Request.cpp, p. 68 - symbol not found" << std::endl;  // переделать
-              delimiter " << delimiter << std::endl;
-response = new Response();
+				response = new Response();
 // --------------------OUT OF RANGE--------------------------
 // terminate called after throwing an instance of 'std::out_of_range'
 // what(): basic_string::substr: __pos (which is 1) > this->size() (which is 0)
@@ -126,10 +124,10 @@ if (createCGI() == -1){
 return(-1);
 }
 // std::cout << "buffer0 |" << buffer << "|" << std::endl;
-}
 
 return(0);
 }
+
 int Request::createCGI() {
 std::size_t pos;
 
@@ -200,12 +198,12 @@ return (-1);
             if (fullBuffer.find(endBoundary)!= std::string::npos) {
                 
                 std::cout << "Make full buffer AAAAA" << std::endl;
-std::cout << "Max body size " << _maxBodySize << std::endl;
-std::cout << "Full buffer lengtn " << fullBuffer.length() << std::endl;
-if (fullBuffer.length() > _maxBodySize){
-std::cout << "OoOOOOOOOOOOOOOOOOOO" << fullBuffer.length() << std::endl;
-response->makeAnswer(newUrl, 413);
-}
+				std::cout << "Max body size " << _maxBodySize << std::endl;
+				std::cout << "Full buffer lengtn " << fullBuffer.length() << std::endl;
+				if (fullBuffer.length() > _maxBodySize){
+					std::cout << "OoOOOOOOOOOOOOOOOOOO" << fullBuffer.length() << std::endl;
+					response->makeAnswer(newUrl, 413);
+				}
                 
                 endBody = true;
             }
@@ -233,7 +231,8 @@ response->makeAnswer(newUrl, 413);
 
             std::cout << "----------request file open---------" <<std::endl;
             std::ofstream fout;
-            fout.open(root + upload + filename, std::ofstream::out);
+			const char * ss = (root + upload + filename).c_str();
+            fout.open(ss, std::ofstream::out);
             // fout.open("upload/" + filename, std::ofstream::out);
             // std::size_t posEof = fullBuffer.find(boundary);
             // std::size_t posN = fullBuffer.rfind("\n", posEof);
@@ -322,6 +321,7 @@ response->makeAnswer(newUrl, 400);
             return (0);
 
 } else {
+	endBody = true;
 response->makeAnswer(newUrl, 501);
 return (-1);
 

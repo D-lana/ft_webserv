@@ -93,6 +93,7 @@ Response::~Response() {
         std::cout << "\x1b[1;92m" << "> makeAnswer 93 err 404 " << code << "\n" << "\x1b[0m";
         contentType = "text/html";
         nn_newUrl = "errors/404.html";
+               newUrl = nn_newUrl.c_str();
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
 
@@ -104,6 +105,7 @@ Response::~Response() {
         std::cout << "\x1b[1;92m" << "> response 111 makeAnswer err 400 " << code << "\n" << "\x1b[0m";
         contentType = "text/html";
         nn_newUrl = "errors/400.html";
+               newUrl = nn_newUrl.c_str();
 
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
@@ -119,6 +121,7 @@ Response::~Response() {
     } else if (code == 500) {
         contentType = "text/html";
         nn_newUrl = "errors/500.html";
+               newUrl = nn_newUrl.c_str();
 
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
@@ -130,6 +133,7 @@ Response::~Response() {
     } else if (code == 501) {
         contentType = "text/html";
         nn_newUrl = "errors/501.html";
+        newUrl = nn_newUrl.c_str();
 
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
@@ -137,10 +141,12 @@ Response::~Response() {
         response << protocol << " 501 Not Implemented\r\nContent-Type: " << contentType << "\r\nContent-Length: " << contents.size() << "\r\n\r\n";
         response.write(contents.data(), contents.size());
         answer = response.str();
+        
 
     } else if (code == 204) {
         contentType = "text/html";
         nn_newUrl = "errors/204.html";
+        newUrl = nn_newUrl.c_str();
 
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
@@ -151,6 +157,7 @@ Response::~Response() {
     } else if (code == 413) {
         contentType = "text/html";
         nn_newUrl = "errors/413.html";
+               newUrl = nn_newUrl.c_str();
 
         std::ifstream stream(newUrl, std::ios::in | std::ios::binary);
         std::vector<char> contents((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
@@ -233,9 +240,9 @@ void Response::checkFile(bool cgi_request) {
                 // std::cout  << "\x1b[1;92m" << "\n-----SMOTRI RESPONSE 236 LINE!!!!!!-------\n" << "\x1b[0m";
                 answer = makeAnswer(_newUrl, 200); // -----------------------------
             }
-        } else {
-            std::cout << "-----Check Wrong Post Request-------" << std::endl;
-            answer = makeAnswer(_newUrl, 500);
+        // } else {
+        //     std::cout << "-----Check Wrong Post Request-------" << std::endl;
+        //     answer = makeAnswer(_newUrl, 500);
         }
     }
 
