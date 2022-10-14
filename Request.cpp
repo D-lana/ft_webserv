@@ -2,75 +2,77 @@
 
 Request::Request(std::string& _buffer){
 
-    method = "";
-    buffer = "";
-    buffer = _buffer;
-    url = "";
-    protocol = "HTTP/1.1";
-    fullBuffer = "";
-    parsLine = false;
-    parsHeaders = false;
-    endBody = false;
-    cgiRequest = false;
-    std::cout << "15 request root" << "|" << root << "|" << std::endl;
-    env = new char*[COUNT_ENV];
+	method = "";
+	buffer = "";
+	buffer = _buffer;
+	url = "";
+	protocol = "HTTP/1.1";
+	fullBuffer = "";
+	parsLine = false;
+	parsHeaders = false;
+	endBody = false;
+	cgiRequest = false;
+	std::cout << "15 request root" << "|" << root << "|" << std::endl;
+	env = new char*[COUNT_ENV];
 	for(int i = 0; i < COUNT_ENV; i++) {
 		env[i] = NULL;
-	}     
+	}
+	slash = "/";
 }
 
 void Request::parsFirstLine() {
 
-    std::size_t pos = 0;
-    if ((pos = buffer.find(' ')) == std::string::npos) {
-        std::cout << "Request.cpp, p. 8 - symbol not found" << std::endl;  // переделать
-        exit(-1);
-    }
-    method = buffer.substr(0, pos);
-    std::cout << "method" << "|" << method << "|" << std::endl;
-    buffer.erase(0, pos+1);
+	std::size_t pos = 0;
+	if ((pos = buffer.find(' ')) == std::string::npos) {
+		 response = new Response();
+		 std::cout  << "\x1b[1;92m" << "\n-----SMOTRI REQUEST 28 LINE!!!!!!-------\n" << "\x1b[0m";
+		 response->makeAnswer(newUrl, 400);
+		// std::cout << "Request.cpp, p. 8 - symbol not found" << std::endl;  // переделать
+		// exit(-1);
+	}
+	method = buffer.substr(0, pos);
+	std::cout << "method" << "|" << method << "|" << std::endl;
+	buffer.erase(0, pos+1);
 
-    if ((pos = buffer.find(' ')) == std::string::npos) {
-        std::cout << "Request.cpp, p. 16 - symbol not found" << std::endl;  // переделать
-        exit(-1);
-    }
-    url = buffer.substr(1, pos - 1);
-    newUrl = root + url;
-    
-    std::cout << "url " << "|" << url << "|" << std::endl;
-    buffer.erase(0, pos+1);
-    std::cout << "siteName req 38 " << "|" << siteName << "|" << std::endl;
-    if ((pos = url.find(siteName)) != std::string::npos){
-        std::string tmp;
-        tmp = url;
-        url = url.substr(0, pos);
-        url = url.append(tmp.substr(pos + siteName.length()));
+	if ((pos = buffer.find(' ')) == std::string::npos) {
+		response = new Response();
+		std::cout  << "\x1b[1;92m" << "\n-----SMOTRI REQUEST 39 LINE!!!!!!-------\n" << "\x1b[0m";
+		response->makeAnswer(newUrl, 400);
+		// std::cout << "Request.cpp, p. 16 - symbol not found" << std::endl;  // переделать
+		// exit(-1);
+	}
+	url = buffer.substr(1, pos - 1);
+	// newUrl = root + url;
+	
+	std::cout << "url " << "|" << url << "|" << std::endl;
+	buffer.erase(0, pos+1);
+	std::cout << "siteName req 47 " << "|" << siteName << "|" << std::endl;
+	if ((pos = url.find(siteName)) != std::string::npos){
+		std::string tmp;
+		tmp = url;
+		url = url.substr(0, pos);
+		std::cout << "pos " << "|" << pos << std::endl;
 
-         std::cout << "url kotiki " << "|" << url << "|" << std::endl;
+		url = url.append(tmp.substr(pos + siteName.length()));
 
-    }
-    if ((pos = url.find(root)) != std::string::npos){
-        root = "";
+		 std::cout << "url kotiki " << "|" << url << "|" << std::endl;
 
-    }
-    if (url == ""){
-        url = "index.html";
-    }
-    // if (url.find("cgi-bin") != std::string::npos) {
-    //     //////////////
-    //     cgi->createDynamicHtml(newUrl);
-    //     if ((pos = url.find('.')) != std::string::npos) {
-    //         url = url.substr(0, pos+1) + "html";
-    //         std::cout << "url BIN " << "|" << url << "|" << std::endl;
-    //             cgiRequest = true;
-    //     }
-    // }
-
-    if ((pos = buffer.find("\r\n")) == std::string::npos) {
-        std::cout << "Request.cpp, p. 22 - symbol not found" << std::endl;  // переделать
-        exit(-1);
-    }
-    buffer.erase(0, pos + 2);
+	}
+	if ((pos = url.find(root)) != std::string::npos){
+		root = "";
+	}
+	newUrl = root + url;
+	if (url == ""){
+		url = "index.html";
+	}
+	if ((pos = buffer.find("\r\n")) == std::string::npos) {
+		response = new Response();
+		std::cout  << "\x1b[1;92m" << "\n-----SMOTRI REQUEST 70 LINE!!!!!!-------\n" << "\x1b[0m";
+		response->makeAnswer(newUrl, 400);
+		// std::cout << "Request.cpp, p. 22 - symbol not found" << std::endl;  // переделать
+		// exit(-1);
+	}
+	buffer.erase(0, pos + 2);
 }
 
     void Request::makeHeaders() {
@@ -239,34 +241,70 @@ void Request::parsFirstLine() {
     
 }
 
+int Request::findRedirection() {
+//     it->getLocationName() /google
+// it->getRedirectionSite() http://www.google.ru
+// it->getRedirectionSite() http://www.google.ru
+// url google
+	//std::string slash = "/";
+	redirect_code = redirect_name = redirect_site = "";
+	for (std::vector<Location>::iterator it = vecLocation.begin(); it != vecLocation.end(); ++it) {
+		if (it->getLocationRedirection() == true) {
+			std::cout << "-------------getLocationRedirection()-------------" << std::endl;
+			redirect_code = it->getLocationIndex();
+			redirect_name = it->getLocationName();
+			redirect_site = it->getRedirectionSite();
+			//std::string r2 = it->getLocationRoot();
+			std::cout << "redirection " << redirect_code << std::endl;
+			std::cout << "it->getLocationName() " << redirect_name << std::endl;
+			std::cout << "it->getRedirectionSite() " << redirect_site << std::endl;
+			std::cout << "it->getRedirectionSite() " << redirect_site << std::endl;
+			std::cout << "url " << url << std::endl;
+			if (url == redirect_name || slash + url == redirect_name) {
+				return (302);
+			}
+		}
+	}
+	return (0);
+}
+
+
 Request::~Request(){
-     delete response;
+	 delete response;
 }
 
 Response* Request::getResponse() {
-    return (response);
+	return (response);
 }
 
 void Request::setBuffer(std::string& _buffer) {
-    buffer = "";
-    buffer = _buffer;
+	buffer = "";
+	buffer = _buffer;
 }
 
 bool Request::getEndBody(){
-    return (endBody);
+	return (endBody);
 }
 
 void Request::setRoot(const std::string& _root){
-    root = _root;
+	root = _root;
 }
 
 const std::string Request::getRoot() const {
-    return(root);
+	return(root);
 }
 
 void Request::setSiteName(const std::string& _siteName) {
    siteName = _siteName; 
 }
 void Request::setUpload(const std::string& _upload){
-    upload = _upload;
+	upload = _upload;
 }
+
+void Request::setMaxBodySize(const size_t &maxBodySize) {
+	_maxBodySize = maxBodySize;
+};
+
+void Request::setLocation(std::vector<Location> &_vecLocation) {
+	vecLocation = _vecLocation;
+};

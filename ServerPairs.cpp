@@ -1,4 +1,3 @@
-// #include "ServerPairs.hpp"
 #include "Library.hpp"
 
 ServerPairs::ServerPairs() {
@@ -19,13 +18,13 @@ ServerPairs::~ServerPairs() {
 	};
 
 void ServerPairs::setPort(const int &port) {
-	// _port = htons(port);
+	if (port > 65535 || port < 0)
+		throw std::runtime_error("Invalid syntax of port");
 	_port = port;
 };
 
 void ServerPairs::setHost(const std::string &host) {
 	_host = inet_addr(host.c_str());
-	// _host = host; // ????
 };
 
 void ServerPairs::setServName(const std::string &serverName) {

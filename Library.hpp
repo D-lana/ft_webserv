@@ -17,6 +17,7 @@
 # include <list>
 # include <string>
 # include <sstream>
+# include <iostream>  
 # include <fstream>
 # include <map>
 # include <cstdio>
@@ -24,6 +25,7 @@
 # include <arpa/inet.h>
 # include <algorithm>
 # include <csignal>
+# include <ctime>
 
 # include "Location.hpp"
 # include "ServerPairs.hpp"
@@ -40,6 +42,7 @@
 # define PORT 8080
 # define ADDRESS INADDR_ANY
 # define DEFAULT_CONFIG "configs/default.conf"
+# define EXTENSION ".conf"
 
 # define PATH_PY "/usr/local/bin/python3"
 # define PATH_SH "/bin/bash"
