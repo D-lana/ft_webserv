@@ -17,7 +17,6 @@ std::vector<u_short>& FtParser::getPorts() {
     
 
 //   *** основной метод парсинга ***
-
 void FtParser::parse(std::string argv) {
 
 	if (strlen(EXTENSION) > argv.size() || argv.substr((argv.size() - strlen(EXTENSION)), 
@@ -50,7 +49,6 @@ void FtParser::parse(std::string argv) {
 
 
 //   *** поиск закрывающей фигурной скобки***
-
 std::vector<std::string>::iterator FtParser::findEndBrace(std::vector<std::string> &config, 
 		std::vector<std::string>::iterator it) {
 

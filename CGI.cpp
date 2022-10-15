@@ -48,37 +48,13 @@ int CGI::createDynamicHtml(char **env, std::string url) {
 	return (0);
 }
 
-// int CGI::environment(std::string url, char **env) {
-// 	std::string path_info = "PATH_INFO=" + url;
-// 	std::string request_method = "REQUEST_METHOD=";
-// 	request_method.append(REQUEST_METHOD);
-// 	std::string query_string = "QUERY_STRING=";
-// 	query_string.append(QUERY_STRING);
-
-// 	std::string content_type = "CONTENT_TYPE=";
-// 	content_type.append(CONTENT_TYPE);
-// 	std::string content_length = "CONTENT_LENGTH=";
-// 	content_length.append(CONTENT_LENGTH);
-// 	std::string http_cookie = "HTTP_COOKIE=";
-// 	http_cookie.append(HTTP_COOKIE);
-
-
-// 	env[0] = strdup(path_info.c_str());
-// 	env[1] = strdup(request_method.c_str());
-// 	env[2] = strdup(query_string.c_str());
-// 	env[3] = strdup(content_type.c_str());
-// 	env[4] = strdup(content_length.c_str());
-// 	env[5] = strdup(http_cookie.c_str());
-
-// 	return (0);
-// }
-
 char *CGI::selectionTypeScript(std::string url) {
 	std::cout << "------selectionTypeScript--------: " << url << std::endl;
     std::string s; // сюда будем класть считанные строки
 	std::string s_2;
 	const char *ss = url.c_str();
     std::ifstream file_read(ss); // файл из которого читаем (для линукс путь будет выглядеть по другому)
+
 	std::getline(file_read, s);
 	std::cout << "-------s: " << s << std::endl;
 	// что нибудь делаем со строкой //#!/usr/local/bin/python3
