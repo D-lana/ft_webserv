@@ -52,7 +52,6 @@ public:
     void setRoot(const std::string& _root);
     void setSiteName(const std::string& _siteName);
     void setUpload(const std::string& _upload);
-    // void setFilename(std::string _filename);
     const std::string getRoot() const;
     void setMaxBodySize(const size_t &maxBodySize);
     int createCGI();

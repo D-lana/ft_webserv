@@ -6,20 +6,13 @@
 class Http {
 
     private:
-        // int fd = 0;
-        // std::string buffer;
-        // Request *request;
-        
         std::map<int, Request*> requests;
-        size_t contentSize; // временно????
-        // Processor *answer;
+        size_t contentSize;
         bool endAnswer;
 
     public:
 
         Http();
-        // Http(int _fd, std::string& _buffer);
-
         ~Http();
 
         Request* getRequest(int fd);
@@ -28,9 +21,6 @@ class Http {
         size_t getContentSize();
         bool getEndAnswer();
         void deleteRequest(int fd);
-        //size_t getLenAnswer(int fd);
-
-
 };
 
 #endif
