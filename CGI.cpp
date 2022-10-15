@@ -8,19 +8,17 @@ CGI::~CGI() {
 
 }
 
-int CGI::createDynamicHtml(char **env, std::string url) {
+int	CGI::createDynamicHtml(char **env, std::string url) {
 	pid_t	pid;
-	char **cmd;
+	char	**cmd;
+
 	cmd = new char*[COUNT_CMD];
 	for(int i = 0; i < COUNT_CMD; i++) {
 		cmd[i] = NULL;
 	}
 	cmd[0] = selectionTypeScript(url);
 	cmd[1] = strdup(url.c_str());
-	std::cout << "\x1b[1;92m" << "> select script success " << "\n" << "\x1b[0m";
 	if (cmd[0] == NULL || cmd[1] == NULL) {
-		std::cout << "\x1b[1;70m" << "> Strdup ERROR " << "\n" << "\x1b[0m";
-		/// Передать инфо об ошибке
 		return (-1);
 	}
 	pid = fork();
@@ -28,15 +26,11 @@ int CGI::createDynamicHtml(char **env, std::string url) {
 		waitpid(pid, NULL, 0);
 	}
 	else if (pid == 0) {
-		std::cout << "\x1b[1;92m" << "> cmd[0] |" << cmd[0] << "|\n" << "\x1b[0m";
-		std::cout << "\x1b[1;92m" << "> cmd[1] |" << cmd[1] << "|\n" << "\x1b[0m";
-		std::cout << "\x1b[1;92m" << "> PATH_PY |" << PATH_PY << "|\n" << "\x1b[0m";
 		if (execve(cmd[0], cmd, env) == -1) {
-			std::cout << "\x1b[1;70m" << "> Execve ERROR " << "\n" << "\x1b[0m";
+			std::cout << "\x1b[1;70m" << "> ERROR: Execve fail." << "\n" << "\x1b[0m";
 		}
 		exit(0);
 	}
-	std::cout << "\x1b[1;92m" << "> SUCCESS! " << "\n" << "\x1b[0m";
 	for(int i = 0; i < COUNT_CMD; i++) {
 		free(cmd[i]);
 	}
@@ -48,24 +42,20 @@ int CGI::createDynamicHtml(char **env, std::string url) {
 	return (0);
 }
 
-char *CGI::selectionTypeScript(std::string url) {
-	std::cout << "------selectionTypeScript--------: " << url << std::endl;
-    std::string s; // сюда будем класть считанные строки
-	std::string s_2;
-	const char *ss = url.c_str();
-    std::ifstream file_read(ss); // файл из которого читаем (для линукс путь будет выглядеть по другому)
+char*	CGI::selectionTypeScript(std::string url) {
 
+    std::string		s; 
+	std::string		s_2;
+	const char *ss = url.c_str();
+    std::ifstream file_read(ss);
 	std::getline(file_read, s);
-	std::cout << "-------s: " << s << std::endl;
-	// что нибудь делаем со строкой //#!/usr/local/bin/python3
 	size_t pos = s.find("#!");
 	if (pos != std::string::npos && pos == 0) {
-		std::cout << "Found at pos = " << pos << "\n";
 		s_2 = s.substr(2);
-	} 	else {
-		std::cout << "Not found\n";
+	} 
+	else {
+		std::cout << "\x1b[1;70m" << "> ERROR: CGI script unknown format." << "\n" << "\x1b[0m";
 	}
-    std::cout << "--------NEW s: " << s_2 << std::endl;
     file_read.close();
 	file_read.clear();
 	char *tmp =strdup(s_2.c_str());
@@ -75,4 +65,3 @@ char *CGI::selectionTypeScript(std::string url) {
 	}
 	return(tmp);
 }
-

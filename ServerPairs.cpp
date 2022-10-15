@@ -64,7 +64,7 @@ std::vector<Location>& ServerPairs::getLocations() {
 	return _locations;
 };
 
-const std::string& ServerPairs::getServName() {
+const std::string& ServerPairs::getServName() const {
 	return _servName;
 };
 
