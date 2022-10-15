@@ -49,7 +49,7 @@ class ServerPairs {
         const u_short& getPort() const;
         const std::string& getRoot() const; 
         const std::string& getIndex();
-        const std::string& getServName();
+        const std::string& getServName() const;
         const in_addr_t& getHost() const;
         const std::string& getUpload();
         const int& getBodySize();
