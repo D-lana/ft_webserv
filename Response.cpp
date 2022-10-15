@@ -194,7 +194,6 @@ void Response::checkFile(bool cgi_request) {
 	void Response::checkFileDeleting(std::string& _newUrl){
 		const char *url_tmp = _newUrl.c_str();
 		std::ifstream ifs(url_tmp);
-		std::cout << _newUrl << std::endl;
 		if (ifs.is_open()){
 			remove((_newUrl).c_str());
 			answer = makeAnswer(_newUrl, 201);
