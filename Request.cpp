@@ -12,7 +12,6 @@ Request::Request(std::string& _buffer){
 	parsHeaders = false;
 	endBody = false;
 	cgiRequest = false;
-	std::cout << "15 request root" << "|" << root << "|" << std::endl;
 	env = new char*[COUNT_ENV];
 	for(int i = 0; i < COUNT_ENV; i++) {
 		env[i] = NULL;
@@ -23,41 +22,26 @@ Request::Request(std::string& _buffer){
 int Request::parsFirstLine() {
 
 	std::size_t pos = 0;
-	 std::cout  << "\x1b[1;92m" << "\n-----parsFirstLine()-------\n" << "\x1b[0m";
 	if ((pos = buffer.find(' ')) == std::string::npos) {
-		 response = new Response();
-		 std::cout  << "\x1b[1;92m" << "\n-----SMOTRI REQUEST 28 LINE!!!!!!-------\n" << "\x1b[0m";
-		 response->makeAnswer(newUrl, 400);
-		// std::cout << "Request.cpp, p. 8 - symbol not found" << std::endl;  // переделать
+		response = new Response();
+		response->makeAnswer(newUrl, 400);
 		return (-1);
 	}
 	method = buffer.substr(0, pos);
-	std::cout << "method" << "|" << method << "|" << std::endl;
 	buffer.erase(0, pos+1);
 
 	if ((pos = buffer.find(' ')) == std::string::npos) {
 		response = new Response();
-		std::cout  << "\x1b[1;92m" << "\n-----SMOTRI REQUEST 39 LINE!!!!!!-------\n" << "\x1b[0m";
 		response->makeAnswer(newUrl, 400);
-		// std::cout << "Request.cpp, p. 16 - symbol not found" << std::endl;  // переделать
 		return (-1);
 	}
-	url = buffer.substr(1, pos - 1);
-	// newUrl = root + url;
-	
-	std::cout << "url " << "|" << url << "|" << std::endl;
+	url = buffer.substr(1, pos - 1);	
 	buffer.erase(0, pos+1);
-	std::cout << "siteName req 47 " << "|" << siteName << "|" << std::endl;
 	if ((pos = url.find(siteName)) != std::string::npos){
 		std::string tmp;
 		tmp = url;
 		url = url.substr(0, pos);
-		std::cout << "pos " << "|" << pos << std::endl;
-
 		url = url.append(tmp.substr(pos + siteName.length()));
-
-		 std::cout << "url kotiki " << "|" << url << "|" << std::endl;
-
 	}
 	if ((pos = url.find(root)) != std::string::npos){
 		root = "";
@@ -68,67 +52,51 @@ int Request::parsFirstLine() {
 	}
 	if ((pos = buffer.find("\r\n")) == std::string::npos) {
 		response = new Response();
-		std::cout  << "\x1b[1;92m" << "\n-----SMOTRI REQUEST 70 LINE!!!!!!-------\n" << "\x1b[0m";
 		response->makeAnswer(newUrl, 400);
-		// std::cout << "Request.cpp, p. 22 - symbol not found" << std::endl;  // переделать
 		return (-1);
 	}
 	buffer.erase(0, pos + 2);
 	return(0);
 }
 
-	int Request::makeHeaders() {
-		
-		std::string tmpStr;
-		std::string keyHead;
-		std::string valueHead;
-		std::size_t delimiter;
-		std::size_t pos;
+int Request::makeHeaders() {
+	
+	std::string tmpStr;
+	std::string keyHead;
+	std::string valueHead;
+	std::size_t delimiter;
+	std::size_t pos;
 
-		while (buffer.compare("\r\n")) {
-			if ((pos = buffer.find("\r\n")) == std::string::npos) {
+	while (buffer.compare("\r\n")) {
+		if ((pos = buffer.find("\r\n")) == std::string::npos) {
 			response = new Response();
-		  std::cout << "\x1b[1;92m" << "\n-----SMOTRI REQUEST 89 LINE!!!!!!-------\n" << "\x1b[0m";
-		  response->makeAnswer(newUrl, 400);
-		  return (-1);
-			}
-			if (pos == 0){
-				break;
-			}
-			tmpStr = buffer.substr(0, pos);
-			
-			std::cout << "pos " << pos << std::endl;
-			std::cout << "tmpStr " << tmpStr << std::endl;
-			
-			if ((delimiter = tmpStr.find(": ")) == std::string::npos) {
-				response = new Response();
-			// --------------------OUT OF RANGE--------------------------
-			// terminate called after throwing an instance of 'std::out_of_range'
-			// what(): basic_string::substr: __pos (which is 1) > this->size() (which is 0)
-			std::cout << "\x1b[1;92m" << "\n-----SMOTRI REQUEST 98 LINE!!!!!!-------\n" << "\x1b[0m";
 			response->makeAnswer(newUrl, 400);
-			//exit(-1);
 			return (-1);
-			// --------------------OUT OF RANGE--------------------------
-			}
-
-			keyHead = tmpStr.substr(0, delimiter);
-			valueHead = tmpStr.substr(delimiter + 2, tmpStr.length() - keyHead.length()-2);
-			headers.insert(std::pair<std::string, std::string> (keyHead, valueHead));
-			buffer.erase(0, pos+2);
-		   
-}
-if (createCGI() == -1){
-return(-1);
-}
-return(0);
+		}
+		if (pos == 0){
+			break;
+		}
+		tmpStr = buffer.substr(0, pos);
+		if ((delimiter = tmpStr.find(": ")) == std::string::npos) {
+			response = new Response();
+			response->makeAnswer(newUrl, 400);
+			return (-1);
+		}
+		keyHead = tmpStr.substr(0, delimiter);
+		valueHead = tmpStr.substr(delimiter + 2, tmpStr.length() - keyHead.length()-2);
+		headers.insert(std::pair<std::string, std::string> (keyHead, valueHead));
+		buffer.erase(0, pos+2);
+	}
+	if (createCGI() == -1){
+		return(-1);
+	}
+	return(0);
 }
 
 int Request::createCGI() {
 	std::size_t pos;
 
 	if (url.find("cgi-bin") != std::string::npos) {
-		//////////////
 		std::string path_info = "PATH_INFO=" + newUrl;
 		std::string request_method = "REQUEST_METHOD=";
 		request_method.append(method);
@@ -139,11 +107,10 @@ int Request::createCGI() {
 		env[4] = strdup("");
 		env[5] = strdup("");
 		if (method == "POST") {
-			std::string content_type = "CONTENT_TYPE="; // Content-Type -key
+			std::string content_type = "CONTENT_TYPE=";
 			std::map<std::string, std::string>::iterator it1 = headers.find("Content-Type");
 			if (it1 == headers.end()) {
 				response = new Response();
-				std::cout << "\x1b[1;92m" << "\n-----SMOTRI REQUEST 130 LINE!!!!!!-------\n" << "\x1b[0m";
 				response->makeAnswer(newUrl, 400);
 				return (-1);
 			}
@@ -152,11 +119,10 @@ int Request::createCGI() {
 			std::map<std::string, std::string>::iterator it2 = headers.find("Content-Length");
 			if (it2 == headers.end()) {
 				response = new Response();
-				std::cout << "\x1b[1;92m" << "\n-----SMOTRI REQUEST 139 LINE!!!!!!-------\n" << "\x1b[0m";
 				response->makeAnswer(newUrl, 400);
 				return (-1);
 			}
-			content_length.append(it2->second); //Content-Length -key
+			content_length.append(it2->second);
 			env[3] = strdup(content_type.c_str());
 			env[4] = strdup(content_length.c_str());
 		}
@@ -181,57 +147,34 @@ int Request::createCGI() {
 		if (buffer != ""){
 			fullBuffer.append(buffer);
 			if (fullBuffer.find(endBoundary)!= std::string::npos) {
-				
-				std::cout << "Make full buffer AAAAA" << std::endl;
-				std::cout << "Max body size " << _maxBodySize << std::endl;
-				std::cout << "Full buffer lengtn " << fullBuffer.length() << std::endl;
 				if (fullBuffer.length() > _maxBodySize){
-					std::cout << "OoOOOOOOOOOOOOOOOOOO" << fullBuffer.length() << std::endl;
 					response->makeAnswer(newUrl, 413);
 				}
-				
 				endBody = true;
 			}
 		}
-		// std::cout << "FullBuffer |" << fullBuffer << "|" <<std::endl;
 		buffer = "";
 	}
 
 	void Request::bodyParsing(){
 
-		std::size_t pos = 0;
-		while (fullBuffer.find(endBoundary) != std::string::npos){
-			if ((pos = fullBuffer.find("filename=")) != std::string::npos) {
-				fullBuffer.erase(0, pos+10);
-				filename = fullBuffer.substr(0, fullBuffer.find("\""));
-				std::cout << "body parsing filename |" << filename << "|" <<std::endl;
-				fullBuffer.erase(0, fullBuffer.find("\r\n\r\n") + 4);
-			// } else {
-			//     // filename = "cats.gif";
-			//     std::cout << "-------NO NAME--------" <<std::endl;
-			//     exit(-1);
-			}
-			std::size_t posEof = fullBuffer.find(boundary);
-			std::size_t posN = fullBuffer.rfind("\r\n", posEof);
-
-			std::cout << "----------request file open---------" <<std::endl;
-			std::ofstream fout;
-			const char * ss = (root + upload + filename).c_str();
-			fout.open(ss, std::ofstream::out);
-			// fout.open("upload/" + filename, std::ofstream::out);
-			// std::size_t posEof = fullBuffer.find(boundary);
-			// std::size_t posN = fullBuffer.rfind("\n", posEof);
-		   
-			// fout << fullBuffer.substr(0, posN-1);
-			fout << fullBuffer.substr(0, posN);
-			fout.close();
-			std::cout << "----------request file closed---------" <<std::endl;
-			fullBuffer.erase(0, posEof + boundary.length());
-		   
-			std::cout << "END BODY PARSING" << std::endl;
-		}
-			fullBuffer = "";
-	 }
+        std::size_t pos = 0;
+        while (fullBuffer.find(endBoundary) != std::string::npos){
+            if ((pos = fullBuffer.find("filename=")) != std::string::npos) {
+                fullBuffer.erase(0, pos+10);
+                filename = fullBuffer.substr(0, fullBuffer.find("\""));
+                fullBuffer.erase(0, fullBuffer.find("\r\n\r\n") + 4);
+            }
+            std::size_t posEof = fullBuffer.find(boundary);
+            std::size_t posN = fullBuffer.rfind("\r\n", posEof);
+            std::ofstream fout;
+            fout.open(("site_example/upload/" + filename).c_str(), std::ofstream::out);
+            fout << fullBuffer.substr(0, posN);
+            fout.close();
+            fullBuffer.erase(0, posEof + boundary.length());
+        }
+            fullBuffer = "";
+     }
 
 	int Request::requestParsing() {
 
@@ -243,90 +186,55 @@ int Request::createCGI() {
 			makeHeaders();
 			parsHeaders = true;
 		}
-		
-		//----------------------------findRedirection----------------------------
 		if (findRedirection() == 302) {
 			response = new Response();
 			endBody = true;
 			response->makeAnswer(redirect_site, 302);
 			return (0);
 		}
-		//----------------------------findRedirection----------------------------
-
-		std::cout << "----------Print map-----------" << std::endl;
-		std::map<std::string, std::string>::iterator it = headers.begin();
-		for (int i = 0; it != headers.end(); it++, i++) {
-			std::cout << "|" << it->first << "|" << it->second << "|"<< std::endl;
-		}
-		std::cout << "---------End printing--------" << std::endl;
-		
-		std::cout << "156 request ROOT" << root << "|" << std::endl;
-		std::cout << "157 request url " << url << "|" << std::endl;
-
 		response = new Response(url, root);
 		if (!method.compare("GET")) {
-			// response = new Response(url, root);
-			response->checkFile(cgiRequest); // CGI проверить нужен ли он тут вообще
+			response->checkFile(cgiRequest);
 			endBody = true;
-			// parsLine = false; // убрать после обработки удаления запросов
-			// parsHeaders = false; // убрать после обработки удаления запросов
 		} else if (!method.compare("POST")) {
-		
-		std::map<std::string, std::string>::iterator it = headers.find("Content-Type");
-		if (it == headers.end()) {
-		response->makeAnswer(newUrl, 400);
-		}
-		
-		
-		std::map<std::string, std::string>::iterator it2 = headers.find("Content-Length");
-		if (it2 == headers.end()) {
-		std::cout << "\x1b[1;92m" << "\n-----SMOTRI REQUEST 280 LINE!!!!!!-------\n" << "\x1b[0m";
-		response->makeAnswer(newUrl, 400); //?????
-			   // std::cout << "ContentLength not found" << std::endl; // убрать
+			std::map<std::string, std::string>::iterator it = headers.find("Content-Type");
+			if (it == headers.end()) {
+				response->makeAnswer(newUrl, 400);
 			}
-			
+			std::map<std::string, std::string>::iterator it2 = headers.find("Content-Length");
+			if (it2 == headers.end()) {
+				response->makeAnswer(newUrl, 400);
+			}	
 			std::string preBoundary;
 			preBoundary = it->second.substr(it->second.find("boundary=") + 9);
 			boundary = preBoundary.substr(preBoundary.rfind('-') + 1);
 			endBoundary = boundary + "--";
-
 			makeFullBuffer();
 			if (endBody==true){
 				bodyParsing();
-				std::cout << "request filename |" << filename << "|" << std::endl; 
 				response->checkPostReq(cgiRequest, filename);
 				return (0);
 			}
-			
 		} else if (!method.compare("DELETE")){
 			response->checkFileDeleting(newUrl);
 			endBody = true;
-			std::cout << "----------DELETE-----------" << std::endl;
 			return (0);
 
-} else {
-	endBody = true;
-response->makeAnswer(newUrl, 501);
-return (-1);
-
+		} else {
+			endBody = true;
+			response->makeAnswer(newUrl, 501);
+			return (-1);
 		}
-		return (0);
-		}
+	return (0);
+}
 
 int Request::findRedirection() {
 	redirect_code = redirect_name = redirect_site = "";
 	for (std::vector<Location>::iterator it = vecLocation.begin(); it != vecLocation.end(); ++it) {
 		if (it->getLocationRedirection() == true) {
-			std::cout << "-------------getLocationRedirection()-------------" << std::endl;
 			redirect_code = it->getLocationIndex();
 			redirect_name = it->getLocationName();
 			redirect_site = it->getRedirectionSite();
-			//std::string r2 = it->getLocationRoot();
-			std::cout << "redirection " << redirect_code << std::endl;
-			std::cout << "it->getLocationName() " << redirect_name << std::endl;
-			std::cout << "it->getRedirectionSite() " << redirect_site << std::endl;
-			std::cout << "it->getRedirectionSite() " << redirect_site << std::endl;
-			std::cout << "url " << url << std::endl;
 			if (url == redirect_name || slash + url == redirect_name) {
 				return (302);
 			}
@@ -335,9 +243,8 @@ int Request::findRedirection() {
 	return (0);
 }
 
-
 Request::~Request(){
-	 delete response;
+	delete response;
 }
 
 Response* Request::getResponse() {
@@ -370,8 +277,8 @@ void Request::setUpload(const std::string& _upload){
 
 void Request::setMaxBodySize(const size_t &maxBodySize) {
 	_maxBodySize = maxBodySize;
-};
+}
 
 void Request::setLocation(std::vector<Location> &_vecLocation) {
 	vecLocation = _vecLocation;
-};
+}

@@ -15,10 +15,10 @@ class Response {
         std::string root;
         std::string _newUrl;
         std::string filename;
-        std::stringstream response; // сюда будет записываться ответ клиенту
-        std::stringstream response_body; // тело ответа
+        std::stringstream response;
+        std::stringstream response_body;
    
-        size_t contentSize; // временно
+        size_t contentSize;
 
         std::map<std::string, std::string> mimeType;
         std::map<std::string, std::string> codeStatus;
@@ -31,8 +31,6 @@ class Response {
         std::string makeAnswer(std::string& newUrl, int code);
         std::string findContentType();
         std::string& getAnswer();
-        // void setAnswer(std::string _answer);
-        // void initCodeStatus();
         void initMimeType();
         void checkFile(bool cgi_request);
         void checkPostReq(bool cgi_request, std::string& filename);
